@@ -66,8 +66,34 @@
 
   function dims(key) { return IMAGES[key] || null; }
 
+  /* -------------------------------- motion -------------------------------- */
+
+  function videoSrc(name)   { return "assets/video/" + name + ".mp4"; }
+  function previewSrc(name) { return "assets/preview/" + name + ".mp4"; }
+  function posterSrc(name)  { return "assets/poster/" + name + ".webp"; }
+  function vmeta(name) { return (typeof VIDEOS !== "undefined" && VIDEOS[name]) || null; }
+
+  function clock(seconds) {
+    var s2 = Math.round(seconds || 0);
+    return Math.floor(s2 / 60) + ":" + (s2 % 60 < 10 ? "0" : "") + (s2 % 60);
+  }
+
+  function hasMotion(p) { return !!(p.videos && p.videos.length); }
+
+  // What a tile shows at rest: the first still, or the first video's poster.
+  function coverKey(p) {
+    if (p.images && p.images.length) return { key: p.images[0], video: false };
+    if (hasMotion(p)) return { key: p.videos[0], video: true };
+    return null;
+  }
+
+  function pieceCount(p) {
+    return (p.images ? p.images.length : 0) + (p.videos ? p.videos.length : 0);
+  }
+
   function altFor(p, i) {
-    return p.client + ", " + p.title + (p.images.length > 1 ? " (" + (i + 1) + " of " + p.images.length + ")" : "");
+    var n = pieceCount(p);
+    return p.client + ", " + p.title + (n > 1 ? " (" + (i + 1) + " of " + n + ")" : "");
   }
 
   function matches(p) {
@@ -109,9 +135,14 @@
       h1.appendChild(em);
     }
 
-    var pieces = PROJECTS.reduce(function (n, p) { return n + p.images.length; }, 0);
+    var pieces = PROJECTS.reduce(function (n, p) { return n + pieceCount(p); }, 0);
     var stats = $(".cover-stats");
-    [["Projects", PROJECTS.length], ["Pieces", pieces], ["Disciplines", CATEGORIES.length]]
+    // count only disciplines that actually hold work, so the number never lies
+    var filled = CATEGORIES.filter(function (c) {
+      return PROJECTS.some(function (p) { return p.category === c; });
+    }).length;
+
+    [["Projects", PROJECTS.length], ["Pieces", pieces], ["Disciplines", filled]]
       .forEach(function (pair) {
         var row = document.createElement("div");
         var dt = document.createElement("dt");
@@ -333,8 +364,14 @@
       var inCat = PROJECTS.filter(function (p) { return p.category === cat; });
       var conf = DISCIPLINE_IMAGE[cat] || {};
       var key = conf.image;
-      var belongs = key && inCat.some(function (p) { return p.images.indexOf(key) !== -1; });
-      if (!belongs) key = inCat[0].images[0];
+      var belongs = key && inCat.some(function (p) { return (p.images || []).indexOf(key) !== -1; });
+      var poster = false;
+      if (!belongs) {
+        var c = coverKey(inCat[0]);
+        key = c && c.key;
+        poster = !!(c && c.video);
+      }
+      if (!key) return;
 
       var a = document.createElement("a");
       a.className = "band is-armed";
@@ -345,7 +382,7 @@
       var media = document.createElement("span");
       media.className = "band-media";
       var img = document.createElement("img");
-      img.src = fullSrc(key);
+      img.src = poster ? posterSrc(key) : fullSrc(key);
       img.alt = "";
       img.loading = "lazy";
       img.decoding = "async";
@@ -522,10 +559,10 @@
   }
 
   // One tile. Every project gets the same shape; the full piece is in the
-  // preview sheet, which scrolls.
+  // preview sheet, which scrolls. Motion projects show a poster at rest and
+  // play a short silent loop while the pointer is on them.
   function entry(p, number) {
-    var key = p.images[0];
-    var d = dims(key);
+    var cover = coverKey(p);
 
     var link = document.createElement("a");
     link.className = "entry-link";
@@ -540,14 +577,32 @@
     shotWrap.className = "entry-shot-wrap";
     var fig = document.createElement("figure");
     fig.className = "entry-shot";
+
     var img = document.createElement("img");
-    img.src = thumbSrc(key);
-    if (d) { img.width = d[0]; img.height = d[1]; }
+    if (cover && cover.video) {
+      img.src = posterSrc(cover.key);
+      var vm = vmeta(cover.key);
+      if (vm) { img.width = vm.w; img.height = vm.h; }
+    } else if (cover) {
+      var d = dims(cover.key);
+      img.src = thumbSrc(cover.key);
+      if (d) { img.width = d[0]; img.height = d[1]; }
+    }
     img.loading = number <= 6 ? "eager" : "lazy";
     img.decoding = "async";
     img.alt = altFor(p, 0);
     fig.appendChild(img);
     shotWrap.appendChild(fig);
+
+    if (hasMotion(p)) {
+      shotWrap.classList.add("has-motion");
+      var badge = document.createElement("span");
+      badge.className = "entry-play";
+      var meta0 = vmeta(p.videos[0]);
+      badge.textContent = "▶ " + (meta0 ? clock(meta0.dur) : "Play");
+      shotWrap.appendChild(badge);
+      attachLoop(link, fig, p.videos[0]);
+    }
 
     var text = document.createElement("div");
     text.className = "entry-text";
@@ -555,11 +610,12 @@
     var meta = document.createElement("p");
     meta.className = "entry-client";
     meta.appendChild(document.createTextNode(p.client + (p.year ? " · " + p.year : "")));
-    if (p.images.length > 1) {
-      var n = document.createElement("span");
-      n.className = "count";
-      n.textContent = " · " + p.images.length + " pieces";
-      meta.appendChild(n);
+    var n = pieceCount(p);
+    if (n > 1) {
+      var c = document.createElement("span");
+      c.className = "count";
+      c.textContent = " · " + n + " pieces";
+      meta.appendChild(c);
     }
 
     var title = document.createElement("h3");
@@ -587,6 +643,41 @@
     return art;
   }
 
+  // The loop is created on first hover and never on touch, so a scroll through
+  // the grid on a phone downloads nothing extra.
+  function attachLoop(link, fig, name) {
+    if (!window.matchMedia || !window.matchMedia("(hover: hover)").matches) return;
+    if (prefersReduced()) return;
+    var vid = null;
+
+    function enter() {
+      if (!vid) {
+        vid = document.createElement("video");
+        vid.className = "entry-loop";
+        vid.src = previewSrc(name);
+        vid.muted = true;
+        vid.loop = true;
+        vid.playsInline = true;
+        vid.setAttribute("aria-hidden", "true");
+        vid.preload = "none";
+        fig.appendChild(vid);
+      }
+      vid.currentTime = 0;
+      var played = vid.play();
+      if (played && played.catch) played.catch(function () {});
+      fig.classList.add("is-playing");
+    }
+    function leave() {
+      fig.classList.remove("is-playing");
+      if (vid) vid.pause();
+    }
+
+    link.addEventListener("mouseenter", enter);
+    link.addEventListener("mouseleave", leave);
+    link.addEventListener("focus", enter);
+    link.addEventListener("blur", leave);
+  }
+
   /* ------------------------------- viewer ------------------------------- */
 
   var viewer = $("#viewer");
@@ -609,7 +700,7 @@
     addFact(facts, "Client", p.client);
     if (p.year) addFact(facts, "Year", p.year);
     addFact(facts, "Discipline", p.category);
-    addFact(facts, "Pieces", String(p.images.length));
+    addFact(facts, "Pieces", String(pieceCount(p)));
 
     var tags = $(".viewer-tags");
     tags.innerHTML = "";
@@ -635,22 +726,47 @@
 
     var box = $(".viewer-images");
     box.innerHTML = "";
-    p.images.forEach(function (key, i) {
+    var index = 0;
+    var total = pieceCount(p);
+
+    (p.videos || []).forEach(function (name) {
+      var vm = vmeta(name);
+      var fig = document.createElement("figure");
+      var v = document.createElement("video");
+      v.src = videoSrc(name);
+      v.poster = posterSrc(name);
+      v.controls = true;
+      v.playsInline = true;
+      v.preload = index === 0 ? "metadata" : "none";
+      if (vm) { v.width = vm.w; v.height = vm.h; }
+      v.setAttribute("aria-label", altFor(p, index));
+      fig.appendChild(v);
+      if (total > 1) {
+        var cap = document.createElement("figcaption");
+        cap.textContent = (index + 1) + " / " + total + (vm ? " · " + clock(vm.dur) : "");
+        fig.appendChild(cap);
+      }
+      box.appendChild(fig);
+      index++;
+    });
+
+    (p.images || []).forEach(function (key) {
       var d = dims(key);
       var fig = document.createElement("figure");
       var img = document.createElement("img");
       img.src = fullSrc(key);
       if (d) { img.width = d[2]; img.height = d[3]; }
-      img.loading = i < 2 ? "eager" : "lazy";
+      img.loading = index < 2 ? "eager" : "lazy";
       img.decoding = "async";
-      img.alt = altFor(p, i);
+      img.alt = altFor(p, index);
       fig.appendChild(img);
-      if (p.images.length > 1) {
-        var cap = document.createElement("figcaption");
-        cap.textContent = (i + 1) + " / " + p.images.length;
-        fig.appendChild(cap);
+      if (total > 1) {
+        var cap2 = document.createElement("figcaption");
+        cap2.textContent = (index + 1) + " / " + total;
+        fig.appendChild(cap2);
       }
       box.appendChild(fig);
+      index++;
     });
 
     var list = visibleProjects();
@@ -691,6 +807,7 @@
     if (viewer.hidden) return;
     viewer.hidden = true;
     document.body.classList.remove("is-locked");
+    $$("video", viewer).forEach(function (v) { v.pause(); });
     $(".viewer-images").innerHTML = "";
     if (skipURL !== true) writeURL(state.cat, "", false);
     if (lastFocus && lastFocus.focus) lastFocus.focus();

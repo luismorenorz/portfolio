@@ -19,6 +19,15 @@
    Every project gets the same size tile, three across. The order on the page
    is the order in this file. Move a block up to push that project higher.
 
+   A project can also carry motion instead of, or alongside, stills:
+
+       videos: ["mo-01", "mo-02"]
+
+   Each name maps to three files the ingest script writes for you:
+       assets/video/<name>.mp4     the piece, played in the preview sheet
+       assets/preview/<name>.mp4   a short silent loop, played on tile hover
+       assets/poster/<name>.webp   the still frame used on the tile
+
    To add a tag, type it into a project's `tags` array. A tag becomes a filter
    once three projects share it; below that it still shows on the project and
    stays clickable from the preview sheet.
@@ -69,6 +78,8 @@ const SITE = {
 const CATEGORIES = [
   "Email",
   "Advertising",
+  "Motion",
+  "AI",
   "Social",
   "Retail",
   "Packaging",
