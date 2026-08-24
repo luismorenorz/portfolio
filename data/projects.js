@@ -1,0 +1,677 @@
+/* ---------------------------------------------------------------------------
+   PORTFOLIO DATA
+   ---------------------------------------------------------------------------
+   This is the only file you need to edit to change the site's content.
+
+   Each project looks like this:
+
+     {
+       id:       "unique-slug",              // used in the URL (#unique-slug)
+       title:    "What the project is",
+       client:   "Client or brand name",
+       category: "Email",                    // ONE of the CATEGORIES below
+       tags:     ["Email", "Campaign"],      // AS MANY as you like
+       year:     "2025",                     // optional, delete if unknown
+       summary:  "One or two sentences.",
+       images:   ["2-10", "2-5"]             // file names in assets/full + assets/thumb
+     }
+
+   Every project gets the same size tile, three across. The order on the page
+   is the order in this file — move a block up to push that project higher.
+
+   To add a tag to a project, just type it into its `tags` array — the filter
+   bar picks up new tags automatically. Same for categories, but keep those
+   few and broad.
+--------------------------------------------------------------------------- */
+
+const SITE = {
+  name: "Luis Moreno",
+  role: "Graphic & Digital Designer",
+  tagline:
+    "I design email, retail and brand systems for consumer companies — from a single promo asset to a full launch across inbox, feed, web and shelf.",
+  location: "Remote",
+  email: "moreno.luisrz@gmail.com",
+  links: [
+    // Delete any line you don't want shown, or add another.
+    { label: "Email", url: "mailto:moreno.luisrz@gmail.com" },
+    { label: "LinkedIn", url: "https://www.linkedin.com/in/luismorenorz/" }
+  ],
+
+  /* THE HERO PHOTO — this is a placeholder, swap in a photo of yourself.
+     Drop the file into site/assets/full/ (say `luis.jpg`) and write the file
+     name here, extension and all:   cover: { image: "luis.jpg", caption: "" }
+     It gets cropped to a tall 4:5 shape, so a portrait-orientation shot with
+     your face in the upper half works best. */
+  cover: { image: "portrait-placeholder.webp", caption: "" },
+
+  /* The picture next to the About text — any image name from assets/full,
+     or another photo of your own. Set it to null to hide it. */
+  portrait: { image: "3-17-09", caption: "Café Café — brand identity" },
+
+  /* Small line under the masthead, magazine-style. Change it freely. */
+  issue: "Selected work",
+  about: [
+    "I design across the full commercial stack: lifecycle email, paid and organic social, landing pages, retail displays, packaging and brand identity.",
+    "Most of my day-to-day is high-volume campaign work for consumer brands — supplements, beverages, cannabis, beauty, health and home. That means designing inside real constraints: brand systems, bilingual copy, print dielines, retail specs and email clients that break everything.",
+    "I also take on identity and presentation work, where the job is to give a company a coherent look before the campaigns start."
+  ],
+  services: [
+    "Lifecycle & campaign email design",
+    "Paid social and display advertising",
+    "Landing pages and responsive web design",
+    "Retail displays, POS and in-store activations",
+    "Packaging, dielines and print collateral",
+    "Brand identity and presentation design"
+  ]
+};
+
+// Order here is the order of the filter bar.
+const CATEGORIES = [
+  "Email",
+  "Advertising",
+  "Social",
+  "Retail",
+  "Packaging",
+  "Web & UI",
+  "Branding",
+  "Presentations"
+];
+
+const PROJECTS = [
+  /* ------------------------------- EMAIL ------------------------------- */
+  {
+    id: "rove-campaigns",
+    title: "Cannabis lifestyle email campaigns",
+    client: "Rove",
+    category: "Email",
+    tags: ["Email", "Campaign", "Art Direction", "Cannabis", "Ecommerce"],
+    year: "2025",
+    summary:
+      "Promotional and launch emails for a cannabis lifestyle brand, including a Labubu collaboration drop, seasonal sales, a pickleball giveaway and a Breast Cancer Awareness edition.",
+    images: ["2-10", "2-5", "2-6", "2-8", "2-9", "140-33", "140-34"]
+  },
+  {
+    id: "rove-education",
+    title: "Product education emails",
+    client: "Rove",
+    category: "Email",
+    tags: ["Email", "Art Direction", "Cannabis", "Editorial"],
+    year: "2025",
+    summary:
+      "Longer-form editorial emails explaining product benefits — sleep, muscle recovery and the Drink Loud beverage line — with an illustration-led layout system.",
+    images: ["18-4", "2-7", "140-32", "2-11"]
+  },
+  {
+    id: "songer-lifecycle",
+    title: "Lifecycle emails for a music creator app",
+    client: "Songer",
+    category: "Email",
+    tags: ["Email", "Campaign", "Tech", "App"],
+    year: "2025",
+    summary:
+      "Onboarding, engagement and promotional emails for a songwriting app — quizzes, testimonial layouts, credit-pack offers and countdown-driven sales.",
+    images: ["140-31", "140-30", "18-917", "18-918", "18-920", "18-919"]
+  },
+  {
+    id: "compressionsale-emails",
+    title: "Compression wear email program",
+    client: "CompressionSale",
+    category: "Email",
+    tags: ["Email", "Campaign", "Ecommerce", "Health"],
+    year: "2025",
+    summary:
+      "Sale, VIP-reward and product-education emails for a medical compression retailer, including a Halloween sitewide promo and a JOBST Comfort Collection push.",
+    images: ["2-12", "2-13", "2-14", "2-15", "18-19", "18-921"]
+  },
+  {
+    id: "golden-hour-hemp",
+    title: "Wholesale promo emails",
+    client: "Golden Hour Hemp",
+    category: "Email",
+    tags: ["Email", "Campaign", "Cannabis", "B2B", "Illustration"],
+    year: "2025",
+    summary:
+      "Deal-driven emails for a hemp wholesaler — Wax Wednesday, a 4/20 exotic strains push and a Moonrocks & Snowballs product launch.",
+    images: ["2-16", "2-17", "2-18"]
+  },
+  {
+    id: "sports-edit",
+    title: "Running launch emails",
+    client: "The Sports Edit",
+    category: "Email",
+    tags: ["Email", "Campaign", "Sports", "Ecommerce"],
+    year: "2025",
+    summary:
+      "Product-drop emails for a performance running retailer covering the HOKA Challenger 8 and the Saucony Hurricane 24, plus a seasonal running campaign.",
+    images: ["2-4", "450-34", "450-35"]
+  },
+  {
+    id: "alpha-lion-emails",
+    title: "Supplement email campaigns",
+    client: "Alpha Lion",
+    category: "Email",
+    tags: ["Email", "Campaign", "Supplements", "Fitness"],
+    year: "2025",
+    summary:
+      "Welcome-flow and product emails for a sports supplement brand, built on a high-contrast dark layout system.",
+    images: ["137-1475", "137-1476"]
+  },
+  {
+    id: "bbqguys",
+    title: "Welcome and lifecycle emails",
+    client: "BBQGuys",
+    category: "Email",
+    tags: ["Email", "Ecommerce", "Home"],
+    year: "2025",
+    summary:
+      "Onboarding emails for an outdoor living retailer, introducing the brand and its outdoor kitchen range.",
+    images: ["2-23", "2-22"]
+  },
+  {
+    id: "capri-tools",
+    title: "Tool brand emails",
+    client: "Capri Tools",
+    category: "Email",
+    tags: ["Email", "Ecommerce", "Tools", "B2B"],
+    year: "2025",
+    summary:
+      "Welcome and product-focused emails for a professional hand tool brand, with a heavy industrial type treatment.",
+    images: ["2-20", "2-21"]
+  },
+  {
+    id: "wink-scrubs",
+    title: "Winter collection email",
+    client: "Wink",
+    category: "Email",
+    tags: ["Email", "Campaign", "Apparel", "Built in Figma"],
+    year: "2026",
+    summary:
+      "A seasonal fit-guide email for a medical scrubs brand, designed from scratch in Figma rather than assembled from a template.",
+    images: ["242-187"]
+  },
+  {
+    id: "organic-india",
+    title: "Loyalty reward email",
+    client: "Organic India",
+    category: "Email",
+    tags: ["Email", "Wellness", "CPG"],
+    year: "2025",
+    summary: "A limited-window loyalty offer email for a wellness and herbal supplement brand.",
+    images: ["2-19"]
+  },
+  {
+    id: "cheers-health",
+    title: "Editorial wellness email",
+    client: "Cheers",
+    category: "Email",
+    tags: ["Email", "Wellness", "Editorial"],
+    year: "2025",
+    summary: "A long-form, article-style email on sleep and alcohol for a wellness supplement brand.",
+    images: ["179-30"]
+  },
+  {
+    id: "ben-bridge",
+    title: "New arrivals email",
+    client: "Ben Bridge Jeweler",
+    category: "Email",
+    tags: ["Email", "Jewelry", "Luxury", "Editorial"],
+    year: "2025",
+    summary: "A restrained, typography-led seasonal arrivals email for a fine jewelry retailer.",
+    images: ["18-2"]
+  },
+
+  /* ---------------------------- ADVERTISING ---------------------------- */
+  {
+    id: "spartan-watch-bands",
+    title: "Apple Watch band campaign",
+    client: "Spartan",
+    category: "Advertising",
+    tags: ["Advertising", "Art Direction", "Product Photography", "Accessories", "Ecommerce"],
+    year: "2025",
+    summary:
+      "A paid social and display campaign for premium Apple Watch bands, built on a single line — \"when the occasion calls for something sharper\" — and a consistent low-key product treatment.",
+    images: ["156-100", "156-101", "156-102", "156-103", "156-104", "156-97", "156-98", "156-99"]
+  },
+  {
+    id: "greenhouse-smoothies",
+    title: "Smoothie launch carousel",
+    client: "Greenhouse",
+    category: "Advertising",
+    tags: ["Advertising", "Social", "Carousel", "CPG", "Food & Beverage"],
+    year: "2025",
+    summary:
+      "A six-slide social carousel launching a new organic smoothie line, moving from the brand claim through each flavour SKU.",
+    images: ["156-113", "156-112", "156-114", "156-115", "156-116", "156-117"]
+  },
+  {
+    id: "greenhouse-promos",
+    title: "Subscribe & save promo assets",
+    client: "Greenhouse",
+    category: "Advertising",
+    tags: ["Advertising", "Ecommerce", "Banner", "CPG", "Food & Beverage"],
+    year: "2026",
+    summary:
+      "Promotional web banners and social assets across multiple sizes for subscription and sitewide-discount pushes.",
+    images: ["156-105", "156-106", "156-108", "156-109", "156-110", "156-118"]
+  },
+  {
+    id: "greenhouse-immunity",
+    title: "Defend The Day digital assets",
+    client: "Greenhouse",
+    category: "Advertising",
+    tags: ["Advertising", "Retail", "Campaign", "CPG", "Food & Beverage"],
+    year: "2025",
+    summary:
+      "Digital assets for the Defend The Day ginger-shot platform, including a gifting push and a tall shelf-blade format for retail.",
+    images: ["156-96", "156-95", "156-107", "156-111"]
+  },
+  {
+    id: "gelmoment-eyeliner",
+    title: "Gel eyeliner launch and promo",
+    client: "GelMoment",
+    category: "Advertising",
+    tags: ["Advertising", "Social", "Beauty", "Bilingual EN/FR", "Product Photography"],
+    year: "2025",
+    summary:
+      "Story, feed and Facebook cuts for the Gel Eyeliner launch and the Instigator Eyeliner gift-with-purchase offer.",
+    images: ["3-48", "3-47", "3-49", "3-44", "3-45", "3-46"]
+  },
+  {
+    id: "gelmoment-eyeshadow",
+    title: "Toujours eyeshadow offer",
+    client: "GelMoment",
+    category: "Advertising",
+    tags: ["Advertising", "Social", "Beauty", "Bilingual EN/FR"],
+    year: "2025",
+    summary: "A 15%-off palette and brush-set offer adapted across story, feed and Facebook formats.",
+    images: ["3-51", "3-50", "3-52"]
+  },
+  {
+    id: "gelmoment-footfile",
+    title: "Optimum foot file offer",
+    client: "GelMoment",
+    category: "Advertising",
+    tags: ["Advertising", "Social", "Beauty", "Bilingual EN/FR"],
+    year: "2025",
+    summary: "A bundle offer for the foot file, buffer and foot cream, sized for three placements.",
+    images: ["3-54", "3-53", "3-55"]
+  },
+  {
+    id: "gelmoment-poise",
+    title: "Poise Perfection gel polish launch",
+    client: "GelMoment",
+    category: "Advertising",
+    tags: ["Advertising", "Social", "Beauty", "Product Photography"],
+    year: "2025",
+    summary: "Launch assets for a new gel polish shade range, led by close-up manicure photography.",
+    images: ["3-57", "3-56", "3-58"]
+  },
+  {
+    id: "gelmoment-vibrance",
+    title: "Vibrance hair dye launch",
+    client: "GelMoment",
+    category: "Advertising",
+    tags: ["Advertising", "Social", "Beauty"],
+    year: "2025",
+    summary: "Launch assets for a temporary hair dye line — \"all the colour, without the commitment\".",
+    images: ["3-60", "3-59", "3-61"]
+  },
+  {
+    id: "generac-ads",
+    title: "Home standby generator ads",
+    client: "Generac dealer",
+    category: "Advertising",
+    tags: ["Advertising", "Paid Social", "Home Services", "Lead Generation"],
+    year: "2025",
+    summary:
+      "Black Friday and extended-warranty ads for a Generac dealer, built around storm-season peace of mind.",
+    images: ["98-419", "98-420", "98-421", "98-422", "98-423"]
+  },
+  {
+    id: "cuddle-sale",
+    title: "Days of Cuddle Sale",
+    client: "Custom blanket brand",
+    category: "Advertising",
+    tags: ["Advertising", "Ecommerce", "Home", "Seasonal"],
+    year: "2025",
+    summary:
+      "A quiet, photography-led Black Friday campaign for personalised blankets — one offer, four story-format cuts.",
+    images: ["98-424", "98-425", "98-426", "98-427"]
+  },
+
+  /* ------------------------------- SOCIAL ------------------------------ */
+  {
+    id: "cosmedica-social",
+    title: "Aesthetic clinic social system",
+    client: "Cosmédica · Dra. Cristal Miranda",
+    category: "Social",
+    tags: ["Social", "Art Direction", "Beauty", "Healthcare", "Editorial", "Spanish"],
+    year: "2025",
+    summary:
+      "An ongoing Instagram system for an aesthetic medicine clinic: treatment explainers, comparison posts and service menus held together by a soft, editorial art direction.",
+    images: ["18-10", "18-17", "18-18", "18-13", "18-7", "18-16", "18-15", "18-11", "18-8", "18-9"]
+  },
+  {
+    id: "nancy-valdes-social",
+    title: "Hormonal and aesthetic medicine social",
+    client: "Dra. Nancy Valdés",
+    category: "Social",
+    tags: ["Social", "Art Direction", "Healthcare", "Beauty", "Spanish"],
+    year: "2025",
+    summary:
+      "Feed content for a hormonal-optimisation and aesthetic medicine practice, including treatment comparisons and a seasonal campaign.",
+    images: ["3-25", "3-27", "3-28", "3-29", "3-30", "3-26", "3-31", "3-32", "3-34"]
+  },
+  {
+    id: "iduna-social",
+    title: "Wellness brand feed",
+    client: "IDUNA",
+    category: "Social",
+    tags: ["Social", "Art Direction", "Wellness", "Editorial", "Spanish"],
+    year: "2025",
+    summary:
+      "A monochrome, copy-led social system for a body and wellness brand — \"a new approach to beauty and health\".",
+    images: ["3-19", "3-20", "3-21", "3-22", "3-23", "3-24", "3-33"]
+  },
+  {
+    id: "ananda-social",
+    title: "Body treatment social posts",
+    client: "Ananda Beauty Spot",
+    category: "Social",
+    tags: ["Social", "Beauty", "Spanish"],
+    year: "2025",
+    summary: "Feed posts for a body-contouring and advanced aesthetics studio.",
+    images: ["18-5", "18-6"]
+  },
+
+  /* ------------------------------- RETAIL ------------------------------ */
+  {
+    id: "greenhouse-dtd-displays",
+    title: "Defend The Day retail displays",
+    client: "Greenhouse",
+    category: "Retail",
+    tags: ["Retail", "POS", "Print", "Dielines", "3D Mockup", "CPG", "Food & Beverage"],
+    year: "2025",
+    summary:
+      "Free-standing display units for a ginger-shot launch — three structural options presented as rendered mockups with the flat print panels that build them.",
+    images: ["171-36", "171-37", "171-38", "171-42", "171-44", "171-45"]
+  },
+  {
+    id: "greenhouse-fridge",
+    title: "Grocery fridge takeovers",
+    client: "Greenhouse",
+    category: "Retail",
+    tags: ["Retail", "POS", "Print", "In-store", "CPG", "Food & Beverage"],
+    year: "2025",
+    summary:
+      "Full cooler wraps installed in grocery stores, turning a standard fridge into a branded immunity destination.",
+    images: ["171-31", "171-32", "171-33", "171-34"]
+  },
+  {
+    id: "greenhouse-protein",
+    title: "Protein+ cooler programme",
+    client: "Greenhouse",
+    category: "Retail",
+    tags: ["Retail", "POS", "3D Mockup", "Print", "CPG"],
+    year: "2025",
+    summary:
+      "Cooler graphics for the Protein+ shake launch, worked up as side-by-side renders for retailer approval.",
+    images: ["171-35", "171-39", "171-40"]
+  },
+
+  /* ------------------------------ PACKAGING ---------------------------- */
+  {
+    id: "pkg-vibrance",
+    title: "Vibrance hair dye packaging",
+    client: "GelMoment",
+    category: "Packaging",
+    tags: ["Packaging", "Dielines", "Print", "Beauty", "Bilingual EN/FR"],
+    year: "2025",
+    summary:
+      "Carton and label system for a temporary hair dye range, from dielines through to the supporting retail and social collateral.",
+    images: ["156-30"]
+  },
+  {
+    id: "pkg-contour",
+    title: "Highlight & contour stick packaging",
+    client: "GelMoment",
+    category: "Packaging",
+    tags: ["Packaging", "Dielines", "Print", "Beauty", "Bilingual EN/FR"],
+    year: "2025",
+    summary: "Bilingual carton design and usage collateral for a duo highlight and contour stick.",
+    images: ["156-40"]
+  },
+  {
+    id: "pkg-tea",
+    title: "Tea Time sampler packaging",
+    client: "GelMoment",
+    category: "Packaging",
+    tags: ["Packaging", "Dielines", "Print", "Illustration", "Bilingual EN/FR"],
+    year: "2025",
+    summary:
+      "An illustrated sampler-set pack with matching promotional assets for the seasonal tea collection.",
+    images: ["156-50"]
+  },
+  {
+    id: "pkg-nailwraps",
+    title: "Glam & Go nail wraps packaging",
+    client: "GelMoment",
+    category: "Packaging",
+    tags: ["Packaging", "Dielines", "Print", "Beauty"],
+    year: "2025",
+    summary: "Sleeve and insert design for a gel nail wrap line, including the pattern range presentation.",
+    images: ["156-61"]
+  },
+  {
+    id: "pkg-eyeliner",
+    title: "Gel eyeliner packaging",
+    client: "GelMoment",
+    category: "Packaging",
+    tags: ["Packaging", "Dielines", "Print", "Beauty", "Bilingual EN/FR"],
+    year: "2025",
+    summary: "Carton, spec sheet and launch collateral for the Gel Eyeliner and Instigator liner.",
+    images: ["156-72"]
+  },
+  {
+    id: "pkg-lashes",
+    title: "Lashes & tweezers packaging",
+    client: "GelMoment",
+    category: "Packaging",
+    tags: ["Packaging", "Dielines", "Print", "Beauty"],
+    year: "2025",
+    summary:
+      "A one-step lash and tweezer kit: pack layout, sticker application spec and the campaign imagery around it.",
+    images: ["156-82"]
+  },
+
+  /* ------------------------------ WEB & UI ----------------------------- */
+  {
+    id: "doctronic",
+    title: "Telehealth landing page",
+    client: "Doctronic",
+    category: "Web & UI",
+    tags: ["Web", "Landing Page", "Responsive", "UI/UX", "Healthcare"],
+    year: "2025",
+    summary:
+      "A clinician-led GLP-1 evaluation flow designed for desktop and mobile, leading with trust signals and a short, low-friction first step.",
+    images: ["137-618", "137-1477"]
+  },
+  {
+    id: "carevio",
+    title: "Healthcare app UI",
+    client: "Carevio",
+    category: "Web & UI",
+    tags: ["UI/UX", "Product Design", "Mobile App", "Healthcare", "Design System"],
+    year: "2026",
+    summary:
+      "Onboarding, dashboard and account screens for a care-management app, presented as a full UI case with its component and colour foundations.",
+    images: ["244-1536"]
+  },
+  {
+    id: "alpha-lion-landing",
+    title: "BURN20 landing page",
+    client: "Alpha Lion",
+    category: "Web & UI",
+    tags: ["Web", "Landing Page", "Ecommerce", "Supplements", "Fitness"],
+    year: "2025",
+    summary:
+      "A conversion-focused product page for a fat burner programme, structured around routine, timeline and social proof.",
+    images: ["137-1478"]
+  },
+  {
+    id: "generac-landing",
+    title: "Generator dealer landing pages",
+    client: "Generac dealer",
+    category: "Web & UI",
+    tags: ["Web", "Landing Page", "Lead Generation", "Home Services"],
+    year: "2025",
+    summary:
+      "Two lead-generation pages for home standby generators — one offer-led, one service-area led — both built around a free assessment form.",
+    images: ["61-3", "97-418"]
+  },
+  {
+    id: "nole",
+    title: "Hair care sampling landing page",
+    client: "NOLE",
+    category: "Web & UI",
+    tags: ["Web", "Landing Page", "Ecommerce", "Beauty", "CPG"],
+    year: "2025",
+    summary:
+      "A free-sample landing page for a natural hair care line, walking through scents, reviews and the plastic-free promise.",
+    images: ["9-3"]
+  },
+  {
+    id: "fragrance-sampler",
+    title: "Fragrance sampler landing page",
+    client: "Fragrance brand",
+    category: "Web & UI",
+    tags: ["Web", "Landing Page", "Ecommerce", "Beauty", "Editorial"],
+    year: "2025",
+    summary:
+      "A quiet, editorial sampling page introducing three signature scents through still-life photography.",
+    images: ["9-6"]
+  },
+  {
+    id: "villa-stari-mlin",
+    title: "Villa website",
+    client: "Villa Stari Mlin",
+    category: "Web & UI",
+    tags: ["Web", "Hospitality", "Editorial", "Travel"],
+    year: "2025",
+    summary: "A booking-led site for a Mediterranean holiday villa, carried by photography and generous white space.",
+    images: ["3-41"]
+  },
+  {
+    id: "easynerdy",
+    title: "B2B services website",
+    client: "easynerdy",
+    category: "Web & UI",
+    tags: ["Web", "B2B", "Tech", "Lead Generation"],
+    year: "2025",
+    summary: "A productivity-consulting site organised around services, process and proof.",
+    images: ["3-42"]
+  },
+
+  /* ------------------------------ BRANDING ----------------------------- */
+  {
+    id: "cafe-cafe",
+    title: "Café Café — brand identity",
+    client: "Café Café",
+    category: "Branding",
+    tags: ["Branding", "Art Direction", "Print", "Logo", "Hospitality", "Spanish"],
+    year: "2025",
+    summary:
+      "A full identity for a neighbourhood coffee shop: a hand-drawn smile mark, a warm ochre-and-maroon palette, uniforms, signage and a voice built on repeating itself — \"repite después de mí\".",
+    images: [
+      "3-17-01", "3-17-02", "3-17-03", "3-17-04", "3-17-05",
+      "3-17-06", "3-17-07", "3-17-08", "3-17-09", "3-17-10"
+    ]
+  },
+  {
+    id: "manara",
+    title: "Manara — brand identity",
+    client: "Manara",
+    category: "Branding",
+    tags: ["Branding", "Logo", "Interior", "Retail"],
+    year: "2025",
+    summary: "Identity and applications for a furniture and homeware brand built on a soft, gradient-lit palette.",
+    images: ["3-2"]
+  },
+  {
+    id: "wyne",
+    title: "Wyne — brand identity",
+    client: "Wyne",
+    category: "Branding",
+    tags: ["Branding", "Logo", "Print", "Hospitality", "Menu Design"],
+    year: "2025",
+    summary: "A dark, minimal identity for a wine bar, applied across menus, labels, uniforms and signage.",
+    images: ["3-3"]
+  },
+  {
+    id: "adapt-cafe",
+    title: "Adapt Cafe — brand identity",
+    client: "Adapt Cafe",
+    category: "Branding",
+    tags: ["Branding", "Logo", "Hospitality", "Editorial"],
+    year: "2025",
+    summary: "A stark black-and-white identity for a specialty cafe, shown across signage, packaging and print.",
+    images: ["3-4"]
+  },
+  {
+    id: "avenue-pilates",
+    title: "Avenue — pilates studio identity",
+    client: "Avenue",
+    category: "Branding",
+    tags: ["Branding", "Logo", "Wellness", "Print", "Editorial"],
+    year: "2025",
+    summary:
+      "A restrained identity for a pilates studio — serif wordmark, a single red accent and a body-led photographic direction.",
+    images: ["3-5"]
+  },
+  {
+    id: "nancy-valdes-brand",
+    title: "Dra. Nancy Valdés — brand identity",
+    client: "Dra. Nancy Valdés",
+    category: "Branding",
+    tags: ["Branding", "Logo", "Healthcare", "Beauty", "Spanish"],
+    year: "2025",
+    summary:
+      "A personal-practice identity for an aesthetic medicine doctor, from monogram and palette through to social and print applications.",
+    images: ["3-6"]
+  },
+
+  /* ---------------------------- PRESENTATIONS -------------------------- */
+  {
+    id: "deck-digital-transformation",
+    title: "Digital transformation pitch deck",
+    client: "Consulting",
+    category: "Presentations",
+    tags: ["Presentation", "Pitch Deck", "Data Visualisation", "Consulting", "B2B"],
+    year: "2026",
+    summary:
+      "A pitch deck on reinventing business through technology, using a hot-orange-on-black system and before/after data slides.",
+    images: ["213-31"]
+  },
+  {
+    id: "deck-orbitoshift",
+    title: "Orbitoshift — crypto pitch deck",
+    client: "Orbitoshift",
+    category: "Presentations",
+    tags: ["Presentation", "Pitch Deck", "Finance", "Crypto", "Data Visualisation"],
+    year: "2026",
+    summary:
+      "An investor deck for decentralised financial infrastructure, built on a cool blue 3D motif and hard numbers.",
+    images: ["213-32"]
+  },
+  {
+    id: "deck-trace-ai",
+    title: "Trace AI — company deck",
+    client: "Trace AI",
+    category: "Presentations",
+    tags: ["Presentation", "Pitch Deck", "AI", "Tech", "B2B"],
+    year: "2026",
+    summary:
+      "A capabilities and company-overview deck for an AI business, covering the market thesis, core capabilities and founding team.",
+    images: ["213-33"]
+  }
+];

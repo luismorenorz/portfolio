@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luis Moreno — Graphic &amp; Digital Designer</title>
+<meta name="description" content="Portfolio of Luis Moreno — email, advertising, social, retail, packaging, web and brand design for consumer companies.">
+<meta property="og:title" content="Luis Moreno — Graphic &amp; Digital Designer">
+<meta property="og:description" content="Email, advertising, social, retail, packaging, web and brand design for consumer companies.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23141310'/><text y='72' x='50' text-anchor='middle' font-family='Georgia,serif' font-size='62' fill='%23fbfaf8'>M</text></svg>">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip" href="#work">Skip to work</a>
+
+<header class="masthead">
+  <a class="wordmark" href="#top">
+    <span class="wordmark-name"></span>
+    <span class="wordmark-role"></span>
+  </a>
+  <nav class="site-nav">
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ------------------------------ cover ------------------------------ -->
+  <section class="cover">
+    <div class="cover-type">
+      <p class="cover-issue"></p>
+      <h1 class="cover-headline"></h1>
+      <dl class="cover-stats"></dl>
+      <a class="cover-cue" href="#work">Start reading ↓</a>
+    </div>
+    <figure class="cover-shot">
+      <img alt="" decoding="async">
+      <figcaption></figcaption>
+    </figure>
+  </section>
+
+  <!-- ------------------------------- work ------------------------------ -->
+  <section id="work" class="work">
+
+    <div class="filters" role="region" aria-label="Filter projects">
+      <div class="filter-row">
+        <h2 class="filter-label">Section</h2>
+        <div class="cats" role="group" aria-label="Filter by category"></div>
+      </div>
+      <div class="filter-row">
+        <h2 class="filter-label">Tags</h2>
+        <div class="tags-wrap">
+          <div class="tags" role="group" aria-label="Filter by tag"></div>
+          <button class="tags-toggle" type="button" aria-expanded="false">Show all tags</button>
+        </div>
+      </div>
+      <div class="filter-row filter-row-tools">
+        <label class="search">
+          <span class="visually-hidden">Search projects</span>
+          <input type="search" placeholder="Search client, project or tag…" autocomplete="off">
+        </label>
+        <p class="result-count" aria-live="polite"></p>
+        <button class="clear-filters" type="button" hidden>Clear filters</button>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    <p class="empty" hidden>Nothing matches those filters yet. <button type="button" class="link-btn clear-filters">Clear them</button> and try again.</p>
+  </section>
+
+  <!-- ------------------------------ about ------------------------------ -->
+  <section id="about" class="about">
+    <div class="about-inner">
+      <div class="about-main">
+        <h2 class="section-title">About</h2>
+        <div class="about-body"></div>
+        <div class="about-lists">
+          <div>
+            <h3 class="side-title">What I do</h3>
+            <ul class="services"></ul>
+          </div>
+          <div>
+            <h3 class="side-title">Clients &amp; projects</h3>
+            <ul class="clients"></ul>
+          </div>
+        </div>
+      </div>
+      <figure class="about-shot">
+        <img alt="" loading="lazy" decoding="async">
+        <figcaption></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ----------------------------- contact ----------------------------- -->
+  <section id="contact" class="contact">
+    <h2 class="section-title">Contact</h2>
+    <p class="contact-lead">Available for freelance and full-time work. The fastest way to reach me is email.</p>
+    <a class="contact-email" href="#"></a>
+    <ul class="contact-links"></ul>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <p class="foot-name"></p>
+  <p class="foot-note">Built as a static site — no login, no Figma account needed.</p>
+</footer>
+
+<!-- ------------------------- project preview panel ------------------------ -->
+<div class="viewer" id="viewer" hidden>
+  <div class="viewer-scrim" data-close></div>
+
+  <div class="viewer-panel" role="dialog" aria-modal="true" aria-labelledby="viewer-title">
+    <div class="viewer-bar">
+      <div class="viewer-bar-meta">
+        <span class="viewer-client"></span>
+        <span class="viewer-sep">/</span>
+        <span class="viewer-name" id="viewer-title"></span>
+      </div>
+      <div class="viewer-bar-actions">
+        <button type="button" class="viewer-prev" aria-label="Previous project">←</button>
+        <button type="button" class="viewer-next" aria-label="Next project">→</button>
+        <a class="viewer-tab" href="#" target="_blank" rel="noopener" title="Open this project in a new tab">Open in new tab ↗</a>
+        <button type="button" class="viewer-close" aria-label="Close preview" data-close>Close ✕</button>
+      </div>
+    </div>
+
+    <div class="viewer-body">
+      <div class="viewer-inner">
+        <aside class="viewer-info">
+          <p class="viewer-eyebrow"></p>
+          <h2 class="viewer-title"></h2>
+          <p class="viewer-summary"></p>
+          <dl class="viewer-facts"></dl>
+          <ul class="viewer-tags"></ul>
+        </aside>
+        <div class="viewer-images"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="data/images.js"></script>
+<script src="data/projects.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
