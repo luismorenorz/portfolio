@@ -17,11 +17,11 @@
      }
 
    Every project gets the same size tile, three across. The order on the page
-   is the order in this file — move a block up to push that project higher.
+   is the order in this file. Move a block up to push that project higher.
 
-   To add a tag to a project, just type it into its `tags` array — the filter
-   bar picks up new tags automatically. Same for categories, but keep those
-   few and broad.
+   To add a tag, type it into a project's `tags` array. A tag becomes a filter
+   once three projects share it; below that it still shows on the project and
+   stays clickable from the preview sheet.
 --------------------------------------------------------------------------- */
 
 const SITE = {
@@ -37,15 +37,15 @@ const SITE = {
     { label: "LinkedIn", url: "https://www.linkedin.com/in/luismorenorz/" }
   ],
 
-  /* THE HERO PHOTO — this is a placeholder, swap in a photo of yourself.
+  /* THE HERO PHOTO. This is a placeholder, swap in a photo of yourself.
      Drop the file into site/assets/full/ (say `luis.jpg`) and write the file
      name here, extension and all:   cover: { image: "luis.jpg", caption: "" }
      It gets cropped to a tall 4:5 shape, so a portrait-orientation shot with
      your face in the upper half works best. */
   cover: { image: "portrait-placeholder.webp", caption: "" },
 
-  /* The picture next to the About text — any image name from assets/full,
-     or another photo of your own. Set it to null to hide it. */
+  /* The picture next to the About text. Any image name from assets/full, or
+     another photo of your own. Set it to null to hide it. */
   portrait: { image: "3-17-09", caption: "Café Café brand identity" },
 
   /* Small line above the headline. Change it freely. */
@@ -575,7 +575,7 @@ const PROJECTS = [
   /* ------------------------------ BRANDING ----------------------------- */
   {
     id: "cafe-cafe",
-    title: "Café Café brand identity",
+    title: "Brand identity",
     client: "Café Café",
     category: "Branding",
     tags: ["Branding", "Art Direction", "Print", "Logo", "Hospitality", "Spanish"],
@@ -589,7 +589,7 @@ const PROJECTS = [
   },
   {
     id: "manara",
-    title: "Manara — brand identity",
+    title: "Brand identity",
     client: "Manara",
     category: "Branding",
     tags: ["Branding", "Logo", "Interior", "Retail"],
@@ -599,7 +599,7 @@ const PROJECTS = [
   },
   {
     id: "wyne",
-    title: "Wyne — brand identity",
+    title: "Brand identity",
     client: "Wyne",
     category: "Branding",
     tags: ["Branding", "Logo", "Print", "Hospitality", "Menu Design"],
@@ -609,7 +609,7 @@ const PROJECTS = [
   },
   {
     id: "adapt-cafe",
-    title: "Adapt Cafe — brand identity",
+    title: "Brand identity",
     client: "Adapt Cafe",
     category: "Branding",
     tags: ["Branding", "Logo", "Hospitality", "Editorial"],
@@ -619,7 +619,7 @@ const PROJECTS = [
   },
   {
     id: "avenue-pilates",
-    title: "Avenue — pilates studio identity",
+    title: "Pilates studio identity",
     client: "Avenue",
     category: "Branding",
     tags: ["Branding", "Logo", "Wellness", "Print", "Editorial"],
@@ -630,7 +630,7 @@ const PROJECTS = [
   },
   {
     id: "nancy-valdes-brand",
-    title: "Dra. Nancy Valdés — brand identity",
+    title: "Personal practice identity",
     client: "Dra. Nancy Valdés",
     category: "Branding",
     tags: ["Branding", "Logo", "Healthcare", "Beauty", "Spanish"],
@@ -654,7 +654,7 @@ const PROJECTS = [
   },
   {
     id: "deck-orbitoshift",
-    title: "Orbitoshift — crypto pitch deck",
+    title: "Crypto investor deck",
     client: "Orbitoshift",
     category: "Presentations",
     tags: ["Presentation", "Pitch Deck", "Finance", "Crypto", "Data Visualisation"],
@@ -665,7 +665,7 @@ const PROJECTS = [
   },
   {
     id: "deck-trace-ai",
-    title: "Trace AI — company deck",
+    title: "Company overview deck",
     client: "Trace AI",
     category: "Presentations",
     tags: ["Presentation", "Pitch Deck", "AI", "Tech", "B2B"],
