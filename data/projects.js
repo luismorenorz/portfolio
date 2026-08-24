@@ -227,8 +227,9 @@ const PROJECTS = [
     category: "Email",
     tags: ["Email", "Jewelry", "Luxury", "Editorial"],
     year: "2025",
-    summary: "New arrivals email for a fine jewelry retailer: type on white above a single product shot.",
-    images: ["18-2"]
+    summary: "New arrivals email for a fine jewelry retailer: type on white above a single product shot, with the hero animated.",
+    images: ["18-2"],
+    videos: ["giffycanvas-1"]
   },
 
   /* ---------------------------- ADVERTISING ---------------------------- */
@@ -348,6 +349,181 @@ const PROJECTS = [
     summary:
       "Black Friday campaign for monogrammed blankets: one offer, four story-format cuts.",
     images: ["98-424", "98-425", "98-426", "98-427"]
+  },
+
+  /* ------------------------------- MOTION ------------------------------- */
+  {
+    id: "gh-campaign-video",
+    title: "Product and campaign video",
+    client: "Greenhouse",
+    category: "Motion",
+    tags: ["Motion", "Advertising", "CPG", "Food & Beverage", "Paid Social"],
+    year: "2025",
+    summary:
+      "Seven cuts for a juice and protein brand across vertical, square and widescreen: the microplastics explainer, the Green Ritual banner, a Union Station screen, an Instacart shoppable spot.",
+    videos: ["20250409-gh-microplasticsvideos-solution-108", "20250606-gh-greenritual-banner-video-1080x19",
+             "20251112-gh-dtd-hdvideobanner-b-1080x1920-v2", "20251113-gh-dtd-fg-instacart-shoppable-video",
+             "20250613-gh-proteinplus-union-station-video", "20250812-gh-protein-paid-ads-1080x1080-2",
+             "202511051703-2"]
+  },
+  {
+    id: "gh-protein-heroes",
+    title: "Protein+ hero animations",
+    client: "Greenhouse",
+    category: "Motion",
+    tags: ["Motion", "Email", "CPG", "Product Photography"],
+    year: "2025",
+    summary: "Two animated email heroes for the Protein+ shake launch, built on the line \"we solved the protein problem\".",
+    videos: ["hero-animation", "hero-anim-protein-2"]
+  },
+  {
+    id: "rove-heroes",
+    title: "Animated email heroes",
+    client: "Rove",
+    category: "Motion",
+    tags: ["Motion", "Email", "Cannabis", "Art Direction", "Ecommerce"],
+    year: "2025",
+    summary:
+      "Nine looping heroes for a cannabis lifestyle brand, covering the apparel drops and the Drink Loud beverage line.",
+    videos: ["hero-1", "hero-2", "hero-3", "giffycanvas", "ezgif-5bb2358e64c93237",
+             "97e71b26-0574-48ce-8db6-422924ca689d", "gif", "gif-1", "gif-2"]
+  },
+  {
+    id: "songer-heroes",
+    title: "Animated email heroes",
+    client: "Songer",
+    category: "Motion",
+    tags: ["Motion", "Email", "Tech", "App", "Campaign"],
+    year: "2025",
+    summary:
+      "Six heroes for a songwriting app, most of them countdown-driven: Halloween, Black Friday, and the 92%-off early access run.",
+    videos: ["hero", "hero-4", "hero-5", "hero-6", "ezgif-1e222236e4ffc1", "ezgif-32d33707b55529bd"]
+  },
+  {
+    id: "puregenius-heroes",
+    title: "Animated email heroes",
+    client: "Pure Genius",
+    category: "Motion",
+    tags: ["Motion", "Email", "CPG", "Ecommerce", "Health"],
+    year: "2025",
+    summary: "Four heroes for a 23g protein drink, from a back-in-stock alert to a daily-habit push carried by review screenshots.",
+    videos: ["attachment-1", "frame-81", "group-66", "ezgif-1691e8e992ef9045"]
+  },
+  {
+    id: "zillow-rentals-motion",
+    title: "Rentals campaign motion",
+    client: "Zillow Rentals",
+    category: "Motion",
+    tags: ["Motion", "Advertising", "Campaign", "Real Estate", "B2B"],
+    year: "2025",
+    summary:
+      "Seven pieces for the leasing-season launch, from teaser bumpers to a 79-second sizzle reel aimed at property managers.",
+    videos: ["zillowrentals-asclaunchsizzle-reachzillions", "asc-teaser-v2-2", "edit-main-comp",
+             "v3-mixed-portfolio-animation-mel-2-1", "merge", "artboard4", "artboard5"]
+  },
+  {
+    id: "zillow-product-motion",
+    title: "Product UI motion",
+    client: "Zillow",
+    category: "Motion",
+    tags: ["Motion", "UI/UX", "Product Design", "Real Estate", "Tech"],
+    year: "2025",
+    summary:
+      "Screen-recorded product walkthroughs cut to music, including the property-management integrations flow and the OpenAI demo.",
+    videos: ["zillow-openai-demo-v6-final-4k-100325", "emtrata-2", "final-rev-1"]
+  },
+  {
+    id: "jewelry-apparel-heroes",
+    title: "Sale email heroes",
+    client: "Jewelry and apparel brands",
+    category: "Motion",
+    tags: ["Motion", "Email", "Jewelry", "Ecommerce", "Apparel"],
+    year: "2025",
+    summary: "Three animated heroes built around a countdown: a flash sale, a sample sale and a swimwear push led by customer reviews.",
+    videos: ["giffycanvas-12", "ezgif-12628e0e63447042", "giffycanvas-2"]
+  },
+  {
+    id: "gelmoment-packaging-video",
+    title: "Packaging range animation",
+    client: "GelMoment",
+    category: "Motion",
+    tags: ["Motion", "Packaging", "Beauty", "Product Photography"],
+    year: "2026",
+    summary: "A vertical spot walking the full product range, one pack at a time.",
+    videos: ["packagings"]
+  },
+  {
+    id: "generac-promo-video",
+    title: "Generator promotion video",
+    client: "Generac dealer",
+    category: "Motion",
+    tags: ["Motion", "Advertising", "Home Services", "Lead Generation"],
+    year: "2026",
+    summary: "A January promotion spot pricing out a home standby generator and its seven-year warranty.",
+    videos: ["gscvid"]
+  },
+  {
+    id: "sky18-film",
+    title: "Brand film",
+    client: "Sky 18 Capital",
+    category: "Motion",
+    tags: ["Motion", "Finance", "B2B", "Brand Film"],
+    year: "2026",
+    summary: "A 78-second film introducing a private lending firm.",
+    videos: ["sky18-hero-vid-2"]
+  },
+  {
+    id: "cne-deals-video",
+    title: "Season deals promo",
+    client: "CNE",
+    category: "Motion",
+    tags: ["Motion", "Advertising", "Campaign", "Events"],
+    year: "2025",
+    summary: "A widescreen promo for an annual insider list, with a PS5 and a ticket upgrade as the hook.",
+    videos: ["wheel-video-1920x1080"]
+  },
+  {
+    id: "blaze-product-video",
+    title: "Product reveal",
+    client: "The Blaze BZ3",
+    category: "Motion",
+    tags: ["Motion", "Product Photography", "Accessories"],
+    year: "2025",
+    summary: "A short reveal for an eyewear release, shot against black.",
+    videos: ["video-template-aep"]
+  },
+  {
+    id: "sko-film",
+    title: "Marketing Challenger SKO film",
+    client: "Self-initiated",
+    category: "Motion",
+    tags: ["Motion", "Presentation", "Data Visualisation", "B2B"],
+    year: "2026",
+    summary: "A sales-kickoff opener, built to run before the deck rather than inside it.",
+    videos: ["luis-marketing-challenger-sko"]
+  },
+
+  /* --------------------------------- AI --------------------------------- */
+  {
+    id: "generac-ai-film",
+    title: "AI-generated campaign film",
+    client: "Generac dealer",
+    category: "AI",
+    tags: ["AI", "Motion", "Advertising", "Home Services", "Character Design"],
+    year: "2026",
+    summary:
+      "A mascot-led campaign generated end to end with AI video, cut in four versions: two vertical, two widescreen, the longest running just under three minutes.",
+    videos: ["vid-final-16x9-30seg-no-edit-sin-qr", "vid-6-16x9", "vid-9-9x16", "vid-3-9x16"]
+  },
+  {
+    id: "ai-experiments",
+    title: "Image-to-video experiments",
+    client: "Self-initiated",
+    category: "AI",
+    tags: ["AI", "Motion", "Product Photography", "R&D"],
+    year: "2026",
+    summary: "Two tests turning a single still into motion, checking how far a generated camera move holds up on a product shot.",
+    videos: ["magnific-animate-the-provided-imag-rgggxfixt", "woman-resting-on-stone-wall-202608060051"]
   },
 
   /* ------------------------------- SOCIAL ------------------------------ */

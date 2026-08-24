@@ -74,15 +74,14 @@ def slugify(name, taken):
 
 
 def encode(src, slug, meta):
-    # scale so the tall edge is at most MAX_H, keeping even dimensions
-    scale = "scale='min(iw,trunc(iw*{0}/ih/2)*2)':'min(ih,{0})'".format(MAX_H)
-    if meta["h"] <= meta["w"]:
-        scale = "scale='min(iw,trunc({0}*iw/ih/2)*2)':'min(ih,{0})'".format(MAX_H)
+    # Cap the height at MAX_H, never upscale, and force both axes even —
+    # x264 rejects odd dimensions, and sources like an 800x567 GIF hit that.
+    scale = "scale=-2:'trunc(min(ih,{0})/2)*2'".format(MAX_H)
 
     full = os.path.join(OUT["video"], slug + ".mp4")
     r = run(["ffmpeg", "-y", "-i", src,
              "-vf", scale + ",format=yuv420p",
-             "-c:v", "libx264", "-crf", "30", "-preset", "slow",
+             "-c:v", "libx264", "-crf", "30", "-preset", "medium",
              "-movflags", "+faststart",
              "-c:a", "aac", "-b:a", "96k", "-ac", "2",
              full])
@@ -91,8 +90,8 @@ def encode(src, slug, meta):
 
     prev = os.path.join(OUT["preview"], slug + ".mp4")
     r = run(["ffmpeg", "-y", "-i", src, "-t", str(PREVIEW_SECS),
-             "-vf", "scale={0}:-2,format=yuv420p".format(PREVIEW_W),
-             "-c:v", "libx264", "-crf", "33", "-preset", "slow",
+             "-vf", "scale='min(iw,{0})':-2,format=yuv420p".format(PREVIEW_W),
+             "-c:v", "libx264", "-crf", "33", "-preset", "medium",
              "-movflags", "+faststart", "-an", prev])
     if r.returncode != 0:
         return None, "preview: " + r.stderr[-300:]
@@ -105,7 +104,7 @@ def encode(src, slug, meta):
         frame = tmp.name
     try:
         r = run(["ffmpeg", "-y", "-ss", at, "-i", src, "-frames:v", "1",
-                 "-vf", "scale={0}:-2".format(POSTER_W), frame])
+                 "-vf", "scale='min(iw,{0})':-2".format(POSTER_W), frame])
         if r.returncode != 0 or not os.path.getsize(frame):
             return None, "poster: " + r.stderr[-300:]
         Image.open(frame).convert("RGB").save(poster, "WEBP", quality=80, method=5)
