@@ -35,7 +35,7 @@
       <p class="cover-issue"></p>
       <h1 class="cover-headline"></h1>
       <dl class="cover-stats"></dl>
-      <a class="cover-cue" href="#work">See the work ↓</a>
+      <a class="cover-cue" href="#disciplines">See the work ↓</a>
     </div>
     <figure class="cover-shot">
       <img alt="" decoding="async">
@@ -43,8 +43,22 @@
     </figure>
   </section>
 
+  <!-- ------------------------ explore by discipline --------------------- -->
+  <section id="disciplines" class="disciplines" aria-labelledby="disciplines-label">
+    <p class="disciplines-label" id="disciplines-label">Explore by discipline</p>
+    <div class="band-list"></div>
+  </section>
+
   <!-- ------------------------------- work ------------------------------ -->
   <section id="work" class="work">
+
+    <header class="work-head">
+      <div class="work-head-titles">
+        <h2 class="work-title">All work</h2>
+        <p class="work-count" aria-live="polite"></p>
+      </div>
+      <button type="button" class="work-back" hidden>← All work</button>
+    </header>
 
     <div class="filters" role="region" aria-label="Filter projects">
       <div class="filter-line">
@@ -56,7 +70,6 @@
             <span class="visually-hidden">Search projects</span>
             <input type="search" placeholder="Search" autocomplete="off">
           </label>
-          <p class="result-count" aria-live="polite"></p>
         </div>
       </div>
       <div class="tag-panel" hidden>
@@ -67,6 +80,7 @@
 
     <div class="grid" id="grid"></div>
     <p class="empty" hidden>Nothing matches those filters. <button type="button" class="link-btn clear-filters">Clear them</button> and try again.</p>
+    <div class="grid-more"><button type="button" class="more-btn" hidden></button></div>
   </section>
 
   <!-- ------------------------------ about ------------------------------ -->

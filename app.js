@@ -15,7 +15,44 @@
   var $ = function (sel, root) { return (root || document).querySelector(sel); };
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
 
-  var state = { cat: null, tags: [], q: "" };
+  var state = { cat: null, tags: [], q: "", expanded: false };
+
+  var INITIAL_COUNT = 12;   // "All work" opens with this many, then expands
+
+  // One representative image per discipline. Each must belong to a project in
+  // that discipline; buildDisciplines falls back to the first project's first
+  // image if one ever stops matching.
+  var DISCIPLINE_IMAGE = {
+    "Email":         { image: "137-1475", pos: "center top" },
+    "Advertising":   { image: "156-113", pos: "center" },
+    "Social":        { image: "3-19",     pos: "center 30%" },
+    "Retail":        { image: "171-31",  pos: "center 42%" },
+    "Packaging":     { image: "156-30",   pos: "center 18%" },
+    "Web & UI":      { image: "3-41",    pos: "center top" },
+    "Branding":      { image: "3-17-03", pos: "center 35%" },
+    "Presentations": { image: "213-33",  pos: "center top" }
+  };
+
+  function prefersReduced() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function slugify(cat) {
+    return cat.toLowerCase().replace(/&/g, " ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  }
+
+  function catFromSlug(slug) {
+    for (var i = 0; i < CATEGORIES.length; i++) {
+      if (slugify(CATEGORIES[i]) === slug) return CATEGORIES[i];
+    }
+    return null;
+  }
+
+  function categoryCounts() {
+    var counts = {};
+    PROJECTS.forEach(function (p) { counts[p.category] = (counts[p.category] || 0) + 1; });
+    return counts;
+  }
 
   /* ------------------------------ helpers ------------------------------- */
 
@@ -209,8 +246,9 @@
 
     $$(".clear-filters").forEach(function (b) {
       b.addEventListener("click", function () {
-        state = { cat: null, tags: [], q: "" };
+        state = { cat: null, tags: [], q: "", expanded: false };
         $(".search input").value = "";
+        writeURL(null, "#work", true);
         render();
       });
     });
@@ -219,7 +257,11 @@
     var t;
     search.addEventListener("input", function () {
       clearTimeout(t);
-      t = setTimeout(function () { state.q = search.value.trim(); render(); }, 120);
+      t = setTimeout(function () {
+        state.q = search.value.trim();
+        state.expanded = false;
+        render();
+      }, 120);
     });
   }
 
@@ -231,8 +273,7 @@
     b.setAttribute("aria-pressed", "false");
     b.textContent = label;
     b.addEventListener("click", function () {
-      state.cat = (value === null || state.cat === value) ? null : value;
-      render();
+      setCategory((value === null || state.cat === value) ? null : value, { scroll: false });
     });
     return b;
   }
@@ -240,6 +281,7 @@
   function toggleTag(t) {
     var i = state.tags.indexOf(t);
     if (i === -1) state.tags.push(t); else state.tags.splice(i, 1);
+    state.expanded = false;
     render();
   }
 
@@ -275,10 +317,184 @@
     $$(".clear-filters").forEach(function (b) { b.hidden = !active; });
   }
 
+  /* --------------------- explore by discipline (index) -------------------- */
+
+  function bandHref(cat) { return "?category=" + slugify(cat) + "#work"; }
+
+  function buildDisciplines() {
+    var wrap = $(".band-list");
+    var counts = categoryCounts();
+    var n = 0;
+
+    CATEGORIES.forEach(function (cat) {
+      if (!counts[cat]) return;
+      n++;
+
+      var inCat = PROJECTS.filter(function (p) { return p.category === cat; });
+      var conf = DISCIPLINE_IMAGE[cat] || {};
+      var key = conf.image;
+      var belongs = key && inCat.some(function (p) { return p.images.indexOf(key) !== -1; });
+      if (!belongs) key = inCat[0].images[0];
+
+      var a = document.createElement("a");
+      a.className = "band is-armed";
+      a.href = bandHref(cat);
+      a.dataset.cat = cat;
+      a.setAttribute("aria-label", cat + ", " + counts[cat] + " projects");
+
+      var media = document.createElement("span");
+      media.className = "band-media";
+      var img = document.createElement("img");
+      img.src = fullSrc(key);
+      img.alt = "";
+      img.loading = "lazy";
+      img.decoding = "async";
+      if (conf.pos) img.style.objectPosition = conf.pos;
+      media.appendChild(img);
+
+      var index = document.createElement("span");
+      index.className = "band-meta band-index";
+      index.appendChild(document.createElement("span"))
+           .textContent = (n < 10 ? "0" : "") + n;
+
+      var word = document.createElement("h3");
+      word.className = "band-word";
+      word.textContent = cat;
+
+      var foot = document.createElement("span");
+      foot.className = "band-meta band-foot";
+      var count = document.createElement("span");
+      count.textContent = counts[cat] + (counts[cat] === 1 ? " project" : " projects");
+      var arrow = document.createElement("span");
+      arrow.className = "arrow";
+      arrow.textContent = "→";
+      foot.appendChild(count);
+      foot.appendChild(arrow);
+
+      a.appendChild(media);
+      a.appendChild(index);
+      a.appendChild(word);
+      a.appendChild(foot);
+
+      a.addEventListener("click", function (e) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+        e.preventDefault();
+        setCategory(cat);
+      });
+
+      wrap.appendChild(a);
+    });
+
+    revealBands();
+    trackBands();
+  }
+
+  // Reveal on scroll. The resting state is visible and JS arms the hidden
+  // state, so no-JS, a dead observer or a frozen clock can never leave a
+  // discipline invisible. A timer sweeps up anything the observer missed.
+  function revealBands() {
+    var bands = $$(".band");
+    function disarm(b) { b.classList.remove("is-armed"); }
+
+    if (prefersReduced() || !window.IntersectionObserver) {
+      bands.forEach(disarm);
+      return;
+    }
+    var io = new IntersectionObserver(function (rows) {
+      rows.forEach(function (r) {
+        if (r.isIntersecting) { disarm(r.target); io.unobserve(r.target); }
+      });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.12 });
+    bands.forEach(function (b) { io.observe(b); });
+    setTimeout(function () { bands.forEach(disarm); }, 2200);
+  }
+
+  // The band crossing the middle of the viewport shows its image. Computed on
+  // scroll rather than with IntersectionObserver: "which one is at the centre"
+  // is a continuous question, and a throttled read of eight rects is cheap.
+  function trackBands() {
+    var bands = $$(".band");
+    if (!bands.length) return;
+    var ticking = false;
+    var current = null;
+
+    function update() {
+      ticking = false;
+      var mid = window.innerHeight / 2;
+      var hit = null;
+      for (var i = 0; i < bands.length; i++) {
+        var r = bands[i].getBoundingClientRect();
+        if (r.top < mid && r.bottom > mid) { hit = bands[i]; break; }
+      }
+      if (hit === current) return;
+      if (current) current.classList.remove("is-live");
+      if (hit) hit.classList.add("is-live");
+      current = hit;
+    }
+
+    // a timer rather than requestAnimationFrame: rAF stops in throttled or
+    // non-compositing tabs, and this must keep tracking wherever it runs
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      setTimeout(update, 16);
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    update();
+  }
+
+  /* ------------------------------ routing -------------------------------- */
+
+  function writeURL(cat, hash, push) {
+    var url = location.pathname + (cat ? "?category=" + slugify(cat) : "") + (hash || "");
+    if (push) history.pushState(null, "", url);
+    else history.replaceState(null, "", url);
+  }
+
+  function setCategory(cat, opts) {
+    opts = opts || {};
+    state.cat = cat;
+    state.expanded = false;
+    writeURL(cat, "#work", opts.push !== false);
+    render();
+    if (opts.scroll !== false) {
+      document.getElementById("work").scrollIntoView({
+        block: "start",
+        behavior: prefersReduced() ? "auto" : "smooth"
+      });
+    }
+  }
+
+  // Read ?category= and the hash, and bring the page in line with them.
+  function applyURL(fromPop) {
+    var params = new URLSearchParams(location.search);
+    var cat = params.get("category") ? catFromSlug(params.get("category")) : null;
+    if (cat !== state.cat) { state.cat = cat; state.expanded = false; }
+    render();
+
+    var hash = location.hash.replace("#", "");
+    var isProject = hash && PROJECTS.some(function (p) { return p.id === hash; });
+    if (fromPop) {
+      if (isProject) openProject(hash, false);
+      else if (!viewer.hidden) closeViewer(true);
+    }
+    return isProject ? hash : null;
+  }
+
+  window.addEventListener("popstate", function () { applyURL(true); });
+
   /* -------------------------------- grid --------------------------------- */
 
   function render() {
-    var list = visibleProjects();
+    var all = visibleProjects();
+
+    // "All work" opens with a first screenful; a chosen category shows in full
+    var capped = !state.cat && !state.tags.length && !state.q &&
+                 !state.expanded && all.length > INITIAL_COUNT;
+    var list = capped ? all.slice(0, INITIAL_COUNT) : all;
+
     var grid = $("#grid");
     grid.innerHTML = "";
     list.forEach(function (p, i) {
@@ -289,10 +505,17 @@
       grid.appendChild(el);
     });
 
-    $(".result-count").textContent =
-      list.length === PROJECTS.length
-        ? PROJECTS.length + " projects"
-        : list.length + " of " + PROJECTS.length + " projects";
+    $(".work-title").textContent = state.cat || "All work";
+    $(".work-count").textContent = capped
+      ? "Showing " + list.length + " of " + all.length
+      : (all.length === PROJECTS.length
+          ? all.length + " projects"
+          : all.length + " of " + PROJECTS.length + " projects");
+    $(".work-back").hidden = !state.cat;
+
+    var more = $(".more-btn");
+    more.hidden = !capped;
+    more.textContent = "View all " + all.length + " projects";
 
     $(".empty").hidden = list.length !== 0;
     syncFilters();
@@ -376,7 +599,7 @@
 
     $(".viewer-client").textContent = p.client;
     $(".viewer-name").textContent = p.title;
-    $(".viewer-tab").href = location.pathname.replace(/[^/]*$/, "") + "index.html#" + p.id;
+    $(".viewer-tab").href = location.pathname.replace(/[^/]*$/, "") + "index.html" + location.search + "#" + p.id;
     $(".viewer-eyebrow").textContent = p.category;
     $(".viewer-title").textContent = p.title;
     $(".viewer-summary").textContent = p.summary;
@@ -396,11 +619,13 @@
       b.type = "button";
       b.textContent = t;
       b.addEventListener("click", function () {
-        closeViewer();
+        closeViewer(true);
         state.cat = null;
         state.tags = [t];
         state.q = "";
+        state.expanded = false;
         $(".search input").value = "";
+        writeURL(null, "#work", true);
         render();
         document.getElementById("work").scrollIntoView({ block: "start" });
       });
@@ -462,18 +687,18 @@
     openProject(list[i].id, true);
   }
 
-  function closeViewer() {
+  function closeViewer(skipURL) {
     if (viewer.hidden) return;
     viewer.hidden = true;
     document.body.classList.remove("is-locked");
     $(".viewer-images").innerHTML = "";
-    history.replaceState(null, "", location.pathname + location.search);
+    if (skipURL !== true) writeURL(state.cat, "", false);
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
 
   // the close button and the backdrop both carry data-close
   $$("[data-close]", viewer).forEach(function (el) {
-    el.addEventListener("click", closeViewer);
+    el.addEventListener("click", function () { closeViewer(); });
   });
   $(".viewer-prev").addEventListener("click", function () { step(-1); });
   $(".viewer-next").addEventListener("click", function () { step(1); });
@@ -503,9 +728,15 @@
 
   fillChrome();
   buildFilters();
-  render();
-  measureHeader();
+  buildDisciplines();
 
-  var hash = location.hash.replace("#", "");
-  if (hash && PROJECTS.some(function (p) { return p.id === hash; })) openProject(hash, false);
+  $(".work-back").addEventListener("click", function () { setCategory(null); });
+  $(".more-btn").addEventListener("click", function () {
+    state.expanded = true;
+    render();
+  });
+
+  var startProject = applyURL(false);
+  measureHeader();
+  if (startProject) openProject(startProject, false);
 })();

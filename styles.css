@@ -52,7 +52,7 @@ a { color: inherit; }
 ::selection { background: var(--ink); color: var(--paper); }
 
 /* the one repeated label style */
-.section-title, .side-title, .entry-client, .cover-issue,
+.section-title, .side-title, .entry-client, .cover-issue, .disciplines-label,
 .site-nav a, .contact-links a, .wordmark-role, .viewer-eyebrow {
   font-size: 10px; font-weight: 500; text-transform: uppercase;
   letter-spacing: .14em; color: var(--muted);
@@ -250,6 +250,128 @@ a { color: inherit; }
 
 .empty { text-align: center; padding: 70px 0; color: var(--muted); font-size: 14px; }
 
+/* -------------------- explore by discipline (the index) ----------------- */
+
+.disciplines { border-top: 1px solid var(--hairline); }
+
+.disciplines-label {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: clamp(30px, 4vw, 54px) var(--pad) clamp(18px, 2.4vw, 28px);
+}
+
+.band-list { border-top: 1px solid var(--hairline); }
+
+/* one full-bleed strip per discipline; the whole surface is the link */
+.band {
+  position: relative; display: grid; place-items: center;
+  min-height: clamp(220px, 34vh, 400px);
+  padding: 30px var(--pad);
+  border-bottom: 1px solid var(--hairline);
+  text-decoration: none; color: inherit;
+  overflow: hidden; isolation: isolate;
+}
+
+.band-media {
+  position: absolute; inset: 0; z-index: -1;
+  opacity: 0; transition: opacity .38s var(--ease);
+}
+.band-media img { width: 100%; height: 100%; object-fit: cover; }
+/* Contrast layer. Darker at the edges where the 10px labels sit and lighter
+   through the middle where the large word runs, so both clear AA against the
+   worst case (a near-white crop) without burying the image. */
+.band-media::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(23, 23, 20, .74) 0px,
+    rgba(23, 23, 20, .52) 76px,
+    rgba(23, 23, 20, .52) calc(100% - 76px),
+    rgba(23, 23, 20, .74) 100%);
+}
+.band.is-live .band-media { opacity: 1; }
+
+/* pointer devices get the same state on hover; touch relies on scroll alone */
+@media (hover: hover) {
+  .band:hover .band-media { opacity: 1; }
+  .band:hover .band-word { color: var(--paper); }
+  .band:hover .band-meta { color: var(--paper); }
+}
+.band:focus-visible .band-media { opacity: 1; }
+.band:focus-visible .band-word { color: var(--paper); }
+.band:focus-visible .band-meta { color: var(--paper); }
+
+.band-word {
+  margin: 0; text-align: center; max-width: 100%;
+  font-size: clamp(72px, 10vw, 160px);
+  font-weight: 500; line-height: .9; letter-spacing: -.045em;
+  color: var(--ink);
+  transition: color .38s var(--ease), opacity .5s var(--ease),
+              transform .5s var(--ease), clip-path .5s var(--ease);
+  clip-path: inset(-18% -6% -18% -6%);
+}
+.band.is-live .band-word { color: var(--paper); }
+
+.band-meta {
+  position: absolute; left: var(--pad); right: var(--pad);
+  display: flex; justify-content: space-between; align-items: baseline;
+  pointer-events: none;
+  font-size: 10px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .14em; color: var(--faint);
+  transition: color .38s var(--ease), opacity .5s var(--ease), transform .5s var(--ease);
+}
+.band-index { top: 18px; }
+.band-foot  { bottom: 18px; }
+.band-foot .arrow { transition: transform .3s var(--ease); }
+.band.is-live .band-meta { color: var(--paper); }
+
+.band:hover .band-foot .arrow,
+.band:focus-visible .band-foot .arrow { transform: translateX(6px); }
+
+.band:focus-visible { outline: 1px solid var(--ink); outline-offset: -3px; }
+.band.is-live:focus-visible { outline-color: var(--paper); }
+
+/* Reveal on scroll. JS arms this and disarms per band as it enters view, with
+   a timer that disarms everything left over. Base state is visible, so a
+   failed observer or a frozen clock can never hide a discipline. */
+.band.is-armed .band-word {
+  opacity: 0; transform: translateY(20px);
+  clip-path: inset(-18% -6% 100% -6%);
+}
+.band.is-armed .band-meta { opacity: 0; transform: translateY(10px); }
+
+/* ------------------------------ work header ----------------------------- */
+
+.work-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 24px; flex-wrap: wrap;
+  padding: clamp(44px, 6vw, 90px) 0 clamp(18px, 2.4vw, 28px);
+}
+.work-head-titles { display: flex; align-items: baseline; gap: clamp(14px, 2vw, 26px); flex-wrap: wrap; }
+.work-title {
+  margin: 0; font-size: clamp(30px, 4.4vw, 60px); font-weight: 300;
+  line-height: 1; letter-spacing: -.03em;
+}
+.work-count { margin: 0; font-size: 12px; color: var(--faint); font-variant-numeric: tabular-nums; }
+
+.work-back {
+  font: inherit; font-size: 12px; background: none; border: 0; cursor: pointer;
+  color: var(--muted); padding: 4px 0; border-bottom: 1px solid var(--hairline);
+  transition: color .18s var(--ease), border-color .18s var(--ease);
+}
+.work-back:hover { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* ------------------------------ view all -------------------------------- */
+
+.grid-more { display: flex; justify-content: center; padding: clamp(40px, 5vw, 68px) 0 0; }
+.more-btn {
+  font: inherit; font-size: 13px; background: none; cursor: pointer;
+  color: var(--ink); padding: 13px 30px;
+  border: 1px solid var(--hairline); border-radius: 999px;
+  transition: border-color .2s var(--ease), background .2s var(--ease);
+}
+.more-btn:hover { border-color: var(--ink); }
+.more-btn[hidden] { display: none; }
+
 /* -------------------------------- about --------------------------------- */
 
 .about { border-top: 1px solid var(--hairline); background: var(--paper-2); }
@@ -411,6 +533,7 @@ body.is-locked { overflow: hidden; }
 }
 
 @media (max-width: 900px) {
+  .band-word { font-size: clamp(52px, 11vw, 96px); }
   .cover { grid-template-columns: 1fr; align-items: start; }
   .cover-shot { order: -1; }
   .cover-shot img { aspect-ratio: 3 / 2; max-height: 46vh; }
@@ -431,6 +554,12 @@ body.is-locked { overflow: hidden; }
 }
 
 @media (max-width: 520px) {
+  /* touch strips: no hover, roomy targets, and the longest word still fits */
+  .band { min-height: clamp(200px, 30vh, 300px); padding: 26px var(--pad); }
+  .band-word { font-size: clamp(40px, 12.5vw, 76px); letter-spacing: -.035em; }
+  .band-index { top: 14px; }
+  .band-foot { bottom: 14px; }
+  .work-head { padding-top: 40px; }
   .grid { grid-template-columns: 1fr; gap: 34px; }
   .site-nav { gap: 14px; }
   .clients { columns: 1; }
@@ -439,11 +568,13 @@ body.is-locked { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .band.is-armed .band-word,
+  .band.is-armed .band-meta { opacity: 1; transform: none; clip-path: none; }
   * { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-delay: 0s !important; }
 }
 
 @media print {
-  .masthead, .filters, .viewer, .site-nav, .cover-cue { display: none !important; }
+  .masthead, .filters, .viewer, .site-nav, .cover-cue, .disciplines, .grid-more { display: none !important; }
   .grid { grid-template-columns: repeat(2, 1fr); }
   .entry { animation: none; }
 }
