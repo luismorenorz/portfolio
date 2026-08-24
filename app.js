@@ -3,10 +3,10 @@
    Plain JS, no dependencies, works from file:// as well as a web server.
 
    Every project is an equal tile in a three-across grid. Clicking one slides
-   up a preview sheet over the page — the grid stays behind it — with all of
-   that project's pieces stacked so they can be scrolled. Arrow keys step
-   between projects, Esc or a click on the backdrop closes it, and every tile
-   is a real link so cmd-click (or "Open in new tab") opens it standalone.
+   up a preview sheet over the page, with the grid still visible behind it and
+   all of that project's pieces stacked so they can be scrolled. Arrow keys
+   step between projects, Esc or a click on the backdrop closes it, and every
+   tile is a real link, so cmd-click (or "Open in new tab") opens it alone.
    ========================================================================= */
 
 (function () {
@@ -30,7 +30,7 @@
   function dims(key) { return IMAGES[key] || null; }
 
   function altFor(p, i) {
-    return p.client + " — " + p.title + (p.images.length > 1 ? " (" + (i + 1) + " of " + p.images.length + ")" : "");
+    return p.client + ", " + p.title + (p.images.length > 1 ? " (" + (i + 1) + " of " + p.images.length + ")" : "");
   }
 
   function matches(p) {
@@ -58,17 +58,17 @@
     $(".wordmark-role").textContent = SITE.role;
     $(".foot-name").textContent = "© " + new Date().getFullYear() + " " + SITE.name;
 
-    $(".cover-issue").textContent = (SITE.issue || "Selected work") + " — " + SITE.role;
+    $(".cover-issue").textContent = (SITE.issue || "Selected work") + " · " + SITE.role;
 
-    // Everything after the first em dash drops to the muted grey.
+    // The headline is two sentences; the second one drops to grey.
     var h1 = $(".cover-headline");
-    var split = SITE.tagline.indexOf("—");
+    var split = SITE.tagline.indexOf(". ");
     if (split === -1) {
       h1.textContent = SITE.tagline;
     } else {
-      h1.appendChild(document.createTextNode(SITE.tagline.slice(0, split + 1)));
+      h1.appendChild(document.createTextNode(SITE.tagline.slice(0, split + 1) + " "));
       var em = document.createElement("em");
-      em.textContent = SITE.tagline.slice(split + 1);
+      em.textContent = SITE.tagline.slice(split + 2);
       h1.appendChild(em);
     }
 
@@ -144,8 +144,8 @@
   /* ------------------------------- filters ------------------------------ */
 
   // A tag is only offered as a filter when it actually narrows anything.
-  // Of 64 tags, 25 sit on a single project — as filter targets those are
-  // dead ends, so they live on the project itself instead.
+  // Of 64 tags, 25 sit on a single project. As filter targets those are dead
+  // ends, so they live on the project itself instead.
   var TAG_FILTER_MIN = 3;
 
   function tagCounts() {
@@ -184,7 +184,7 @@
 
     var hidden = Object.keys(counts).length - filterable.length;
     $(".tag-note").textContent =
-      hidden + " more specific tags live on the projects themselves — open a project and click one to find its relatives.";
+      hidden + " narrower tags live on the projects. Open one and click a tag to find its relatives.";
 
     var toggle = $(".tag-toggle");
     var panel = $(".tag-panel");
@@ -283,8 +283,8 @@
     grid.innerHTML = "";
     list.forEach(function (p, i) {
       var el = entry(p, i + 1);
-      // stagger the entrance animation, but only across the first couple of
-      // rows — later tiles should not sit waiting for a delay to elapse
+      // stagger the entrance animation across the first couple of rows only.
+      // Later tiles should not sit waiting for a delay to elapse.
       el.style.setProperty("--i", Math.min(i, 8));
       grid.appendChild(el);
     });
