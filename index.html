@@ -47,24 +47,21 @@
   <section id="work" class="work">
 
     <div class="filters" role="region" aria-label="Filter projects">
-      <div class="filter-row">
-        <h2 class="filter-label">Section</h2>
-        <div class="cats" role="group" aria-label="Filter by category"></div>
-      </div>
-      <div class="filter-row">
-        <h2 class="filter-label">Tags</h2>
-        <div class="tags-wrap">
-          <div class="tags" role="group" aria-label="Filter by tag"></div>
-          <button class="tags-toggle" type="button" aria-expanded="false">Show all tags</button>
+      <div class="filter-line">
+        <nav class="cats" aria-label="Filter by category"></nav>
+        <div class="filter-tools">
+          <div class="active-tags" aria-live="polite"></div>
+          <button class="tag-toggle" type="button" aria-expanded="false">Filter by tag<span class="chev" aria-hidden="true">&#8964;</span></button>
+          <label class="search">
+            <span class="visually-hidden">Search projects</span>
+            <input type="search" placeholder="Search" autocomplete="off">
+          </label>
+          <p class="result-count" aria-live="polite"></p>
         </div>
       </div>
-      <div class="filter-row filter-row-tools">
-        <label class="search">
-          <span class="visually-hidden">Search projects</span>
-          <input type="search" placeholder="Search client, project or tag…" autocomplete="off">
-        </label>
-        <p class="result-count" aria-live="polite"></p>
-        <button class="clear-filters" type="button" hidden>Clear filters</button>
+      <div class="tag-panel" hidden>
+        <div class="tag-list" role="group" aria-label="Filter by tag"></div>
+        <p class="tag-note"></p>
       </div>
     </div>
 

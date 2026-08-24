@@ -12,13 +12,13 @@ W, H = 1200, 1500
 SITE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "site"))
 OUT = os.path.join(SITE, "assets", "full", "portrait-placeholder.webp")
 
-BG = (20, 20, 23)
-FIG = (42, 42, 47)
-FIG2 = (52, 52, 58)
-LINE = (66, 64, 60)
-TEXT = (158, 154, 146)
-DIM = (110, 107, 101)
-ACCENT = (224, 113, 74)
+BG = (227, 224, 219)      # paper-3
+FIG = (208, 203, 195)
+FIG2 = (199, 194, 185)
+LINE = (198, 192, 182)
+TEXT = (126, 122, 115)    # muted
+DIM = (169, 164, 155)     # faint
+ACCENT = (126, 122, 115)  # no accent colour any more
 
 img = Image.new("RGB", (W, H), BG)
 d = ImageDraw.Draw(img)
@@ -57,8 +57,8 @@ def font(path, size, fallback=None):
     return ImageFont.load_default()
 
 
-f_big = font("/System/Library/Fonts/Supplemental/Georgia.ttf", 54,
-             ["/System/Library/Fonts/Supplemental/Times New Roman.ttf"])
+f_big = font("/System/Library/Fonts/Supplemental/Arial.ttf", 46,
+             ["/System/Library/Fonts/Helvetica.ttc"])
 f_small = font("/System/Library/Fonts/Supplemental/Arial.ttf", 25)
 
 

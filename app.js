@@ -15,7 +15,6 @@
   var $ = function (sel, root) { return (root || document).querySelector(sel); };
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
 
-  var TOP_TAGS = 16;                       // tags shown before "Show all tags"
   var state = { cat: null, tags: [], q: "" };
 
   /* ------------------------------ helpers ------------------------------- */
@@ -33,8 +32,6 @@
   function altFor(p, i) {
     return p.client + " — " + p.title + (p.images.length > 1 ? " (" + (i + 1) + " of " + p.images.length + ")" : "");
   }
-
-  function pad2(n) { return (n < 10 ? "0" : "") + n; }
 
   function matches(p) {
     if (state.cat && p.category !== state.cat) return false;
@@ -63,7 +60,7 @@
 
     $(".cover-issue").textContent = (SITE.issue || "Selected work") + " — " + SITE.role;
 
-    // Everything after the first em dash is set in italic accent type.
+    // Everything after the first em dash drops to the muted grey.
     var h1 = $(".cover-headline");
     var split = SITE.tagline.indexOf("—");
     if (split === -1) {
@@ -146,42 +143,69 @@
 
   /* ------------------------------- filters ------------------------------ */
 
+  // A tag is only offered as a filter when it actually narrows anything.
+  // Of 64 tags, 25 sit on a single project — as filter targets those are
+  // dead ends, so they live on the project itself instead.
+  var TAG_FILTER_MIN = 3;
+
+  function tagCounts() {
+    var counts = {};
+    PROJECTS.forEach(function (p) {
+      p.tags.forEach(function (t) { counts[t] = (counts[t] || 0) + 1; });
+    });
+    return counts;
+  }
+
   function buildFilters() {
     var catWrap = $(".cats");
-    var counts = {};
-    PROJECTS.forEach(function (p) { counts[p.category] = (counts[p.category] || 0) + 1; });
-
-    catWrap.appendChild(chip("All work", PROJECTS.length, null, "cat"));
+    catWrap.appendChild(catButton("All work", null));
+    var present = {};
+    PROJECTS.forEach(function (p) { present[p.category] = true; });
     CATEGORIES.forEach(function (c) {
-      if (counts[c]) catWrap.appendChild(chip(c, counts[c], c, "cat"));
+      if (present[c]) catWrap.appendChild(catButton(c, c));
     });
 
-    var tagCounts = {};
-    PROJECTS.forEach(function (p) {
-      p.tags.forEach(function (t) { tagCounts[t] = (tagCounts[t] || 0) + 1; });
-    });
-    var sorted = Object.keys(tagCounts).sort(function (a, b) {
-      return tagCounts[b] - tagCounts[a] || a.localeCompare(b);
+    var counts = tagCounts();
+    var filterable = Object.keys(counts)
+      .filter(function (t) { return counts[t] >= TAG_FILTER_MIN; })
+      .sort(function (a, b) { return a.localeCompare(b); });
+
+    var list = $(".tag-list");
+    filterable.forEach(function (t) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "tag";
+      b.dataset.value = t;
+      b.setAttribute("aria-pressed", "false");
+      b.textContent = t;
+      b.addEventListener("click", function () { toggleTag(t); });
+      list.appendChild(b);
     });
 
-    var tagWrap = $(".tags");
-    tagWrap.classList.add("is-collapsed");
-    sorted.forEach(function (t, i) {
-      var el = chip(t, tagCounts[t], t, "tag");
-      if (i >= TOP_TAGS) el.classList.add("is-extra");
-      tagWrap.appendChild(el);
-    });
+    var hidden = Object.keys(counts).length - filterable.length;
+    $(".tag-note").textContent =
+      hidden + " more specific tags live on the projects themselves — open a project and click one to find its relatives.";
 
-    var toggle = $(".tags-toggle");
-    if (sorted.length <= TOP_TAGS) {
-      toggle.hidden = true;
-    } else {
-      toggle.addEventListener("click", function () {
-        var collapsed = tagWrap.classList.toggle("is-collapsed");
-        toggle.setAttribute("aria-expanded", String(!collapsed));
-        toggle.textContent = collapsed ? "Show all tags" : "Show fewer tags";
-      });
-    }
+    var toggle = $(".tag-toggle");
+    var panel = $(".tag-panel");
+    toggle.addEventListener("click", function () {
+      var open = panel.hidden;
+      panel.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+    });
+    document.addEventListener("click", function (e) {
+      if (panel.hidden) return;
+      if (panel.contains(e.target) || toggle.contains(e.target)) return;
+      panel.hidden = true;
+      toggle.setAttribute("aria-expanded", "false");
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !panel.hidden && viewer.hidden) {
+        panel.hidden = true;
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.focus();
+      }
+    });
 
     $$(".clear-filters").forEach(function (b) {
       b.addEventListener("click", function () {
@@ -199,39 +223,54 @@
     });
   }
 
-  function chip(label, count, value, kind) {
+  function catButton(label, value) {
     var b = document.createElement("button");
     b.type = "button";
-    b.className = "chip";
-    b.dataset.kind = kind;
+    b.className = "cat";
     if (value !== null) b.dataset.value = value;
     b.setAttribute("aria-pressed", "false");
-    b.appendChild(document.createTextNode(label));
-    var n = document.createElement("span");
-    n.className = "n";
-    n.textContent = count;
-    b.appendChild(n);
-
+    b.textContent = label;
     b.addEventListener("click", function () {
-      if (kind === "cat") {
-        state.cat = (value === null || state.cat === value) ? null : value;
-      } else {
-        var i = state.tags.indexOf(value);
-        if (i === -1) state.tags.push(value); else state.tags.splice(i, 1);
-      }
+      state.cat = (value === null || state.cat === value) ? null : value;
       render();
     });
     return b;
   }
 
+  function toggleTag(t) {
+    var i = state.tags.indexOf(t);
+    if (i === -1) state.tags.push(t); else state.tags.splice(i, 1);
+    render();
+  }
+
   function syncFilters() {
-    $$(".cats .chip").forEach(function (b) {
+    $$(".cats .cat").forEach(function (b) {
       var v = "value" in b.dataset ? b.dataset.value : null;
       b.setAttribute("aria-pressed", String(state.cat === v));
     });
-    $$(".tags .chip").forEach(function (b) {
+    $$(".tag-list .tag").forEach(function (b) {
       b.setAttribute("aria-pressed", String(state.tags.indexOf(b.dataset.value) !== -1));
     });
+
+    // selected tags stay visible on the bar even when the panel is shut
+    var bar = $(".active-tags");
+    bar.innerHTML = "";
+    state.tags.forEach(function (t) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "active-tag";
+      b.setAttribute("aria-label", "Remove tag " + t);
+      b.appendChild(document.createTextNode(t));
+      var x = document.createElement("span");
+      x.textContent = "\u2715";
+      b.appendChild(x);
+      b.addEventListener("click", function () { toggleTag(t); });
+      bar.appendChild(b);
+    });
+
+    $(".tag-toggle").firstChild.nodeValue =
+      state.tags.length ? "Filter by tag (" + state.tags.length + ")" : "Filter by tag";
+
     var active = !!state.cat || state.tags.length > 0 || !!state.q;
     $$(".clear-filters").forEach(function (b) { b.hidden = !active; });
   }
@@ -260,7 +299,7 @@
   }
 
   // One tile. Every project gets the same shape; the full piece is in the
-  // viewer, which scrolls.
+  // preview sheet, which scrolls.
   function entry(p, number) {
     var key = p.images[0];
     var d = dims(key);
@@ -286,23 +325,19 @@
     img.alt = altFor(p, 0);
     fig.appendChild(img);
     shotWrap.appendChild(fig);
-    if (p.images.length > 1) {
-      var badge = document.createElement("span");
-      badge.className = "entry-count";
-      badge.textContent = p.images.length + " pieces";
-      shotWrap.appendChild(badge);
-    }
 
     var text = document.createElement("div");
     text.className = "entry-text";
 
-    var num = document.createElement("span");
-    num.className = "entry-num";
-    num.textContent = pad2(number);
-
-    var client = document.createElement("p");
-    client.className = "entry-client";
-    client.textContent = p.client + (p.year ? " · " + p.year : "");
+    var meta = document.createElement("p");
+    meta.className = "entry-client";
+    meta.appendChild(document.createTextNode(p.client + (p.year ? " · " + p.year : "")));
+    if (p.images.length > 1) {
+      var n = document.createElement("span");
+      n.className = "count";
+      n.textContent = " · " + p.images.length + " pieces";
+      meta.appendChild(n);
+    }
 
     var title = document.createElement("h3");
     title.className = "entry-title";
@@ -310,14 +345,13 @@
 
     var tags = document.createElement("ul");
     tags.className = "entry-tags";
-    p.tags.slice(0, 4).forEach(function (t) {
+    p.tags.slice(0, 3).forEach(function (t) {
       var li = document.createElement("li");
       li.textContent = t;
       tags.appendChild(li);
     });
 
-    text.appendChild(num);
-    text.appendChild(client);
+    text.appendChild(meta);
     text.appendChild(title);
     text.appendChild(tags);
 
