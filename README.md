@@ -27,17 +27,30 @@ node build/serve.js
 
 Then open http://localhost:8788
 
-## Put it online
+## Live site
 
-The whole site is the `site/` folder — about 30 MB. Any static host works:
+**https://luismorenorz.github.io/portfolio/**
 
-- **Netlify Drop** — go to https://app.netlify.com/drop and drag the `site`
-  folder onto the page. You get a live URL in seconds. Free.
-- **GitHub Pages** — push `site/` to a repo, then Settings → Pages → deploy
-  from that folder.
-- **Vercel / Cloudflare Pages** — point them at the folder, no build command.
+Hosted on GitHub Pages from the repo `luismorenorz/portfolio`. That link is
+public — put it on your CV, LinkedIn and in emails.
 
-Once it's live you can put that one link on your CV, LinkedIn and in emails.
+## Update the live site
+
+The repo mirrors this folder, with the contents of `site/` at the root. To
+publish a change:
+
+```bash
+cd /path/to/your/clone-of-portfolio
+# copy in whatever you changed, e.g. the data file:
+#   cp "…/Portfolio/site/data/projects.js" data/projects.js
+git add -A
+git commit -m "Update projects"
+git push
+```
+
+GitHub Pages rebuilds in about a minute.
+
+Don't have the clone yet? `gh repo clone luismorenorz/portfolio`
 
 ## Edit the content
 
