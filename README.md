@@ -1,38 +1,33 @@
 # Luis Moreno, portfolio site
 
-A static portfolio built from the Figma file *Oct-2025-Luis-Moreno-Resume*.
-54 projects, 165 pieces, filterable by category and tag. No build step and no
-dependencies. Anyone with the link can see the work.
-
-A cover at the top, then every project as an equal tile, three across. Click
-a tile and a preview sheet slides up over the page, with the grid still
-visible behind it and all of that project's pieces stacked so you can scroll
-through them. Arrow keys move between projects; Esc or a click outside closes
-it.
-
-Every tile is also a real link, so cmd-click (or the **Open in new tab ↗**
-button in the preview) opens that project on its own page. Useful for sending
-someone a single project instead of the whole site.
-
-## Look at it locally
-
-Double-click `site/index.html`. It works straight off the disk.
-
-If you'd rather run it on a local server (closer to how it behaves once
-published):
-
-```bash
-node build/serve.js
-```
-
-Then open http://localhost:8788
-
-## Live site
-
 **https://luismorenorz.github.io/portfolio/**
 
-Hosted on GitHub Pages from the repo `luismorenorz/portfolio`. The link is
-public. Put it on your CV, on LinkedIn, in emails.
+A static portfolio built from the Figma file *Oct-2025-Luis-Moreno-Resume* plus
+a folder of motion work. 70 projects, 219 pieces, 10 disciplines. No build
+step, no dependencies. Anyone with the link can see the work.
+
+## The six chapters
+
+1. **Living cover** — 100svh, composed from four real pieces at four scales,
+   cropped by the edges, with a little parallax. No placeholder.
+2. **Selected stories** — Greenhouse, Rove and Café Café, each with its own
+   composition and its own long-form case study.
+3. **Discipline reel** — one sticky stage over a tall track. The word, the
+   background and the count change as you scroll. Touch gets chapters instead.
+4. **Work archive** — the whole 70 in three views: Curated, Grid, Index.
+5. **About manifesto** — a statement, the body copy, and the capability list.
+6. **Contact stage** — near-black, the email at full scale.
+
+## URLs worth knowing
+
+    ?view=curated | ?view=grid | ?view=index      how the archive is shown
+    ?category=email                                one discipline
+    ?category=email&view=index#archive             both together
+    #project-id                                    opens that project's panel
+    case.html?story=greenhouse                     a long-form case study
+
+Back, Forward and reload all restore the view and the category. Tags and the
+search box are deliberately not in the URL, so a history move clears them.
 
 ## Update the live site
 
@@ -60,26 +55,27 @@ in any text editor.
 **Your details** are at the top, in `SITE`: name, role, the headline sentence,
 email, links, the About paragraphs and the "What I do" list.
 
-### The hero photo, replace this first
+### The cover
+
+The hero is a composition of four real pieces, not a portrait. Which four, and
+how they sit, is the `COVER` array near the top of `site/app.js`:
 
 ```js
-cover:    { image: "portrait-placeholder.webp", caption: "" },
-portrait: { image: "3-17-09", caption: "Café Café brand identity" },
+var COVER = [
+  { cls: "p1", key: "171-31",  kind: "image" },   // dominant, right
+  { cls: "p2", key: "2-10",    kind: "image" },   // tall email, bottom left
+  { cls: "p3", key: "3-17-10", kind: "image" },   // branding, bottom centre
+  { cls: "p4", key: "…",       kind: "poster" }   // a motion frame, top
+];
 ```
 
-`cover` is the big photo at the top, and right now it holds **a placeholder**:
-a grey figure that says "your photo here". Swap it for a photo of yourself:
+`kind: "image"` reads from `assets/thumb`, `kind: "poster"` from
+`assets/poster` (any clip name works). Their positions are the `.cover-piece`
+rules in `styles.css`; they are placed around a clear channel so nothing sits
+behind the type.
 
-1. Drop the file into `site/assets/full/`, say `luis.jpg`.
-2. Write the file name here, extension and all:
-   `cover: { image: "luis.jpg", caption: "" }`
-
-It crops to a tall 4:5 on desktop and a wide 3:2 on phones, both from the
-centre, so a portrait-orientation shot with your face near the middle works
-best. The caption is optional. Leave it `""` and nothing shows.
-
-`portrait` is the smaller picture beside the About text, same rules. Set
-either to `null` to hide it.
+The words come from `SITE` in `site/data/projects.js`: `headline`, `support`,
+`issue`, `location`, and `statement` for the About section.
 
 ### Each project
 
@@ -101,9 +97,9 @@ either to `null` to hide it.
   4:5 from the top, so put the strongest part of the piece up there.
 - **Add a tag**: type it into the `tags` array. A tag becomes a filter once
   three projects share it; below that it still shows on the project and stays
-  clickable from the preview sheet. This is how you mark the emails that are
-  also `Motion` or `Print`. I could not tell which emails were animated from
-  the static exports, so nothing carries `Motion` yet.
+  clickable from the preview panel.
+- **Add motion**: `videos: ["slug"]`, alongside or instead of `images`. Run
+  `python3 build/motion.py <folder>` first to encode the clips.
 - **Reorder projects**: move the block up or down. The page follows file order.
 - **Hide a project**: delete its block. The image files can stay.
 - **Change a category**: keep to the eight in the `CATEGORIES` list at the top,
@@ -126,13 +122,19 @@ either to `null` to hide it.
 
 ```
 site/            the website, the only folder you need to publish
-  index.html
-  styles.css
-  app.js
-  data/projects.js   ← all the content and your details
+  index.html         the six chapters
+  case.html          the case-study template, driven by ?story=
+  styles.css         the shell
+  case.css           the long-form layer
+  app.js             cover, stories, reel, archive, panel
+  case.js            renders one story
+  data/projects.js   ← all 70 projects and your details
+  data/stories.js    ← the three case studies
   data/images.js     ← auto-generated image sizes
-  assets/full/       165 full-size WebP images (21 MB)
-  assets/thumb/      165 grid thumbnails (6 MB)
+  data/videos.js     ← auto-generated clip sizes and durations
+  assets/full/       166 full-size WebP images
+  assets/thumb/      166 grid thumbnails
+  assets/video/      54 clips, assets/preview/ hover loops, assets/poster/ stills
 
 build/           the extraction pipeline, kept for re-runs. Not published.
   manifest.tsv       every artboard pulled out of Figma
@@ -141,7 +143,7 @@ build/           the extraction pipeline, kept for re-runs. Not published.
   contact/           labelled contact sheets of everything
   slice.py           cuts the Figma sheets into single artboards
   optimize.py        makes the WebP versions
-  placeholder.py     draws the hero placeholder image
+  motion.py          encodes video and GIF into web assets
   serve.js           tiny local web server
 ```
 
@@ -153,3 +155,13 @@ it with the site.
 The extraction grouped artboards temporarily to export them in batches, then
 ungrouped everything. The file ended exactly as it started, with 165 top-level
 nodes and no leftover groups.
+
+## The three case studies
+
+They live in `site/data/stories.js`. Each one lists the project ids it draws
+from, so the archive and the case study can never drift apart, and a list of
+sections. A section is one of `text`, `full`, `duo`, `trio`, `aside`, `quote`
+or `reel`, which is how the layout changes as you read.
+
+Everything in them is written from what is visible in the work. No invented
+results, metrics or testimonials.

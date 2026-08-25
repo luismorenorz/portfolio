@@ -68,18 +68,6 @@
   /* AI stays a filter and a capability, without a stage of its own */
   var REEL_ORDER = ["Email", "Advertising", "Motion", "Social", "Retail", "Packaging", "Web & UI", "Branding", "Presentations"];
 
-  var CAPABILITIES = [
-    ["Email", "Lifecycle, campaign and promotional email, built to survive the clients that break everything."],
-    ["Advertising", "Paid social, display and banner sets, resized across every placement a campaign needs."],
-    ["Motion", "Animated email heroes, shoppable and banner video, campaign cuts for vertical and widescreen."],
-    ["Retail", "Free-standing displays, cooler wraps and shelf blades, from render through to print dielines."],
-    ["Packaging", "Cartons, sleeves and spec sheets, bilingual where the market asks for it."],
-    ["Web & UI", "Landing pages and product screens, responsive, built around one clear first step."],
-    ["Branding", "Marks, palettes, type systems and the applications that prove they hold."],
-    ["Presentations", "Pitch and capability decks with data slides that stay readable."],
-    ["AI-assisted", "AI-assisted art direction: generated film and image-to-video, used where it earns its place."]
-  ];
-
   /* ------------------------------ helpers ------------------------------- */
 
   function thumbSrc(k) { return "assets/thumb/" + k + ".webp"; }
@@ -974,8 +962,18 @@
       about.appendChild(el);
     });
 
+    $(".cover-eyebrow").innerHTML = "";
+    [SITE.name, SITE.role, SITE.location].forEach(function (t) {
+      $(".cover-eyebrow").appendChild(document.createElement("span")).textContent = t;
+    });
+    $(".cover-headline .reveal").textContent = SITE.headline;
+    $(".cover-support").textContent = SITE.support;
+    $(".cover-issue").textContent = SITE.issue;
+    $(".about-statement .reveal").textContent = SITE.statement;
+    $(".contact-place").textContent = SITE.location;
+
     var caps = $(".capabilities");
-    CAPABILITIES.forEach(function (pair) {
+    (SITE.capabilities || []).forEach(function (pair) {
       var row = document.createElement("div");
       var dt = document.createElement("dt"); dt.className = "cap-term"; dt.textContent = pair[0];
       var dd = document.createElement("dd"); dd.textContent = pair[1];
