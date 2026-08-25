@@ -2,21 +2,38 @@
 
 **https://luismorenorz.github.io/portfolio/**
 
-A static portfolio built from the Figma file *Oct-2025-Luis-Moreno-Resume* plus
-a folder of motion work. 70 projects, 219 pieces, 10 disciplines. No build
-step, no dependencies. Anyone with the link can see the work.
+A static production-design portfolio built from the Figma file
+*Oct-2025-Luis-Moreno-Resume* plus a folder of motion work. 70 projects, 219
+pieces, 10 disciplines. No build step, no dependencies. Anyone with the link
+can see the work.
 
-## The six chapters
+Production first, case studies second: the work is two scrolls from the top.
 
-1. **Living cover** — 100svh, composed from four real pieces at four scales,
-   cropped by the edges, with a little parallax. No placeholder.
-2. **Selected stories** — Greenhouse, Rove and Café Café, each with its own
-   composition and its own long-form case study.
-3. **Discipline reel** — one sticky stage over a tall track. The word, the
-   background and the count change as you scroll. Touch gets chapters instead.
-4. **Work archive** — the whole 70 in three views: Curated, Grid, Index.
-5. **About manifesto** — a statement, the body copy, and the capability list.
-6. **Contact stage** — near-black, the email at full scale.
+## The seven parts
+
+1. **Living cover** — 100svh, composed from four real pieces at four scales
+   (advertising, email, retail, motion), cropped by the edges, with a little
+   parallax. No placeholder, and no single channel dominating.
+2. **Quick production menu** — a full-bleed matrix of routes with live counts:
+   All work first, then Advertising, Motion, Email, then the rest. Once it
+   scrolls away it returns as a compact sticky bar (Work / Advertising /
+   Motion / Email / More), which steps aside while the archive's own filter
+   bar owns the sticky band.
+3. **Work archive** — the whole 70 in three views: Curated, Grid, Index. A
+   curated card shows a deliverable family: two or three pieces of the *same*
+   project, plus the piece count, the number of formats and the discipline.
+4. **Selected production systems** — Greenhouse, Rove and Café Café, each a
+   compact horizontal band with counted pieces, formats and channels, and a
+   long-form case study behind it.
+5. **Production capabilities** — eleven lines from brief to shippable file,
+   with a preview panel. AI sits lower in the hierarchy: a way of working,
+   not a headline craft.
+6. **About** — the statement and the body copy.
+7. **Contact** — near-black, the email at full scale.
+
+Every number on the page is measured from the files, never estimated: piece
+counts are the images and clips themselves, and "formats" is the count of
+distinct aspect ratios actually present in a project.
 
 ## URLs worth knowing
 
@@ -53,7 +70,8 @@ Everything you'd want to change lives in **`site/data/projects.js`**. Open it
 in any text editor.
 
 **Your details** are at the top, in `SITE`: name, role, the headline sentence,
-email, links, the About paragraphs and the "What I do" list.
+the supporting line, the three proof points, email, links, the About
+paragraphs and the capability list.
 
 ### The cover
 
@@ -62,9 +80,9 @@ how they sit, is the `COVER` array near the top of `site/app.js`:
 
 ```js
 var COVER = [
-  { cls: "p1", key: "171-31",  kind: "image" },   // dominant, right
+  { cls: "p1", key: "156-113", kind: "image" },   // advertising, dominant
   { cls: "p2", key: "2-10",    kind: "image" },   // tall email, bottom left
-  { cls: "p3", key: "3-17-10", kind: "image" },   // branding, bottom centre
+  { cls: "p3", key: "171-31",  kind: "image" },   // retail, bottom centre
   { cls: "p4", key: "…",       kind: "poster" }   // a motion frame, top
 ];
 ```
@@ -75,7 +93,9 @@ rules in `styles.css`; they are placed around a clear channel so nothing sits
 behind the type.
 
 The words come from `SITE` in `site/data/projects.js`: `headline`, `support`,
-`issue`, `location`, and `statement` for the About section.
+`proofs` (the three lines under the supporting copy), `issue`, `location`, and
+`statement` for the About section. `capabilities` drives the capability
+matrix: `[name, what it is, preview key, "image" | "poster"]`.
 
 ### Each project
 
@@ -102,8 +122,9 @@ The words come from `SITE` in `site/data/projects.js`: `headline`, `support`,
   `python3 build/motion.py <folder>` first to encode the clips.
 - **Reorder projects**: move the block up or down. The page follows file order.
 - **Hide a project**: delete its block. The image files can stay.
-- **Change a category**: keep to the eight in the `CATEGORIES` list at the top,
-  or edit that list.
+- **Change a category**: keep to the ten in the `CATEGORIES` list at the top,
+  or edit that list. The quick menu's routes are `ROUTES_LEAD` and
+  `ROUTES_REST` in `site/app.js`; their counts are read from the data.
 - **Change the line above the headline**: `issue: "Selected work"`.
 
 ## Add new work later
@@ -122,14 +143,14 @@ The words come from `SITE` in `site/data/projects.js`: `headline`, `support`,
 
 ```
 site/            the website, the only folder you need to publish
-  index.html         the six chapters
+  index.html         the seven parts
   case.html          the case-study template, driven by ?story=
   styles.css         the shell
   case.css           the long-form layer
-  app.js             cover, stories, reel, archive, panel
+  app.js             cover, menu, archive, systems, capabilities, panel
   case.js            renders one story
   data/projects.js   ← all 70 projects and your details
-  data/stories.js    ← the three case studies
+  data/stories.js    ← the three production systems / case studies
   data/images.js     ← auto-generated image sizes
   data/videos.js     ← auto-generated clip sizes and durations
   assets/full/       166 full-size WebP images
@@ -156,11 +177,12 @@ The extraction grouped artboards temporarily to export them in batches, then
 ungrouped everything. The file ended exactly as it started, with 165 top-level
 nodes and no leftover groups.
 
-## The three case studies
+## The three production systems
 
 They live in `site/data/stories.js`. Each one lists the project ids it draws
-from, so the archive and the case study can never drift apart, and a list of
-sections. A section is one of `text`, `full`, `duo`, `trio`, `aside`, `quote`
+from, so the archive and the case study can never drift apart — the piece,
+format and channel counts on the homepage are computed from those projects —
+and a list of sections. A section is one of `text`, `full`, `duo`, `trio`, `aside`, `quote`
 or `reel`, which is how the layout changes as you read.
 
 Everything in them is written from what is visible in the work. No invented

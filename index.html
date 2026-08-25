@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Luis Moreno — Graphic &amp; Digital Designer</title>
-<meta name="description" content="Luis Moreno, graphic and digital designer in Monterrey. Visual systems across campaigns, email, retail, motion, web and brand.">
-<meta property="og:title" content="Luis Moreno — From inbox to shelf">
-<meta property="og:description" content="Visual systems across campaigns, email, retail, motion, web and brand. Selected work 2025–2026.">
+<title>Luis Moreno — Production Designer &amp; Graphic Designer</title>
+<meta name="description" content="Luis Moreno, production designer in Monterrey. High-volume, brand-consistent creative across advertising, motion, email, retail, packaging, web and presentations.">
+<meta property="og:title" content="Luis Moreno — Design at production scale">
+<meta property="og:description" content="High-volume, brand-consistent creative across advertising, motion, email, retail, packaging, web and presentations. Selected work 2025–2026.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230f0f0d'/><text y='71' x='50' text-anchor='middle' font-family='Helvetica,Arial' font-weight='700' font-size='58' fill='%23f3f2f0'>M</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,9 +23,9 @@
     <span class="wordmark-role"></span>
   </a>
   <nav class="site-nav">
-    <a href="#stories">Stories</a>
-    <a href="#reel">Disciplines</a>
-    <a href="#archive">Archive</a>
+    <a class="nav-work" href="#archive">Work</a>
+    <a href="#systems"><span class="nav-long">Production </span>Systems</a>
+    <a href="#capabilities">Capabilities</a>
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -38,51 +38,30 @@
     <div class="cover-stack" aria-hidden="true"></div>
 
     <div class="cover-type">
-      <p class="cover-eyebrow">
-        <span>Luis Moreno</span><span>Graphic &amp; Digital Designer</span><span>Monterrey, Mexico</span>
-      </p>
-      <h1 class="cover-headline" id="cover-headline"><span class="reveal">From inbox to shelf.</span></h1>
-      <p class="cover-support">I build visual systems across campaigns, email, retail, motion, web and brand.</p>
+      <p class="cover-eyebrow"></p>
+      <h1 class="cover-headline" id="cover-headline"><span class="reveal"></span></h1>
+      <p class="cover-support"></p>
+      <ul class="cover-proofs"></ul>
     </div>
 
     <div class="cover-foot">
       <p class="cover-issue">Selected work 2025–2026</p>
-      <a class="cover-cue" href="#stories">Scroll to explore <span aria-hidden="true">↓</span></a>
+      <a class="cover-cue" href="#browse">Scroll to explore <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 
-  <!-- ========================= 2. SELECTED STORIES ======================= -->
-  <section id="stories" class="stories" aria-labelledby="stories-label">
-    <header class="band-head">
-      <h2 class="band-label" id="stories-label">Selected stories</h2>
-      <p class="band-note">Three systems, start to finish.</p>
-    </header>
-    <div class="stories-list"></div>
+  <!-- ====================== 2. QUICK PRODUCTION MENU ===================== -->
+  <section id="browse" class="browse" aria-labelledby="browse-label">
+    <h2 class="band-label" id="browse-label">Browse production work</h2>
+    <nav class="browse-grid" aria-label="Jump to a discipline"></nav>
   </section>
 
-  <!-- ========================= 3. DISCIPLINE REEL ======================== -->
-  <section id="reel" class="reel" aria-labelledby="reel-label">
-    <div class="reel-track">
-      <div class="reel-stage">
-        <div class="reel-media" aria-hidden="true"></div>
-        <div class="reel-inner">
-          <header class="reel-head">
-            <h2 class="band-label" id="reel-label">Disciplines</h2>
-            <p class="reel-progress"><span class="reel-now">01</span><span class="reel-bar"><i></i></span><span class="reel-total"></span></p>
-          </header>
-          <div class="reel-word-wrap"><h3 class="reel-word"></h3></div>
-          <footer class="reel-foot">
-            <p class="reel-count"></p>
-            <a class="reel-cta" href="#archive">View the work <span aria-hidden="true">→</span></a>
-          </footer>
-        </div>
-      </div>
-    </div>
-    <!-- touch devices get chapters instead of a 600vh sticky stage -->
-    <div class="reel-chapters"></div>
-  </section>
+  <!-- compact version, pinned once the menu above scrolls away -->
+  <div class="quickbar" hidden>
+    <nav class="quickbar-inner" aria-label="Production shortcuts"></nav>
+  </div>
 
-  <!-- ========================== 4. WORK ARCHIVE ========================== -->
+  <!-- ========================== 3. WORK ARCHIVE ========================== -->
   <section id="archive" class="work" aria-labelledby="archive-title">
     <header class="work-head">
       <div class="work-head-titles">
@@ -121,7 +100,7 @@
 
     <div class="index-wrap" hidden>
       <table class="index-table">
-        <thead><tr><th scope="col">Client</th><th scope="col">Project</th><th scope="col">Discipline</th><th scope="col">Year</th></tr></thead>
+        <thead><tr><th scope="col">Client</th><th scope="col">Project</th><th scope="col">Discipline</th><th scope="col">Deliverables</th><th scope="col">Year</th></tr></thead>
         <tbody></tbody>
       </table>
       <figure class="index-peek" aria-hidden="true"><img alt="" decoding="async"></figure>
@@ -131,14 +110,36 @@
     <div class="grid-more"><button type="button" class="more-btn" hidden></button></div>
   </section>
 
+  <!-- =================== 4. SELECTED PRODUCTION SYSTEMS ================== -->
+  <section id="systems" class="systems" aria-labelledby="systems-label">
+    <header class="band-head">
+      <h2 class="band-label" id="systems-label">Selected production systems</h2>
+      <p class="band-note">Campaigns built across formats, sizes and channels.</p>
+    </header>
+    <div class="systems-list"></div>
+  </section>
+
+  <!-- ===================== 5. PRODUCTION CAPABILITIES ==================== -->
+  <section id="capabilities" class="caps" aria-labelledby="caps-label">
+    <div class="caps-inner">
+      <header class="caps-head">
+        <h2 class="band-label" id="caps-label">Production capabilities</h2>
+        <p class="caps-note">What I can take from brief to shippable file.</p>
+      </header>
+      <div class="caps-body">
+        <ul class="caps-list"></ul>
+        <figure class="caps-preview" aria-hidden="true"><img alt="" decoding="async"></figure>
+      </div>
+    </div>
+  </section>
+
   <!-- ========================= 5. ABOUT MANIFESTO ======================== -->
   <section id="about" class="about" aria-labelledby="about-label">
     <h2 class="visually-hidden" id="about-label">About</h2>
-    <div class="about-statement"><span class="reveal">I design the system, then make it move.</span></div>
+    <div class="about-statement"><span class="reveal"></span></div>
 
     <div class="about-body-wrap">
       <div class="about-body"></div>
-      <dl class="capabilities"></dl>
     </div>
 
     <div class="clients-wall">
@@ -150,10 +151,11 @@
   <!-- ========================== 6. CONTACT STAGE ========================= -->
   <section id="contact" class="contact" aria-labelledby="contact-label">
     <h2 class="band-label" id="contact-label">Contact</h2>
+    <p class="contact-role"></p>
     <p class="contact-lead">Open to freelance and full-time opportunities.</p>
     <a class="contact-email" href="#"></a>
     <ul class="contact-links"></ul>
-    <p class="contact-place">Monterrey, Mexico</p>
+    <p class="contact-place"></p>
   </section>
 
 </main>

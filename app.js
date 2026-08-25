@@ -1,9 +1,9 @@
 /* =========================================================================
-   Luis Moreno — The Living Portfolio
+   Luis Moreno — production portfolio
 
-   Six chapters: a living cover built from real work, three selected stories,
-   a sticky discipline reel, the archive in three views, an about manifesto
-   and a contact stage.
+   Production first, case studies second. The page runs: living cover, a
+   quick production menu, the work archive in three views, the selected
+   production systems, the capability matrix, about and contact.
 
    No dependencies. Works from file:// and from a GitHub Pages subpath.
    Motion rule throughout: animate transform and clip-path, never opacity on
@@ -27,9 +27,9 @@
      wide renders, tall email, square social and motion. Order matters — the
      grid gives positions 1, 2, 8 and 12 the most room. */
   var CURATED = [
-    "greenhouse-dtd-displays", "cafe-cafe", "rove-campaigns", "spartan-watch-bands",
+    "spartan-watch-bands", "greenhouse-dtd-displays", "rove-campaigns", "cafe-cafe",
     "gh-campaign-video", "cosmedica-social", "carevio", "pkg-vibrance",
-    "generac-ai-film", "deck-trace-ai", "greenhouse-fridge", "zillow-rentals-motion"
+    "greenhouse-smoothies", "deck-trace-ai", "greenhouse-fridge", "zillow-rentals-motion"
   ];
 
   function curatedList() {
@@ -45,28 +45,21 @@
     return out.slice(0, CURATED_COUNT);
   }
 
-  /* the cover composition: four real pieces at four scales */
+  /* The cover composition: four real pieces at four scales, one each from
+     advertising, email, retail and motion. Advertising leads; email is the
+     narrow piece on the left, so no single channel owns the page. */
   var COVER = [
-    { cls: "p1", key: "171-31",  kind: "image" },                                        // Greenhouse retail
+    { cls: "p1", key: "156-113", kind: "image" },                                        // Greenhouse advertising
     { cls: "p2", key: "2-10",    kind: "image" },                                        // Rove email, tall
-    { cls: "p3", key: "3-17-10", kind: "image" },                                        // Café Café shopfront
+    { cls: "p3", key: "171-31",  kind: "image" },                                        // Greenhouse retail
     { cls: "p4", key: "20251112-gh-dtd-hdvideobanner-b-1080x1920-v2", kind: "poster" }   // motion frame
   ];
 
-  /* one background per discipline, always from a project in that discipline */
-  var REEL_IMAGE = {
-    "Email":         { key: "2-10",    kind: "image" },
-    "Advertising":   { key: "156-100", kind: "image" },
-    "Motion":        { key: "hero-1",  kind: "poster" },
-    "Social":        { key: "18-10",   kind: "image" },
-    "Retail":        { key: "171-31",  kind: "image" },
-    "Packaging":     { key: "156-40",  kind: "image" },
-    "Web & UI":      { key: "3-41",    kind: "image" },
-    "Branding":      { key: "3-17-03", kind: "image" },
-    "Presentations": { key: "213-33",  kind: "image" }
-  };
-  /* AI stays a filter and a capability, without a stage of its own */
-  var REEL_ORDER = ["Email", "Advertising", "Motion", "Social", "Retail", "Packaging", "Web & UI", "Branding", "Presentations"];
+  /* the quick production menu: the four routes people ask for first, then
+     the rest. AI is a way of working, not a route, so it stays in the
+     archive filters and in the capability list. */
+  var ROUTES_LEAD = ["Advertising", "Motion", "Email"];
+  var ROUTES_REST = ["Social", "Retail", "Packaging", "Web & UI", "Branding", "Presentations"];
 
   /* ------------------------------ helpers ------------------------------- */
 
@@ -94,6 +87,28 @@
 
   function hasMotion(p) { return !!(p.videos && p.videos.length); }
   function pieceCount(p) { return (p.images ? p.images.length : 0) + (p.videos ? p.videos.length : 0); }
+
+  /* How many shapes a project was delivered in. Measured from the files
+     themselves — the aspect ratios actually present — never estimated. */
+  function formatCount(p) {
+    var seen = {};
+    (p.images || []).forEach(function (k) {
+      var d = dims(k);
+      if (d) seen[(Math.round((d[2] / d[3]) * 20) / 20).toFixed(2)] = 1;
+    });
+    (p.videos || []).forEach(function (k) {
+      var m = vmeta(k);
+      if (m) seen[(Math.round((m.w / m.h) * 20) / 20).toFixed(2)] = 1;
+    });
+    return Object.keys(seen).length;
+  }
+
+  function deliverableLine(p) {
+    var n = pieceCount(p), f = formatCount(p);
+    var out = n + (n === 1 ? " piece" : " pieces");
+    if (f > 1) out += " · " + f + " formats";
+    return out;
+  }
 
   function coverKey(p) {
     if (p.images && p.images.length) return { key: p.images[0], kind: "image" };
@@ -200,24 +215,149 @@
     update();
   }
 
-  /* ------------------------- 2. selected stories ------------------------- */
+  /* ---------------------- 2. quick production menu ----------------------- */
 
-  var STORY_SHAPE = ["story-full", "story-split", "story-stack"];
+  function routeLink(label, cat, count, cls) {
+    var a = document.createElement("a");
+    a.className = "route" + (cls ? " " + cls : "");
+    a.href = cat ? "?category=" + slugify(cat) + "&view=grid#archive" : "?view=grid#archive";
+    a.addEventListener("click", function (e) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      if (!cat && state.view === "curated") state.view = "grid";
+      setCategory(cat);
+    });
+    var name = document.createElement("span");
+    name.className = "route-name";
+    name.appendChild(document.createTextNode(label + " "));
+    var arrow = document.createElement("span");
+    arrow.className = "arrow"; arrow.setAttribute("aria-hidden", "true"); arrow.textContent = "→";
+    name.appendChild(arrow);
+    var n = document.createElement("span");
+    n.className = "route-count";
+    n.textContent = count + (count === 1 ? " project" : " projects");
+    a.appendChild(name); a.appendChild(n);
+    return a;
+  }
 
-  function buildStories() {
-    var wrap = $(".stories-list");
+  function buildBrowse() {
+    var wrap = $(".browse-grid");
+    var counts = categoryCounts();
+    wrap.appendChild(routeLink("All work", null, PROJECTS.length, "is-all"));
+    ROUTES_LEAD.forEach(function (c) {
+      if (counts[c]) wrap.appendChild(routeLink(c, c, counts[c]));
+    });
+    ROUTES_REST.forEach(function (c) {
+      if (counts[c]) wrap.appendChild(routeLink(c, c, counts[c], "is-minor"));
+    });
+  }
 
-    STORIES.forEach(function (s, i) {
-      var shape = STORY_SHAPE[i % STORY_SHAPE.length];
-      var sec = document.createElement("article");
-      sec.className = "story " + shape;
+  /* The same menu, compressed, once the full one has scrolled away. It steps
+     aside while the archive's own filter bar owns the sticky band, so the two
+     never stack on top of each other. */
+  function buildQuickbar() {
+    var bar = $(".quickbar");
+    var inner = $(".quickbar-inner");
+    var counts = categoryCounts();
 
+    function shortcut(label, cat, lead) {
+      var a = document.createElement("a");
+      a.href = cat ? "?category=" + slugify(cat) + "&view=grid#archive" : "?view=grid#archive";
+      if (lead) a.className = "is-lead";
+      a.textContent = label;
+      a.addEventListener("click", function (e) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+        e.preventDefault();
+        if (!cat && state.view === "curated") state.view = "grid";
+        setCategory(cat);
+        closeMore();
+      });
+      return a;
+    }
+
+    inner.appendChild(shortcut("Work", null, true));
+    ROUTES_LEAD.forEach(function (c) { if (counts[c]) inner.appendChild(shortcut(c, c)); });
+
+    var wrapMore = document.createElement("div");
+    wrapMore.className = "more-wrap";
+    var moreBtn = document.createElement("button");
+    moreBtn.type = "button";
+    moreBtn.setAttribute("aria-expanded", "false");
+    moreBtn.textContent = "More ▾";
+    var list = document.createElement("div");
+    list.className = "more-list";
+    list.hidden = true;
+    ROUTES_REST.forEach(function (c) { if (counts[c]) list.appendChild(shortcut(c, c)); });
+    if (counts["AI"]) list.appendChild(shortcut("AI", "AI"));
+    wrapMore.appendChild(moreBtn); wrapMore.appendChild(list);
+    inner.appendChild(wrapMore);
+
+    function closeMore() { list.hidden = true; moreBtn.setAttribute("aria-expanded", "false"); }
+    moreBtn.addEventListener("click", function () {
+      var open = list.hidden;
+      list.hidden = !open;
+      moreBtn.setAttribute("aria-expanded", String(open));
+    });
+    document.addEventListener("click", function (e) {
+      if (list.hidden || wrapMore.contains(e.target)) return;
+      closeMore();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !list.hidden) { closeMore(); moreBtn.focus(); }
+    });
+
+    var browse = $("#browse"), archive = $("#archive");
+    var on = false, ticking = false;
+    function update() {
+      ticking = false;
+      var head = $(".masthead").getBoundingClientRect().height;
+      var b = browse.getBoundingClientRect();
+      var a = archive.getBoundingClientRect();
+      // past the menu, and not while the archive's filter bar is pinned
+      var want = b.bottom < head + 4 && !(a.top < head + 60 && a.bottom > head + 120);
+      if (want === on) return;
+      on = want;
+      bar.hidden = false;
+      bar.classList.toggle("is-on", on);
+      if (!on) closeMore();
+    }
+    function onScroll() { if (ticking) return; ticking = true; setTimeout(update, 16); }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    update();
+  }
+
+  /* ------------------- 4. selected production systems -------------------- */
+
+  function buildSystems() {
+    var wrap = $(".systems-list");
+
+    STORIES.forEach(function (s) {
+      var projects = PROJECTS.filter(function (p) { return s.projects.indexOf(p.id) !== -1; });
+      var pieces = projects.reduce(function (n, p) { return n + pieceCount(p); }, 0);
+      var formats = {};
+      projects.forEach(function (p) {
+        (p.images || []).forEach(function (k) {
+          var d = dims(k);
+          if (d) formats[(Math.round((d[2] / d[3]) * 20) / 20).toFixed(2)] = 1;
+        });
+        (p.videos || []).forEach(function (k) {
+          var m = vmeta(k);
+          if (m) formats[(Math.round((m.w / m.h) * 20) / 20).toFixed(2)] = 1;
+        });
+      });
+
+      var art = document.createElement("article");
+      art.className = "system";
       var inner = document.createElement("div");
-      inner.className = "story-inner";
+      inner.className = "system-inner";
+
+      var text = document.createElement("div");
+      text.className = "system-text";
 
       var meta = document.createElement("p");
-      meta.className = "story-meta";
-      [["num", "Story " + s.number], ["", s.disciplines.join(", ")], ["", s.year]]
+      meta.className = "system-meta";
+      [["num", "System " + s.number], ["", s.disciplines.join(", ")], ["", s.year]]
         .forEach(function (pair) {
           var sp = document.createElement("span");
           if (pair[0]) sp.className = pair[0];
@@ -226,49 +366,65 @@
         });
 
       var h3 = document.createElement("h3");
-      h3.className = "story-title";
-      var c = document.createElement("span"); c.className = "client"; c.textContent = s.client;
-      var n = document.createElement("span"); n.className = "name"; n.textContent = s.title;
-      h3.appendChild(c); h3.appendChild(n);
+      h3.className = "system-title";
+      h3.appendChild(document.createTextNode(s.client));
+      var nm = document.createElement("span");
+      nm.className = "name"; nm.textContent = s.title;
+      h3.appendChild(nm);
 
       var line = document.createElement("p");
-      line.className = "story-line";
+      line.className = "system-line";
       line.textContent = s.line;
 
+      var facts = document.createElement("dl");
+      facts.className = "system-facts";
+      [["Pieces", String(pieces)],
+       ["Formats", String(Object.keys(formats).length)],
+       ["Channels", String(s.disciplines.length)]].forEach(function (pair) {
+        var row = document.createElement("div");
+        var dt = document.createElement("dt"); dt.textContent = pair[0];
+        var dd = document.createElement("dd"); dd.textContent = pair[1];
+        row.appendChild(dt); row.appendChild(dd); facts.appendChild(row);
+      });
+
       var cta = document.createElement("a");
-      cta.className = "story-cta";
+      cta.className = "system-cta";
       cta.href = "case.html?story=" + s.id;
-      cta.textContent = "View case study →";
+      cta.textContent = "View production system →";
 
-      var text = document.createElement("div");
-      text.className = "story-text";
-      text.appendChild(meta); text.appendChild(h3); text.appendChild(line); text.appendChild(cta);
+      text.appendChild(meta); text.appendChild(h3); text.appendChild(line);
+      text.appendChild(facts); text.appendChild(cta);
 
-      if (shape === "story-full") {
-        var bg = document.createElement("div");
-        bg.className = "story-bg";
-        bg.appendChild(shot(s.cover.image, s.client + ", " + s.title, true).firstChild);
-        sec.appendChild(bg);
-        inner.appendChild(text);
-      } else if (shape === "story-split") {
-        inner.appendChild(text);
-        inner.appendChild(shot(s.cover.image, s.client + ", " + s.title, true));
-      } else {
-        inner.appendChild(text);
-        var apps = document.createElement("div");
-        apps.className = "story-apps";
-        pickApps(s).forEach(function (k) { apps.appendChild(shot(k, s.client + ", " + s.title, false)); });
-        inner.appendChild(apps);
-      }
+      var strip = document.createElement("div");
+      strip.className = "system-strip";
+      stripKeys(s, projects).forEach(function (k) {
+        strip.appendChild(shot(k, s.client + ", " + s.title, false));
+      });
 
-      sec.appendChild(inner);
-      wrap.appendChild(sec);
+      inner.appendChild(text); inner.appendChild(strip);
+      art.appendChild(inner);
+      wrap.appendChild(art);
     });
+  }
+
+  // four pieces from the system itself, spread across its projects
+  function stripKeys(s, projects) {
+    var keys = [];
+    if (s.cover && s.cover.image) keys.push(s.cover.image);
+    projects.forEach(function (p) {
+      var imgs = p.images || [];
+      [imgs[1] || imgs[0], imgs[4] || imgs[2]].forEach(function (k) {
+        if (k && keys.indexOf(k) === -1) keys.push(k);
+      });
+    });
+    var flat = [];
+    projects.forEach(function (p) { (p.images || []).forEach(function (k) { flat.push(k); }); });
+    flat.forEach(function (k) { if (keys.length < 4 && keys.indexOf(k) === -1) keys.push(k); });
+    return keys.slice(0, 4);
   }
 
   function shot(key, alt, big) {
     var fig = document.createElement("figure");
-    fig.className = "story-shot";
     var img = document.createElement("img");
     img.src = big ? fullSrc(key) : thumbSrc(key);
     var d = dims(key);
@@ -280,121 +436,43 @@
     return fig;
   }
 
-  function pickApps(s) {
-    var p = PROJECTS.filter(function (x) { return s.projects.indexOf(x.id) !== -1; })[0];
-    var imgs = (p && p.images) || [];
-    return [imgs[2] || imgs[0], imgs[6] || imgs[1] || imgs[0], imgs[9] || imgs[imgs.length - 1]].filter(Boolean);
-  }
+  /* -------------------- 5. production capabilities ----------------------- */
 
-  /* -------------------------- 3. discipline reel ------------------------- */
+  function buildCapabilities() {
+    var list = $(".caps-list");
+    var preview = $(".caps-preview img");
+    var caps = SITE.capabilities || [];
+    if (!caps.length) return;
 
-  var reel = { list: [], i: -1, timer: null };
+    caps.forEach(function (cap, i) {
+      var li = document.createElement("li");
+      // the AI line sits lower in the hierarchy: a way of working, not a craft
+      if (/^AI/.test(cap[0])) li.className = "is-aside";
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "cap-btn";
+      btn.tabIndex = -1;
+      var name = document.createElement("span");
+      name.className = "cap-name"; name.textContent = cap[0];
+      var what = document.createElement("span");
+      what.className = "cap-what"; what.textContent = cap[1];
+      btn.appendChild(name); btn.appendChild(what);
+      li.appendChild(btn);
 
-  function buildReel() {
-    var counts = categoryCounts();
-    reel.list = REEL_ORDER.filter(function (c) { return counts[c]; }).map(function (c, i) {
-      return { cat: c, n: counts[c], index: i };
+      function show() {
+        $$(".caps-list li").forEach(function (o) { o.classList.remove("is-on"); });
+        li.classList.add("is-on");
+        preview.src = cap[3] === "poster" ? posterSrc(cap[2]) : fullSrc(cap[2]);
+      }
+      li.addEventListener("mouseenter", show);
+      btn.addEventListener("focus", show);
+      if (i === 0) show();
+
+      list.appendChild(li);
     });
-    if (!reel.list.length) return;
-
-    $(".reel-total").textContent = "/ " + (reel.list.length < 10 ? "0" : "") + reel.list.length;
-
-    // every background is in the DOM from the start and preloaded well before
-    // its slot, so the stage is never a blank rectangle
-    var media = $(".reel-media");
-    reel.list.forEach(function (d) {
-      var spec = REEL_IMAGE[d.cat] || { key: firstKeyIn(d.cat), kind: "image" };
-      var img = document.createElement("img");
-      img.src = srcOf(spec, true);
-      img.alt = "";
-      img.loading = "lazy";
-      img.decoding = "async";
-      media.appendChild(img);
-      d.img = img;
-    });
-
-    var chapters = $(".reel-chapters");
-    reel.list.forEach(function (d) {
-      var a = document.createElement("a");
-      a.className = "reel-chapter";
-      a.href = "?category=" + slugify(d.cat) + "&view=grid#archive";
-      a.addEventListener("click", function (e) {
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-        e.preventDefault(); setCategory(d.cat);
-      });
-      var img = d.img.cloneNode();
-      img.removeAttribute("loading");
-      img.loading = "lazy";
-      a.appendChild(img);
-      var box = document.createElement("div");
-      box.className = "chapter-inner";
-      var h = document.createElement("h3"); h.textContent = d.cat;
-      var p = document.createElement("p");
-      p.textContent = (d.index + 1 < 10 ? "0" : "") + (d.index + 1) + " · " + d.n + " projects · View the work →";
-      box.appendChild(h); box.appendChild(p);
-      a.appendChild(box);
-      chapters.appendChild(a);
-    });
-
-    $(".reel-cta").addEventListener("click", function (e) {
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-      e.preventDefault();
-      var d = reel.list[Math.max(0, reel.i)];
-      if (d) setCategory(d.cat);
-    });
-
-    showReel(0);
-    trackReel();
   }
 
-  function firstKeyIn(cat) {
-    var p = PROJECTS.filter(function (x) { return x.category === cat; })[0];
-    var c = p && coverKey(p);
-    return c ? c.key : null;
-  }
-
-  function showReel(i) {
-    if (i === reel.i || !reel.list[i]) return;
-    var d = reel.list[i];
-    var word = $(".reel-word");
-
-    reel.list.forEach(function (x) { x.img.classList.toggle("is-on", x === d); });
-
-    // Scrolling fast queues several of these. Keep one timer and read the
-    // current discipline when it fires, or the word lags behind the number.
-    word.classList.add("is-out");
-    clearTimeout(reel.timer);
-    reel.timer = setTimeout(function () {
-      var cur = reel.list[reel.i];
-      if (cur) word.textContent = cur.cat;
-      word.classList.remove("is-out");
-    }, prefersReduced() ? 0 : 180);
-
-    reel.i = i;
-    $(".reel-now").textContent = (i + 1 < 10 ? "0" : "") + (i + 1);
-    $(".reel-count").textContent = d.n + " projects";
-    $(".reel-bar i").style.width = ((i + 1) / reel.list.length * 100) + "%";
-    $(".reel-cta").setAttribute("href", "?category=" + slugify(d.cat) + "&view=grid#archive");
-  }
-
-  function trackReel() {
-    var track = $(".reel-track");
-    var ticking = false;
-    function update() {
-      ticking = false;
-      var r = track.getBoundingClientRect();
-      var span = r.height - window.innerHeight;
-      if (span <= 0) return;
-      var t = Math.max(0, Math.min(0.9999, -r.top / span));
-      showReel(Math.floor(t * reel.list.length));
-    }
-    function onScroll() { if (ticking) return; ticking = true; setTimeout(update, 16); }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    update();
-  }
-
-  /* ------------------------------ 4. archive ----------------------------- */
+  /* ------------------------------ 3. archive ----------------------------- */
 
   function tagCounts() {
     var c = {};
@@ -520,9 +598,10 @@
     var all = visibleProjects();
     var filtered = !!state.cat || state.tags.length > 0 || !!state.q;
     var grid = $("#grid"), indexWrap = $(".index-wrap");
+    var curated = state.view === "curated" && !filtered;
 
     var list, more = 0;
-    if (state.view === "curated" && !filtered) {
+    if (curated) {
       list = curatedList();
     } else if (state.view === "index") {
       list = all;
@@ -534,7 +613,7 @@
     grid.innerHTML = "";
     indexWrap.hidden = state.view !== "index";
     grid.hidden = state.view === "index";
-    grid.className = "grid " + (state.view === "curated" && !filtered ? "is-curated" : "is-uniform");
+    grid.className = "grid " + (curated ? "is-curated" : "is-uniform");
 
     if (state.view === "index") {
       renderIndex(all);
@@ -542,7 +621,7 @@
       $(".index-table tbody").innerHTML = "";
       $(".index-peek").classList.remove("is-on");
       list.forEach(function (p, i) {
-        var el = entry(p, i + 1);
+        var el = entry(p, i + 1, curated);
         el.style.setProperty("--i", Math.min(i, 8));
         grid.appendChild(el);
       });
@@ -551,12 +630,12 @@
     $(".work-title").textContent = state.cat || "Work archive";
     $(".work-count").textContent = filtered
       ? all.length + " of " + PROJECTS.length + " projects"
-      : (state.view === "curated" ? "Twelve selected · " + PROJECTS.length + " in the archive"
-                                  : all.length + " projects");
+      : (curated ? "Twelve selected · " + PROJECTS.length + " in the archive"
+                 : all.length + " projects");
     $(".work-back").hidden = !state.cat;
 
     var btn = $(".more-btn");
-    if (state.view === "curated" && !filtered) {
+    if (curated) {
       btn.hidden = false;
       btn.textContent = "View all " + all.length + " projects";
       btn.onclick = function () { setView("grid"); };
@@ -572,8 +651,12 @@
     syncFilters();
   }
 
-  function entry(p, number) {
+  /* One card. In the curated view a card with enough images becomes a
+     deliverable family: two or three pieces of the same project, never a
+     mix of projects, so what you see is one job at several sizes. */
+  function entry(p, number, family) {
     var cover = coverKey(p);
+    var extras = family ? (p.images || []).slice(1, 3) : [];
     var link = document.createElement("a");
     link.className = "entry-link";
     link.href = "#" + p.id;
@@ -602,6 +685,22 @@
     fig.appendChild(img);
     wrap.appendChild(fig);
 
+    if (extras.length) {
+      var fam = document.createElement("div");
+      fam.className = "entry-family";
+      extras.forEach(function (k, i) {
+        var f2 = document.createElement("figure");
+        var i2 = document.createElement("img");
+        var d2 = dims(k);
+        i2.src = thumbSrc(k);
+        if (d2) { i2.width = d2[0]; i2.height = d2[1]; }
+        i2.loading = "lazy"; i2.decoding = "async";
+        i2.alt = altFor(p, i + 1);
+        f2.appendChild(i2); fam.appendChild(f2);
+      });
+      wrap.appendChild(fam);
+    }
+
     if (hasMotion(p)) {
       var badge = document.createElement("span");
       badge.className = "entry-play";
@@ -615,25 +714,29 @@
     text.className = "entry-text";
     var meta = document.createElement("p");
     meta.className = "entry-client";
-    meta.appendChild(document.createTextNode(p.client + (p.year ? " · " + p.year : "")));
-    var n = pieceCount(p);
-    if (n > 1) {
-      var c = document.createElement("span");
-      c.className = "count"; c.textContent = " · " + n + " pieces";
-      meta.appendChild(c);
-    }
+    meta.textContent = p.client + (p.year ? " · " + p.year : "");
     var title = document.createElement("h3");
     title.className = "entry-title"; title.textContent = p.title;
+
+    // the production line: what was delivered, in how many shapes, for what
+    var prod = document.createElement("p");
+    prod.className = "entry-prod";
+    prod.appendChild(document.createTextNode(deliverableLine(p)));
+    var disc = document.createElement("span");
+    disc.className = "disc"; disc.textContent = p.category;
+    prod.appendChild(disc);
+
     var tags = document.createElement("ul");
     tags.className = "entry-tags";
     p.tags.slice(0, 3).forEach(function (t) {
       var li = document.createElement("li"); li.textContent = t; tags.appendChild(li);
     });
-    text.appendChild(meta); text.appendChild(title); text.appendChild(tags);
+    text.appendChild(meta); text.appendChild(title); text.appendChild(prod); text.appendChild(tags);
 
     link.appendChild(wrap); link.appendChild(text);
     var art = document.createElement("article");
-    art.className = "entry"; art.appendChild(link);
+    art.className = "entry" + (extras.length ? " is-family" : "");
+    art.appendChild(link);
     return art;
   }
 
@@ -677,7 +780,8 @@
       tr.className = "index-row";
       tr.tabIndex = -1;
 
-      [["c-client", p.client], ["c-project", p.title], ["c-disc", p.category], ["c-year", p.year || ""]]
+      [["c-client", p.client], ["c-project", p.title], ["c-disc", p.category],
+       ["c-deliv", deliverableLine(p)], ["c-year", p.year || ""]]
         .forEach(function (pair, i) {
           var td = document.createElement("td");
           td.className = pair[0];
@@ -700,7 +804,7 @@
       var mob = document.createElement("tr");
       mob.className = "index-mobile-peek";
       var mtd = document.createElement("td");
-      mtd.colSpan = 4;
+      mtd.colSpan = 5;
       if (cover) {
         var mi = document.createElement("img");
         mi.src = cover.kind === "poster" ? posterSrc(cover.key) : thumbSrc(cover.key);
@@ -816,7 +920,7 @@
     if (story) {
       caseLink.hidden = false;
       caseLink.href = "case.html?story=" + story.id;
-      caseLink.textContent = "Read the " + story.client + " case study →";
+      caseLink.textContent = "View the " + story.client + " production system →";
     } else {
       caseLink.hidden = true;
     }
@@ -827,6 +931,8 @@
     if (p.year) addFact(facts, "Year", p.year);
     addFact(facts, "Discipline", p.category);
     addFact(facts, "Pieces", String(pieceCount(p)));
+    var f = formatCount(p);
+    if (f > 1) addFact(facts, "Formats", String(f));
 
     var tags = $(".viewer-tags");
     tags.innerHTML = "";
@@ -962,23 +1068,25 @@
       about.appendChild(el);
     });
 
-    $(".cover-eyebrow").innerHTML = "";
+    var eyebrow = $(".cover-eyebrow");
+    eyebrow.innerHTML = "";
     [SITE.name, SITE.role, SITE.location].forEach(function (t) {
-      $(".cover-eyebrow").appendChild(document.createElement("span")).textContent = t;
+      eyebrow.appendChild(document.createElement("span")).textContent = t;
     });
     $(".cover-headline .reveal").textContent = SITE.headline;
     $(".cover-support").textContent = SITE.support;
+
+    var proofs = $(".cover-proofs");
+    (SITE.proofs || []).forEach(function (t) {
+      var li = document.createElement("li");
+      li.textContent = t;
+      proofs.appendChild(li);
+    });
+
     $(".cover-issue").textContent = SITE.issue;
     $(".about-statement .reveal").textContent = SITE.statement;
+    $(".contact-role").textContent = SITE.role;
     $(".contact-place").textContent = SITE.location;
-
-    var caps = $(".capabilities");
-    (SITE.capabilities || []).forEach(function (pair) {
-      var row = document.createElement("div");
-      var dt = document.createElement("dt"); dt.className = "cap-term"; dt.textContent = pair[0];
-      var dd = document.createElement("dd"); dd.textContent = pair[1];
-      row.appendChild(dt); row.appendChild(dd); caps.appendChild(row);
-    });
 
     var seen = {};
     PROJECTS.forEach(function (p) { seen[p.client] = true; });
@@ -1009,7 +1117,7 @@
   // the masthead flips to light type over the dark stages
   function watchHeader() {
     var mast = $(".masthead");
-    var darks = [$(".reel"), $(".contact")].filter(Boolean);
+    var darks = [$(".caps"), $(".contact")].filter(Boolean);
     var ticking = false;
     function update() {
       ticking = false;
@@ -1032,12 +1140,14 @@
 
   fillChrome();
   buildCover();
-  buildStories();
-  buildReel();
+  buildBrowse();
   buildFilters();
+  buildSystems();
+  buildCapabilities();
 
   var start = applyURL(false);
   measureHeader();
+  buildQuickbar();
   watchHeader();
   armReveals();
   if (start) openProject(start, false);

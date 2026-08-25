@@ -35,14 +35,19 @@
 
 const SITE = {
   name: "Luis Moreno",
-  role: "Graphic & Digital Designer",
+  role: "Production Designer & Graphic Designer",
   location: "Monterrey, Mexico",
   issue: "Selected work 2025–2026",
 
   /* The cover. `headline` runs at full editorial scale; `support` is the line
-     under it. Change either and the hero follows. */
-  headline: "From inbox to shelf.",
-  support: "I build visual systems across campaigns, email, retail, motion, web and brand.",
+     under it; the three proofs sit below as a spec strip. */
+  headline: "Design at production scale.",
+  support: "High-volume, brand-consistent creative across advertising, motion, email, retail, packaging, web and presentations.",
+  proofs: [
+    "High-volume production",
+    "Multi-format adaptation",
+    "Brand-system consistency"
+  ],
 
   email: "moreno.luisrz@gmail.com",
   links: [
@@ -51,25 +56,28 @@ const SITE = {
     { label: "LinkedIn", url: "https://www.linkedin.com/in/luismorenorz/" }
   ],
 
-  /* The About manifesto. The first line is the big statement. */
-  statement: "I design the system, then make it move.",
+  /* The About section. The first line is the big statement. */
+  statement: "I turn brand systems into ready-to-launch work.",
   about: [
-    "I design across the full commercial stack: lifecycle email, paid and organic social, landing pages, retail displays, packaging and brand identity.",
-    "Most of my week is high-volume campaign work for consumer brands: supplements, beverages, cannabis, beauty, health and home. I design inside brand systems I did not write, bilingual copy that changes every line length, print dielines, retail specs, and email clients that break whatever you build.",
-    "I also take on identity and presentation work, giving a company a coherent look before the campaigns start."
+    "I work at production scale: high volumes of campaign creative that has to ship on time, on brand and at the right spec. Most weeks that means taking one idea and carrying it across placements, sizes and channels without letting it drift.",
+    "I design inside brand systems I did not write. That is the craft of it. Reading a system well enough to extend it, deciding what a layout does when the copy doubles in length, and knowing which rules bend and which ones hold.",
+    "The work runs from paid social and email through to print dielines, retail specs and packaging, plus motion and AI-assisted workflows where they earn their place. A lot of it is bilingual, which changes every line break. All of it is built to be handed off and produced, not just presented."
   ],
 
-  /* The capability list beside the About copy. */
+  /* The capability matrix. Each row: label, what it means, and a preview
+     drawn from real work. AI sits last and deliberately reads lighter. */
   capabilities: [
-    ["Email", "Lifecycle, campaign and promotional email, built to survive the clients that break everything."],
-    ["Advertising", "Paid social, display and banner sets, resized across every placement a campaign needs."],
-    ["Motion", "Animated email heroes, shoppable and banner video, campaign cuts for vertical and widescreen."],
-    ["Retail", "Free-standing displays, cooler wraps and shelf blades, from render through to print dielines."],
-    ["Packaging", "Cartons, sleeves and spec sheets, bilingual where the market asks for it."],
-    ["Web & UI", "Landing pages and product screens, responsive, built around one clear first step."],
-    ["Branding", "Marks, palettes, type systems and the applications that prove they hold."],
-    ["Presentations", "Pitch and capability decks with data slides that stay readable."],
-    ["AI-assisted", "AI-assisted art direction: generated film and image-to-video, used where it earns its place."]
+    ["Campaign production", "One idea carried across every placement a launch needs.", "156-113", "image"],
+    ["Paid social & display", "Feed, story and banner sets, resized and re-cropped per platform.", "156-100", "image"],
+    ["Motion graphics", "Animated heroes, shoppable spots and campaign cuts.", "hero-1", "poster"],
+    ["Email design", "Lifecycle and promotional email, built for the clients that break things.", "2-10", "image"],
+    ["Retail & print", "Displays, cooler wraps and shelf blades, render through to dielines.", "171-31", "image"],
+    ["Packaging", "Cartons, sleeves and spec sheets ready for a printer.", "156-40", "image"],
+    ["Presentation design", "Pitch and capability decks with data slides that stay readable.", "213-33", "image"],
+    ["Web & landing pages", "Responsive pages built around one clear first step.", "3-41", "image"],
+    ["Brand-system execution", "Extending an identity across the applications that prove it holds.", "3-17-03", "image"],
+    ["Bilingual adaptation", "EN/FR layouts where every line length changes.", "156-50", "image"],
+    ["AI-assisted workflows", "Generated film and image-to-video, used where it earns its place.", "vid-6-16x9", "poster"]
   ]
 };
 

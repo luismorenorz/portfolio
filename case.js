@@ -75,7 +75,7 @@
 
     var hi = el("div", "case-hero-inner");
     var eyebrow = el("p", "case-eyebrow");
-    eyebrow.appendChild(el("span", "num", "Story " + story.number));
+    eyebrow.appendChild(el("span", "num", "System " + story.number));
     eyebrow.appendChild(el("span", null, story.disciplines.join(", ")));
     eyebrow.appendChild(el("span", null, story.year));
     hi.appendChild(eyebrow);
@@ -159,7 +159,7 @@
     if (nextStory) {
       var a2 = el("a");
       a2.href = "case.html?story=" + nextStory.id;
-      a2.appendChild(el("p", "lbl", "Next story"));
+      a2.appendChild(el("p", "lbl", "Next production system"));
       var nm = el("div", "nm");
       nm.appendChild(document.createTextNode(nextStory.client));
       nm.appendChild(el("span", null, nextStory.title));
