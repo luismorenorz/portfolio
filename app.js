@@ -18,10 +18,11 @@
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
 
   var TAG_FILTER_MIN = 3;
+  var DEFAULT_VIEW = "grid";
   var CURATED_COUNT = 12;
   var GRID_PAGE = 24;
 
-  var state = { cat: null, tags: [], q: "", view: "curated", shown: GRID_PAGE };
+  var state = { cat: null, tags: [], q: "", view: DEFAULT_VIEW, shown: GRID_PAGE };
 
   /* The curated twelve: one pass across every discipline, balanced between
      wide renders, tall email, square social and motion. Order matters — the
@@ -103,12 +104,15 @@
     return Object.keys(seen).length;
   }
 
-  function deliverableLine(p) {
-    var n = pieceCount(p), f = formatCount(p);
-    var out = n + (n === 1 ? " piece" : " pieces");
-    if (f > 1) out += " · " + f + " formats";
-    return out;
+  function piecesLabel(p) {
+    var n = pieceCount(p);
+    return n + (n === 1 ? " piece" : " pieces");
   }
+  function formatsLabel(p) {
+    var f = formatCount(p);
+    return f + (f === 1 ? " format" : " formats");
+  }
+  function deliverableLine(p) { return piecesLabel(p) + " · " + formatsLabel(p); }
 
   function coverKey(p) {
     if (p.images && p.images.length) return { key: p.images[0], kind: "image" };
@@ -154,7 +158,31 @@
     }
     return true;
   }
-  function visibleProjects() { return PROJECTS.filter(matches); }
+  /* The file groups projects by discipline, which would open the archive on
+     a wall of one colour and read as a specialist's portfolio. Deal the
+     results round-robin across the disciplines instead: same 70 projects,
+     same ids, same order inside each discipline — the first screen just
+     shows the range. With one category selected it collapses to file order. */
+  function spread(list) {
+    var bucket = {}, order = [];
+    list.forEach(function (p) {
+      if (!bucket[p.category]) { bucket[p.category] = []; order.push(p.category); }
+      bucket[p.category].push(p);
+    });
+    order.sort(function (a, b) { return CATEGORIES.indexOf(a) - CATEGORIES.indexOf(b); });
+    var out = [], round = 0, moved = true;
+    while (moved) {
+      moved = false;
+      for (var i = 0; i < order.length; i++) {
+        var q = bucket[order[i]];
+        if (round < q.length) { out.push(q[round]); moved = true; }
+      }
+      round++;
+    }
+    return out;
+  }
+
+  function visibleProjects() { return spread(PROJECTS.filter(matches)); }
 
   /* --------------------------- reveal on scroll -------------------------- */
 
@@ -224,7 +252,7 @@
     a.addEventListener("click", function (e) {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
       e.preventDefault();
-      if (!cat && state.view === "curated") state.view = "grid";
+      if (state.view === "curated") state.view = "grid";
       setCategory(cat);
     });
     var name = document.createElement("span");
@@ -539,9 +567,20 @@
       b.addEventListener("click", function () { setView(b.dataset.view); });
     });
     $(".work-back").addEventListener("click", function () { setCategory(null); });
-    $(".more-btn").addEventListener("click", function () {
-      state.shown += GRID_PAGE; render();
-    });
+
+    // the category row is the only thing on the page allowed to scroll
+    // sideways, and it says so only when it has somewhere to scroll
+    function measureCats() {
+      catWrap.classList.toggle("is-scrollable", catWrap.scrollWidth > catWrap.clientWidth + 2);
+    }
+    window.addEventListener("resize", measureCats);
+    catWrap.addEventListener("scroll", measureCats, { passive: true });
+    // the first measurement lands before the webfont swaps, which changes the
+    // row's width, so take it again once the page has finished settling
+    window.addEventListener("load", measureCats);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureCats);
+    setTimeout(measureCats, 400);
+    measureCats();
   }
 
   function catButton(label, value) {
@@ -629,8 +668,8 @@
 
     $(".work-title").textContent = state.cat || "Work archive";
     $(".work-count").textContent = filtered
-      ? all.length + " of " + PROJECTS.length + " projects"
-      : (curated ? "Twelve selected · " + PROJECTS.length + " in the archive"
+      ? all.length + " of " + PROJECTS.length
+      : (curated ? "12 selected of " + PROJECTS.length
                  : all.length + " projects");
     $(".work-back").hidden = !state.cat;
 
@@ -641,7 +680,7 @@
       btn.onclick = function () { setView("grid"); };
     } else if (more > 0) {
       btn.hidden = false;
-      btn.textContent = "Load " + Math.min(GRID_PAGE, more) + " more";
+      btn.textContent = "View more projects (" + more + " left)";
       btn.onclick = function () { state.shown += GRID_PAGE; render(); };
     } else {
       btn.hidden = true;
@@ -651,12 +690,16 @@
     syncFilters();
   }
 
-  /* One card. In the curated view a card with enough images becomes a
-     deliverable family: two or three pieces of the same project, never a
-     mix of projects, so what you see is one job at several sizes. */
-  function entry(p, number, family) {
+  /* One cover. The card IS the artwork: a 4:5 crop, a category-coloured
+     scrim, and the four things a reviewer needs in three seconds — what kind
+     of work, for whom, what it is, and how much of it there was. */
+  function entry(p, number, curated) {
     var cover = coverKey(p);
-    var extras = family ? (p.images || []).slice(1, 3) : [];
+
+    var art = document.createElement("article");
+    art.className = "entry cat-" + slugify(p.category) + (curated ? " is-curated-card" : "");
+    art.setAttribute("data-category", p.category);
+
     var link = document.createElement("a");
     link.className = "entry-link";
     link.href = "#" + p.id;
@@ -665,10 +708,9 @@
       e.preventDefault(); openProject(p.id, true);
     });
 
-    var wrap = document.createElement("div");
-    wrap.className = "entry-shot-wrap";
     var fig = document.createElement("figure");
     fig.className = "entry-shot";
+
     var img = document.createElement("img");
     if (cover && cover.kind === "poster") {
       img.src = posterSrc(cover.key);
@@ -679,63 +721,52 @@
       img.src = thumbSrc(cover.key);
       if (d) { img.width = d[0]; img.height = d[1]; }
     }
-    img.loading = number <= 6 ? "eager" : "lazy";
+    img.loading = number <= 8 ? "eager" : "lazy";
     img.decoding = "async";
     img.alt = altFor(p, 0);
     fig.appendChild(img);
-    wrap.appendChild(fig);
 
-    if (extras.length) {
-      var fam = document.createElement("div");
-      fam.className = "entry-family";
-      extras.forEach(function (k, i) {
-        var f2 = document.createElement("figure");
-        var i2 = document.createElement("img");
-        var d2 = dims(k);
-        i2.src = thumbSrc(k);
-        if (d2) { i2.width = d2[0]; i2.height = d2[1]; }
-        i2.loading = "lazy"; i2.decoding = "async";
-        i2.alt = altFor(p, i + 1);
-        f2.appendChild(i2); fam.appendChild(f2);
-      });
-      wrap.appendChild(fam);
-    }
+    // two layers: a constant scrim that guarantees the text contrast, and a
+    // flat tint that thins out on hover so more of the artwork comes through
+    var tint = document.createElement("span");
+    tint.className = "entry-tint"; tint.setAttribute("aria-hidden", "true");
+    var scrim = document.createElement("span");
+    scrim.className = "entry-scrim"; scrim.setAttribute("aria-hidden", "true");
+    fig.appendChild(tint); fig.appendChild(scrim);
+
+    var top = document.createElement("div");
+    top.className = "entry-top";
+    var kicker = document.createElement("p");
+    kicker.className = "entry-kicker"; kicker.textContent = p.category;
+    var who = document.createElement("p");
+    who.className = "entry-client";
+    who.textContent = p.client + (p.year ? " · " + p.year : "");
+    top.appendChild(kicker); top.appendChild(who);
+
+    var bottom = document.createElement("div");
+    bottom.className = "entry-bottom";
+    var title = document.createElement("h3");
+    title.className = "entry-title"; title.textContent = p.title;
+    var prod = document.createElement("p");
+    prod.className = "entry-prod";
+    prod.appendChild(document.createTextNode(deliverableLine(p) + " "));
+    var arrow = document.createElement("span");
+    arrow.className = "arrow"; arrow.setAttribute("aria-hidden", "true"); arrow.textContent = "↗";
+    prod.appendChild(arrow);
+    bottom.appendChild(title); bottom.appendChild(prod);
+
+    fig.appendChild(top); fig.appendChild(bottom);
 
     if (hasMotion(p)) {
       var badge = document.createElement("span");
       badge.className = "entry-play";
       var m0 = vmeta(p.videos[0]);
       badge.textContent = "▶ " + (m0 ? clock(m0.dur) : "Play");
-      wrap.appendChild(badge);
+      fig.appendChild(badge);
       attachLoop(link, fig, p.videos[0]);
     }
 
-    var text = document.createElement("div");
-    text.className = "entry-text";
-    var meta = document.createElement("p");
-    meta.className = "entry-client";
-    meta.textContent = p.client + (p.year ? " · " + p.year : "");
-    var title = document.createElement("h3");
-    title.className = "entry-title"; title.textContent = p.title;
-
-    // the production line: what was delivered, in how many shapes, for what
-    var prod = document.createElement("p");
-    prod.className = "entry-prod";
-    prod.appendChild(document.createTextNode(deliverableLine(p)));
-    var disc = document.createElement("span");
-    disc.className = "disc"; disc.textContent = p.category;
-    prod.appendChild(disc);
-
-    var tags = document.createElement("ul");
-    tags.className = "entry-tags";
-    p.tags.slice(0, 3).forEach(function (t) {
-      var li = document.createElement("li"); li.textContent = t; tags.appendChild(li);
-    });
-    text.appendChild(meta); text.appendChild(title); text.appendChild(prod); text.appendChild(tags);
-
-    link.appendChild(wrap); link.appendChild(text);
-    var art = document.createElement("article");
-    art.className = "entry" + (extras.length ? " is-family" : "");
+    link.appendChild(fig);
     art.appendChild(link);
     return art;
   }
@@ -781,7 +812,7 @@
       tr.tabIndex = -1;
 
       [["c-client", p.client], ["c-project", p.title], ["c-disc", p.category],
-       ["c-deliv", deliverableLine(p)], ["c-year", p.year || ""]]
+       ["c-pieces", piecesLabel(p)], ["c-formats", formatsLabel(p)], ["c-year", p.year || ""]]
         .forEach(function (pair, i) {
           var td = document.createElement("td");
           td.className = pair[0];
@@ -804,7 +835,7 @@
       var mob = document.createElement("tr");
       mob.className = "index-mobile-peek";
       var mtd = document.createElement("td");
-      mtd.colSpan = 5;
+      mtd.colSpan = 6;
       if (cover) {
         var mi = document.createElement("img");
         mi.src = cover.kind === "poster" ? posterSrc(cover.key) : thumbSrc(cover.key);
@@ -844,7 +875,7 @@
   function writeURL(push, hash) {
     var qs = [];
     if (state.cat) qs.push("category=" + slugify(state.cat));
-    if (state.view !== "curated") qs.push("view=" + state.view);
+    if (state.view !== DEFAULT_VIEW) qs.push("view=" + state.view);
     var url = location.pathname + (qs.length ? "?" + qs.join("&") : "") + (hash || "");
     if (push) history.pushState(null, "", url);
     else history.replaceState(null, "", url);
@@ -879,7 +910,7 @@
     var cat = q.get("category") ? catFromSlug(q.get("category")) : null;
     var view = q.get("view");
     state.cat = cat;
-    state.view = (view === "grid" || view === "index" || view === "curated") ? view : "curated";
+    state.view = (view === "grid" || view === "index" || view === "curated") ? view : DEFAULT_VIEW;
     state.shown = GRID_PAGE;
     state.tags = [];
     state.q = "";

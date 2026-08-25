@@ -19,9 +19,13 @@ Production first, case studies second: the work is two scrolls from the top.
    scrolls away it returns as a compact sticky bar (Work / Advertising /
    Motion / Email / More), which steps aside while the archive's own filter
    bar owns the sticky band.
-3. **Work archive** — the whole 70 in three views: Curated, Grid, Index. A
-   curated card shows a deliverable family: two or three pieces of the *same*
-   project, plus the piece count, the number of formats and the discipline.
+3. **Work archive** — the whole 70 in three views: **Grid** (the default),
+   Curated and Index. Every card is a cover: the artwork full bleed at 4:5, a
+   discipline-coloured scrim over it, and the four things a reviewer needs in
+   three seconds — discipline, client and year, project name, and how many
+   pieces in how many formats. Unfiltered, the grid deals the results
+   round-robin across the disciplines, so the first screen shows the range
+   rather than whichever discipline happens to come first in the file.
 4. **Selected production systems** — Greenhouse, Rove and Café Café, each a
    compact horizontal band with counted pieces, formats and channels, and a
    long-form case study behind it.
@@ -35,9 +39,32 @@ Every number on the page is measured from the files, never estimated: piece
 counts are the images and clips themselves, and "formats" is the count of
 distinct aspect ratios actually present in a project.
 
+## The card colour system
+
+One small palette of dark, muted colours, keyed by discipline in
+`site/styles.css`. Related disciplines share a family on purpose, so the
+archive reads as seven signals rather than ten:
+
+    Email                  terracotta   147 70 51
+    Advertising, Social    cobalt        40 71 154
+    Motion, AI             violet        85 59 120
+    Retail, Packaging      forest        64 90 69
+    Web & UI               deep teal     24 92 104
+    Branding               oxblood      104 57 75
+    Presentations          slate         63 70 86
+
+Each card gets `data-category`, a `cat-<slug>` class and a `--cat-rgb` custom
+property; nothing is styled per project. To recolour a discipline, change one
+line under "the category colour system". Two layers sit over the artwork: a
+constant scrim that owns the text contrast, and a flat tint that thins from
+30% to 14% on hover so more of the artwork shows without the words ever
+getting harder to read. Every family clears WCAG AA against a pure-white
+photograph, the worst case.
+
 ## URLs worth knowing
 
-    ?view=curated | ?view=grid | ?view=index      how the archive is shown
+    ?view=grid | ?view=curated | ?view=index      how the archive is shown
+    (grid is the default, so it is the one view the URL leaves out)
     ?category=email                                one discipline
     ?category=email&view=index#archive             both together
     #project-id                                    opens that project's panel

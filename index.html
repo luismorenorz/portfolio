@@ -64,18 +64,8 @@
   <!-- ========================== 3. WORK ARCHIVE ========================== -->
   <section id="archive" class="work" aria-labelledby="archive-title">
     <header class="work-head">
-      <div class="work-head-titles">
-        <h2 class="work-title" id="archive-title">Work archive</h2>
-        <p class="work-count" aria-live="polite"></p>
-      </div>
-      <div class="work-head-tools">
-        <button type="button" class="work-back" hidden>← All work</button>
-        <div class="views" role="group" aria-label="Change how the archive is shown">
-          <button type="button" class="view" data-view="curated" aria-pressed="true">Curated</button>
-          <button type="button" class="view" data-view="grid" aria-pressed="false">Grid</button>
-          <button type="button" class="view" data-view="index" aria-pressed="false">Index</button>
-        </div>
-      </div>
+      <h2 class="work-title" id="archive-title">Work archive</h2>
+      <button type="button" class="work-back" hidden>← All work</button>
     </header>
 
     <div class="filters" role="region" aria-label="Filter projects">
@@ -86,8 +76,14 @@
           <button class="tag-toggle" type="button" aria-expanded="false">Filter by tag<span class="chev" aria-hidden="true">&#8964;</span></button>
           <label class="search">
             <span class="visually-hidden">Search projects</span>
-            <input type="search" placeholder="Search" autocomplete="off">
+            <input type="search" placeholder="Search projects" autocomplete="off">
           </label>
+          <p class="work-count" aria-live="polite"></p>
+          <div class="views" role="group" aria-label="Change how the archive is shown">
+            <button type="button" class="view" data-view="grid" aria-pressed="true">Grid</button>
+            <button type="button" class="view" data-view="curated" aria-pressed="false">Curated</button>
+            <button type="button" class="view" data-view="index" aria-pressed="false">Index</button>
+          </div>
         </div>
       </div>
       <div class="tag-panel" hidden>
@@ -100,7 +96,7 @@
 
     <div class="index-wrap" hidden>
       <table class="index-table">
-        <thead><tr><th scope="col">Client</th><th scope="col">Project</th><th scope="col">Discipline</th><th scope="col">Deliverables</th><th scope="col">Year</th></tr></thead>
+        <thead><tr><th scope="col">Client</th><th scope="col">Project</th><th scope="col">Discipline</th><th scope="col">Pieces</th><th scope="col">Formats</th><th scope="col">Year</th></tr></thead>
         <tbody></tbody>
       </table>
       <figure class="index-peek" aria-hidden="true"><img alt="" decoding="async"></figure>
