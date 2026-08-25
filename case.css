@@ -1,0 +1,118 @@
+/* =========================================================================
+   Case study layer. Rides on styles.css and only adds the long-form pieces.
+   The rhythm changes as you read: full bleed, diptych, triptych, a small
+   image surrounded by air, a dark stage, then the next project.
+   ========================================================================= */
+
+.case-body { background: var(--paper); }
+
+.case-hero {
+  position: relative; min-height: 86svh; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  background: var(--black); color: var(--d-ink);
+  padding: clamp(40px, 7vw, 96px) var(--pad) clamp(30px, 4vw, 56px);
+}
+.case-hero-bg { position: absolute; inset: 0; z-index: 0; }
+.case-hero-bg img { width: 100%; height: 100%; object-fit: cover; opacity: .46; }
+.case-hero-bg::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(15,15,13,.5), rgba(15,15,13,.35) 40%, rgba(15,15,13,.9));
+}
+.case-hero-inner { position: relative; z-index: 1; max-width: var(--maxw); margin: 0 auto; width: 100%; }
+
+.case-eyebrow {
+  margin: 0 0 clamp(16px, 2.4vw, 28px);
+  display: flex; flex-wrap: wrap; gap: 6px 22px;
+  font-size: 11px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .14em; color: var(--d-muted);
+}
+.case-eyebrow .num { color: var(--accent); }
+.case-title {
+  margin: 0; font-family: var(--display); font-weight: 600;
+  font-size: clamp(40px, 8vw, 128px); line-height: .9; letter-spacing: -.045em;
+}
+.case-title .name { display: block; color: var(--d-muted); }
+.case-line { margin: clamp(18px, 2.4vw, 30px) 0 0; max-width: 42ch; font-size: clamp(16px, 1.4vw, 21px); color: var(--d-muted); }
+
+/* the facts strip */
+.case-facts {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: clamp(34px, 4.5vw, 66px) var(--pad);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(20px, 3vw, 46px);
+  border-bottom: 1px solid var(--hairline);
+}
+.case-facts div { display: flex; flex-direction: column; gap: 8px; }
+.case-facts dt { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .14em; color: var(--faint); }
+.case-facts dd { margin: 0; font-size: 15px; line-height: 1.5; }
+.case-facts ul { margin: 0; padding: 0; list-style: none; }
+.case-facts li { font-size: 15px; line-height: 1.6; }
+
+/* sections */
+.case-sec { max-width: var(--maxw); margin: 0 auto; padding: clamp(44px, 6vw, 96px) var(--pad); }
+.case-sec.is-text { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: clamp(24px, 4vw, 70px); align-items: start; }
+.case-sec h2 {
+  margin: 0; font-size: 11px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .14em; color: var(--muted);
+}
+.case-sec p.body { margin: 0; font-size: clamp(18px, 1.5vw, 22px); line-height: 1.58; max-width: 52ch; }
+
+.case-quote {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: clamp(40px, 6vw, 96px) var(--pad);
+  font-family: var(--display); font-weight: 600;
+  font-size: clamp(28px, 5vw, 76px); line-height: 1.02; letter-spacing: -.035em;
+  max-inline-size: 20ch;
+}
+
+.case-figure { margin: 0; }
+.case-figure img, .case-figure video { width: 100%; height: auto; background: var(--paper-3); display: block; }
+.case-cap { margin: 10px 0 0; font-size: 11px; color: var(--faint); }
+
+.case-full { padding-left: 0; padding-right: 0; max-width: none; }
+.case-full .case-figure img { max-height: 92svh; object-fit: cover; }
+.case-full .case-cap { padding: 0 var(--pad); max-width: var(--maxw); margin-left: auto; margin-right: auto; }
+
+.case-duo .row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 2vw, 28px); }
+.case-trio .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 22px); }
+
+/* a small image with a lot of air around it */
+.case-aside { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 84px); align-items: center; }
+.case-aside .case-figure { max-width: 420px; }
+.case-aside h3 { margin: 0 0 14px; font-family: var(--display); font-weight: 600; font-size: clamp(22px, 2.4vw, 34px); letter-spacing: -.025em; }
+.case-aside p { margin: 0; font-size: clamp(16px, 1.3vw, 19px); line-height: 1.62; color: var(--muted); max-width: 42ch; }
+
+/* motion strip on a dark ground */
+.case-reel { background: var(--black); color: var(--d-ink); max-width: none; }
+.case-reel .inner { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--pad); }
+.case-reel .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 22px); }
+.case-reel video { background: #000; }
+.case-reel .case-cap { color: var(--d-muted); }
+
+/* next project */
+.case-next {
+  background: var(--paper-2); border-top: 1px solid var(--hairline);
+  padding: clamp(44px, 6vw, 96px) var(--pad);
+}
+.case-next-inner { max-width: var(--maxw); margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.case-next a { text-decoration: none; display: block; }
+.case-next .lbl { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); margin: 0 0 10px; }
+.case-next .nm { font-family: var(--display); font-weight: 600; font-size: clamp(30px, 5vw, 72px); line-height: .95; letter-spacing: -.035em; }
+.case-next .nm span { display: block; color: var(--muted); }
+.case-next a:hover .nm { color: var(--accent); }
+.case-back { font-size: 13px; text-decoration: none; border-bottom: 1px solid var(--hairline); padding-bottom: 3px; }
+.case-back:hover { border-bottom-color: var(--ink); }
+
+.case-missing { max-width: var(--maxw); margin: 0 auto; padding: 20svh var(--pad); font-size: 18px; }
+.case-missing[hidden] { display: none; }
+
+@media (max-width: 900px) {
+  .case-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .case-sec.is-text { grid-template-columns: 1fr; gap: 14px; }
+  .case-aside { grid-template-columns: 1fr; }
+  .case-trio .row, .case-reel .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .case-facts { grid-template-columns: 1fr; }
+  .case-duo .row, .case-trio .row, .case-reel .row { grid-template-columns: 1fr; }
+  .case-hero { min-height: 70svh; }
+}
