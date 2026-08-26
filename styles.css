@@ -862,8 +862,6 @@ body.is-locked { overflow: hidden; }
   .tag-list { columns: 1; }
   .cover-stack { height: 38svh; }
   .cover-proofs li { min-width: 100%; padding-top: 7px; }
-  .work-head-tools { width: 100%; justify-content: space-between; }
-  .entry-family { display: none; }
   .quickbar-inner { gap: 16px; padding: 8px var(--pad); }
 }
 
