@@ -180,6 +180,15 @@
 
   var id = new URLSearchParams(location.search).get("story");
   var story = STORIES.filter(function (s) { return s.id === id; })[0];
-  if (story) render(story);
-  else $(".case-missing").hidden = false;
+  if (story) {
+    render(story);
+  } else if (typeof PROJECTS !== "undefined" &&
+             PROJECTS.some(function (p) { return p.id === id; })) {
+    /* A story that has been retired still has a live link out in the world.
+       The work itself is still in the archive, so send the reader there
+       instead of to a dead end. */
+    location.replace("index.html#" + id);
+  } else {
+    $(".case-missing").hidden = false;
+  }
 })();
