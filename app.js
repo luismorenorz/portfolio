@@ -200,28 +200,64 @@
     setTimeout(function () { items.forEach(function (el) { el.classList.remove("is-armed"); }); }, 2600);
   }
 
-  /* --------------------------- 1. living cover ---------------------------
-     Four abstract CSS shapes. No project artwork, no requests to assets/.
-     Three layers of motion, each on its own element so none overwrite each
-     other: intro on the wrapper, idle keyframes on the painted ::before, and
-     parallax through --px / --py, which the idle keyframes read.
+  /* ------------------- 1. the cover, and the orb motif --------------------
+     The hero is a photograph now. The four shapes that used to live here are
+     not gone: they are the portfolio's abstract signature, kept intact and
+     turned into a reusable field that appears three times lower down. Their
+     silhouettes, gradients, blur, drift and intro are unchanged; only where
+     they sit is new, and that lives in CSS.
+
+     Three layers of motion, each on a different element so none overwrite the
+     others: the intro scales the wrapper, the idle keyframes move the painted
+     ::before, and parallax feeds --px / --py into those same keyframes.
      ----------------------------------------------------------------------- */
 
-  function buildCoverArt() {
-    var art = $(".cover-art");
-    if (!art) return;
+  /* which of the four shapes each field uses. Markup is generated, never
+     copied by hand, so a placement is one line here. */
+  var ORB_FIELDS = [
+    { sel: ".orbs-interlude",  shapes: [1, 3, 2] },
+    { sel: ".orbs-experience", shapes: [4, 3] },
+    { sel: ".orbs-contact",    shapes: [2, 1, 4] }
+  ];
 
-    // the intro animation is decorative; drop it after it has had its run so a
-    // frozen clock can never leave the shapes at opacity 0
-    setTimeout(function () { art.classList.remove("is-intro"); }, 1800);
+  function buildOrbs() {
+    ORB_FIELDS.forEach(function (f) {
+      var field = $(f.sel);
+      if (!field) return;
+      field.setAttribute("aria-hidden", "true");
+      f.shapes.forEach(function (n, i) {
+        var el = document.createElement("span");
+        el.className = "gradient-shape gradient-shape-" + n;
+        el.style.setProperty("--in-delay", (i * 90) + "ms");
+        field.appendChild(el);
+      });
+      armOrbField(field);
+    });
+  }
+
+  /* One field's motion. The intro class is dropped on a timer so a stalled
+     animation clock can never leave the shapes at opacity 0, and the drift
+     only runs while the field is on screen. */
+  function armOrbField(field) {
+    field.classList.add("is-intro");
+    var shapes = $$(".gradient-shape", field);
+    var depth = [22, -16, 18, -20];
+    var drift = [7, -5, 8, -6];
+    var frame = null, sy = 0, mx = 0, my = 0, live = true;
+
+    if (window.IntersectionObserver) {
+      live = false;
+      new IntersectionObserver(function (rows) {
+        rows.forEach(function (r) {
+          live = r.isIntersecting;
+          field.classList.toggle("is-idle", !live);
+          if (live) { field.classList.remove("is-intro"); onScroll(); }
+        });
+      }, { rootMargin: "120px" }).observe(field);
+    }
+    setTimeout(function () { field.classList.remove("is-intro"); }, 2400);
 
     if (prefersReduced()) return;
-
-    var shapes = $$(".gradient-shape", art);
-    var depth = [22, -16, 18, -20];          // scroll parallax, px
-    var drift = [7, -5, 8, -6];              // pointer parallax, px
-    var cover = $(".cover");
-    var sy = 0, mx = 0, my = 0, frame = null;
 
     function paint() {
       frame = null;
@@ -231,26 +267,27 @@
       });
     }
     function schedule() { if (!frame) frame = requestAnimationFrame(paint); }
-
     function onScroll() {
-      var r = cover.getBoundingClientRect();
+      if (!live) return;
+      var r = field.getBoundingClientRect();
       if (r.bottom < 0 || r.top > window.innerHeight) return;
-      sy = Math.max(-1, Math.min(1, -r.top / Math.max(1, window.innerHeight)));
+      sy = Math.max(-1, Math.min(1, -(r.top - window.innerHeight / 2) / window.innerHeight));
       schedule();
     }
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     onScroll();
 
-    // pointer parallax only where there is a real pointer
     if (window.matchMedia && window.matchMedia("(pointer: fine)").matches) {
-      cover.addEventListener("mousemove", function (e) {
-        var r = cover.getBoundingClientRect();
+      var host = field.parentNode;
+      host.addEventListener("mousemove", function (e) {
+        if (!live) return;
+        var r = host.getBoundingClientRect();
         mx = ((e.clientX - r.left) / r.width - 0.5) * 2;
         my = ((e.clientY - r.top) / r.height - 0.5) * 2;
         schedule();
       });
-      cover.addEventListener("mouseleave", function () { mx = 0; my = 0; schedule(); });
+      host.addEventListener("mouseleave", function () { mx = 0; my = 0; schedule(); });
     }
   }
 
@@ -1457,7 +1494,7 @@
 
   buildCatConfig();
   fillChrome();
-  buildCoverArt();
+  buildOrbs();
   buildBrowse();
   buildFilters();
   buildSystems();

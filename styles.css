@@ -120,29 +120,42 @@ a { color: inherit; }
 /* ============================ 1. LIVING COVER =========================== */
 
 .cover {
-  position: relative; min-height: 100svh;
+  /* The frame is 2.21:1. Letting the hero get much taller than that forces
+     `cover` to eat the left-hand negative space, which is where the type
+     lives, so the height tracks the picture's own proportion. */
+  position: relative; min-height: clamp(420px, calc(100vw / 2.05), 84svh);
   display: grid; grid-template-rows: 1fr auto;
   padding: clamp(28px, 5vw, 70px) var(--pad) clamp(20px, 3vw, 34px);
-  overflow: hidden; isolation: isolate;
+  overflow: clip; isolation: isolate;
+  background: #d9d8d6;            /* the studio grey, so nothing flashes white */
+  /* the site's --muted reads about 2:1 on this grey. Measured against the
+     photograph's own pixels, these two clear AA with room to spare. */
+  --cover-2nd: #333029;
 }
 
 /* ------------------------------------------------------------------------
-   The cover art: four abstract shapes drawn in CSS. No artwork, no requests
-   to assets/. Three layers of motion, each on a different element so they
-   never overwrite one another: the intro scales the wrapper, the idle
-   keyframes move the painted ::before, and JS parallax feeds --px / --py
-   into those same keyframes.
+   The orb motif. These four shapes opened the site before the photograph
+   arrived; they are kept exactly as they were — same silhouettes, same
+   gradients, same 2px blur, same drift — and turned into a field that can be
+   dropped anywhere. Only the placements below are new.
    ------------------------------------------------------------------------ */
 
-.cover-art { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.orb-field {
+  position: absolute; inset: 0; z-index: 0;
+  pointer-events: none;                 /* never in the way of a link */
+  overflow: clip;                       /* and never a source of sideways scroll */
+}
 .gradient-shape { position: absolute; }
 .gradient-shape::before {
   content: ""; position: absolute; inset: 0;
   transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
   animation: shape-idle var(--dur, 18s) ease-in-out var(--delay, 0s) infinite;
+  filter: blur(2px);                    /* static, never animated */
 }
+/* off screen: stop paying for the drift */
+.orb-field.is-idle .gradient-shape::before { animation-play-state: paused; }
 
-.cover-art.is-intro .gradient-shape {
+.orb-field.is-intro .gradient-shape {
   animation: shape-in var(--in, 860ms) var(--ease) backwards;
   animation-delay: var(--in-delay, 0ms);
 }
@@ -152,27 +165,15 @@ a { color: inherit; }
   50%      { transform: translate3d(var(--px, 0px), calc(var(--py, 0px) + var(--rise, -9px)), 0) rotate(var(--tilt, 1.2deg)); }
 }
 
-/* One dominant shape, two secondary, one small. They sit to the right and
-   low left of a clear vertical channel, so none of them lands on the type.
-   The radii stay well under 50% so the silhouettes read as cut paper rather
-   than as spheres, and the light is a corner wash, never a highlight. */
-.gradient-shape::before { filter: blur(2px); }   /* static, never animated */
-
-.gradient-shape-1 {
-  right: -9%; top: 6%; width: 36vw; aspect-ratio: 1 / 1.06;
-  --dur: 19s; --rise: -11px; --tilt: 1.1deg; --in-delay: 0ms;
-}
+/* ---- the four skins, unchanged ---- */
+.gradient-shape-1 { --dur: 19s; --rise: -11px; --tilt: 1.1deg; }
 .gradient-shape-1::before {
   border-radius: 34% 58% 30% 52% / 44% 30% 58% 40%;
   background:
     radial-gradient(115% 88% at 6% 2%, rgba(215, 196, 179, .40) 0%, rgba(215, 196, 179, 0) 58%),
     linear-gradient(148deg, var(--accent-rust) 0%, var(--accent-oxblood) 46%, #58202a 100%);
 }
-
-.gradient-shape-2 {
-  left: -10vw; bottom: -24%; width: 14vw; height: 72%;
-  --dur: 22s; --rise: 8px; --tilt: -0.9deg; --in-delay: 90ms;
-}
+.gradient-shape-2 { --dur: 22s; --rise: 8px; --tilt: -0.9deg; }
 .gradient-shape-2::before {
   border-radius: 40% 42% 26% 30% / 14% 16% 84% 82%;
   background:
@@ -180,22 +181,14 @@ a { color: inherit; }
     linear-gradient(196deg, var(--accent-charcoal) 0%, #4a453f 62%, #6d5c52 100%);
   opacity: .62;
 }
-
-.gradient-shape-3 {
-  right: 25%; bottom: -10%; width: 11vw; aspect-ratio: 1 / 1.2;
-  --dur: 16s; --rise: -7px; --tilt: 1.4deg; --in-delay: 180ms;
-}
+.gradient-shape-3 { --dur: 16s; --rise: -7px; --tilt: 1.4deg; }
 .gradient-shape-3::before {
   border-radius: 52% 34% 46% 30% / 34% 48% 34% 56%;
   background:
     radial-gradient(120% 92% at 4% 4%, rgba(215, 196, 179, .55) 0%, rgba(215, 196, 179, 0) 60%),
     linear-gradient(160deg, var(--accent-sand) 0%, #bc7359 46%, #8a3040 100%);
 }
-
-.gradient-shape-4 {
-  right: 32%; top: -10%; width: 8vw; height: 40%;
-  --dur: 14s; --rise: 10px; --tilt: -1.3deg; --in-delay: 270ms;
-}
+.gradient-shape-4 { --dur: 14s; --rise: 10px; --tilt: -1.3deg; }
 .gradient-shape-4::before {
   border-radius: 30% 44% 38% 26% / 18% 22% 78% 80%;
   background:
@@ -203,26 +196,62 @@ a { color: inherit; }
     linear-gradient(176deg, var(--accent-charcoal) 0%, #5d2733 58%, #93796a 100%);
 }
 
-.cover-type { align-self: center; max-width: 57%; position: relative; z-index: 1; }
-.cover-eyebrow { margin: 0 0 clamp(20px, 3vw, 38px); }
+/* ---- placement 1: a band between the archive and the long-form work ---- */
+.interlude {
+  position: relative; height: clamp(240px, 30vw, 360px);
+  background: var(--paper-2); border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline); overflow: clip;
+}
+.orbs-interlude .gradient-shape-1 { left: 6%;  top: -34%; width: 20vw; aspect-ratio: 1 / 1.06; }
+.orbs-interlude .gradient-shape-3 { left: 38%; bottom: -46%; width: 13vw; aspect-ratio: 1 / 1.2; }
+.orbs-interlude .gradient-shape-2 { right: -4vw; top: -18%; width: 11vw; height: 150%; }
+
+/* ---- placement 2: a counterweight in the experience section ---- */
+.orbs-experience .gradient-shape-4 { right: -5vw; top: 8%;  width: 12vw; height: 26%; }
+.orbs-experience .gradient-shape-3 { right: 4vw;  bottom: 6%; width: 8vw; aspect-ratio: 1 / 1.2; opacity: .8; }
+
+/* ---- placement 3: the closing cluster on the contact stage ---- */
+.orbs-contact .gradient-shape-2 { right: 2vw;  top: -12%; width: 15vw; height: 78%; }
+.orbs-contact .gradient-shape-1 { right: 20vw; bottom: -26%; width: 17vw; aspect-ratio: 1 / 1.06; }
+.orbs-contact .gradient-shape-4 { right: 36vw; top: -8%;  width: 7vw;  height: 34%; }
+
+/* ------------------------------------------------------------------------
+   The cover. One photograph, full bleed, with the copy in the negative space
+   the picture already leaves on the left. No panel behind the type: the
+   studio grey is quiet enough for charcoal, and the numbers are in the audit.
+   ------------------------------------------------------------------------ */
+
+.cover-photo { position: absolute; inset: 0; z-index: 0; display: block; }
+.cover-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  /* keep the subject; the empty left background is what gets cropped first */
+  object-position: right center;
+}
+
+.cover-type { align-self: center; max-width: 37%; min-width: 0; position: relative; z-index: 1; }
+.cover-eyebrow { margin: 0 0 clamp(20px, 3vw, 38px); color: var(--cover-2nd); }
 
 .cover-headline {
   margin: 0; font-family: var(--display);
-  font-size: clamp(52px, 11vw, 170px); font-weight: 600;
-  line-height: .88; letter-spacing: -.045em;
+  /* sized to sit inside the photograph's negative space, not across it */
+  font-size: clamp(38px, 5.4vw, 104px); font-weight: 600;
+  line-height: .9; letter-spacing: -.042em;
 }
 .cover-support {
   margin: clamp(20px, 2.6vw, 34px) 0 0; max-width: 34ch;
-  font-size: clamp(16px, 1.25vw, 20px); line-height: 1.5; color: var(--muted);
+  font-size: clamp(16px, 1.25vw, 20px); line-height: 1.5; color: var(--cover-2nd);
 }
 
 .cover-foot {
+  position: relative; z-index: 1;
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 20px; flex-wrap: wrap;
-  border-top: 1px solid var(--hairline); padding-top: 16px;
+  max-width: 37%;                  /* stays on the studio grey, off the subject */
+  border-top: 1px solid rgba(23, 23, 20, .22); padding-top: 16px;
 }
-.cover-issue { margin: 0; }
-.cover-cue { font-size: 13px; text-decoration: none; color: var(--muted); transition: color .2s var(--ease); }
+.cover-issue { margin: 0; color: var(--cover-2nd); }
+.cover-cue { font-size: 13px; text-decoration: none; color: var(--cover-2nd); transition: color .2s var(--ease); }
 .cover-cue:hover { color: var(--ink); }
 
 /* --------------------------- shared band head --------------------------- */
@@ -662,8 +691,10 @@ a { color: inherit; }
    Dates, locations and summaries here are information, not decoration, so the
    section uses two darker greys of the same family: 5.85:1 and 5.03:1. */
 .exp { --exp-muted: #615d56; --exp-faint: #6b675f;
+  position: relative; overflow: clip;      /* the orb field's containing block */
   border-top: 1px solid var(--ink); background: var(--paper); }
 .exp-inner {
+  position: relative; z-index: 1;          /* content always above the motif */
   max-width: var(--maxw); margin: 0 auto;
   padding: clamp(56px, 7vw, 116px) var(--pad) clamp(50px, 6vw, 100px);
 }
@@ -918,9 +949,12 @@ a { color: inherit; }
 /* ========================== 6. CONTACT STAGE ============================ */
 
 .contact {
+  position: relative; overflow: clip;      /* the orb field's containing block */
   background: var(--black); color: var(--d-ink);
   padding: clamp(64px, 10vw, 150px) var(--pad) clamp(56px, 8vw, 110px);
 }
+/* every piece of contact information sits above the shapes */
+.contact > *:not(.orb-field) { position: relative; z-index: 1; }
 .contact > * { max-width: var(--maxw); margin-left: auto; margin-right: auto; }
 .contact .band-label { color: var(--d-muted); }
 .contact-lead { margin: clamp(20px, 3vw, 34px) auto 0; font-size: clamp(17px, 1.5vw, 22px); color: var(--d-muted); }
@@ -1015,9 +1049,13 @@ body.is-locked { overflow: hidden; }
 }
 
 @media (max-width: 1200px) {
-  .cover-type { max-width: 70%; }
-  .gradient-shape-1 { width: 41vw; }
+  .cover-type { max-width: 39%; }
   .index-peek { width: 190px; }
+}
+
+/* the negative space narrows before the subject does */
+@media (max-width: 1000px) {
+  .cover-type, .cover-foot { max-width: 44%; }
 }
 
 @media (max-width: 1100px) {
@@ -1073,14 +1111,26 @@ body.is-locked { overflow: hidden; }
   .ach-list { grid-template-columns: 1fr; gap: 26px; }
   .ach:nth-child(2), .ach:nth-child(3) { margin-top: 0; }
 
-  .cover { min-height: auto; padding-bottom: clamp(28px, 5vw, 44px); }
+  /* Mobile art direction. The frame is 2.2:1; no portrait crop of it can hold
+     both the subject and a grey area big enough for a headline. So the photo
+     becomes a full-bleed band at the top of the hero — still edge to edge,
+     still one image, no card — and the copy sits under it on paper. */
+  .cover {
+    min-height: auto; padding-top: 0; padding-bottom: clamp(28px, 5vw, 44px);
+    background: var(--paper); grid-template-rows: auto 1fr auto;
+  }
+  .cover-photo {
+    position: relative; inset: auto; order: -1;
+    /* the mobile file is already cropped to 4:5 for this slot, so showing it
+       at 4:5 means the phone never crops it a second time */
+    /* height straight from the viewport width, so the 4:5 file shows whole
+       and the band still bleeds past the page gutter. aspect-ratio plus a
+       max-height would have shrunk the width instead of the height. */
+    height: min(calc(100vw * 1.25), 64svh);
+    margin: 0 calc(var(--pad) * -1) clamp(22px, 4vw, 34px);
+  }
+  .cover-photo img { object-position: center top; }
   .cover-type { max-width: 100%; }
-  /* the art moves above the headline and becomes a shallow band */
-  .cover-art { position: relative; inset: auto; height: 33svh; margin: 0 calc(var(--pad) * -1) clamp(22px, 4vw, 38px); order: -1; overflow: hidden; }
-  .gradient-shape-1 { right: 2%; top: 2%; width: 46vw; aspect-ratio: 1 / .78; }
-  .gradient-shape-2 { left: -6vw; bottom: -12%; width: 24vw; height: 78%; }
-  .gradient-shape-3 { right: 52%; bottom: -6%; width: 20vw; aspect-ratio: 1 / 1; }
-  .gradient-shape-4 { right: 34%; top: -6%; width: 15vw; height: 46%; }
 
   .system-inner { grid-template-columns: 1fr; min-height: 0; gap: 24px; }
   .caps-body { grid-template-columns: 1fr; }
@@ -1179,7 +1229,20 @@ body.is-locked { overflow: hidden; }
   .nav-long { display: none; }
 
   .tag-list { columns: 1; }
-  .cover-art { height: 30svh; }
+  .cover-photo { height: min(calc(100vw * 1.25), 58svh); }
+}
+
+/* phones: fewer shapes at once, and smaller, but never none */
+@media (max-width: 760px) {
+  .interlude { height: clamp(180px, 42vw, 240px); }
+  .orbs-interlude .gradient-shape-2,
+  .orbs-experience .gradient-shape-3,
+  .orbs-contact .gradient-shape-4 { display: none; }
+  .orbs-interlude .gradient-shape-1 { width: 38vw; }
+  .orbs-interlude .gradient-shape-3 { width: 26vw; left: 52%; }
+  .orbs-experience .gradient-shape-4 { width: 26vw; height: 18%; right: -9vw; }
+  .orbs-contact .gradient-shape-2 { width: 34vw; }
+  .orbs-contact .gradient-shape-1 { width: 40vw; right: 8vw; }
 }
 
 /* the narrowest phones: six labels will not fit however tight the tracking,
@@ -1211,7 +1274,7 @@ body.is-locked { overflow: hidden; }
   .entry-link:hover .arrow, .entry-link:focus-visible .arrow { transform: none; }
   .grid.is-in .entry, .entry { animation: none; }
   .grid.is-out { opacity: 1; transform: none; }
-  .gradient-shape::before, .cover-art.is-intro .gradient-shape { animation: none; }
+  .gradient-shape::before, .orb-field.is-intro .gradient-shape { animation: none; }
   .is-armed .route { transform: none; opacity: 1; }
   .exp-metrics.is-armed .metric, .ach.is-armed,
   .group-head.is-armed .group-num,

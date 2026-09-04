@@ -11,6 +11,12 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230f0f0d'/><text y='71' x='50' text-anchor='middle' font-family='Helvetica,Arial' font-weight='700' font-size='58' fill='%23f3f2f0'>M</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" type="image/webp" fetchpriority="high"
+      imagesrcset="assets/images/hero/luis-moreno-hero-1600.webp 1600w, assets/images/hero/luis-moreno-hero-2000.webp 2000w, assets/images/hero/luis-moreno-hero-2600.webp 2600w"
+      imagesizes="100vw" media="(min-width: 761px)">
+<link rel="preload" as="image" type="image/webp" fetchpriority="high"
+      imagesrcset="assets/images/hero/luis-moreno-hero-mobile-900.webp 900w, assets/images/hero/luis-moreno-hero-mobile-1200.webp 1200w"
+      imagesizes="100vw" media="(max-width: 760px)">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -36,14 +42,22 @@
 
   <!-- =========================== 1. LIVING COVER ========================= -->
   <section class="cover" aria-labelledby="cover-headline">
-    <!-- Four CSS shapes, no artwork. Kept as a self-contained block so it can
-         later be swapped for a single photograph without touching the type. -->
-    <div class="cover-art is-intro" aria-hidden="true">
-      <span class="gradient-shape gradient-shape-1"></span>
-      <span class="gradient-shape gradient-shape-2"></span>
-      <span class="gradient-shape gradient-shape-3"></span>
-      <span class="gradient-shape gradient-shape-4"></span>
-    </div>
+    <!-- The photograph is the hero. Two art directions, one source file: the
+         full frame on desktop, a 4:5 crop built for the phone. -->
+    <picture class="cover-photo">
+      <source media="(max-width: 760px)" type="image/webp"
+              srcset="assets/images/hero/luis-moreno-hero-mobile-900.webp 900w,
+                      assets/images/hero/luis-moreno-hero-mobile-1200.webp 1200w"
+              sizes="100vw">
+      <source type="image/webp"
+              srcset="assets/images/hero/luis-moreno-hero-1600.webp 1600w,
+                      assets/images/hero/luis-moreno-hero-2000.webp 2000w,
+                      assets/images/hero/luis-moreno-hero-2600.webp 2600w"
+              sizes="100vw">
+      <img src="assets/images/hero/luis-moreno-hero-2000.webp" width="2600" height="1176"
+           alt="Luis Moreno holding folders, coffee cups and a telephone in an editorial portrait."
+           fetchpriority="high" decoding="async">
+    </picture>
 
     <div class="cover-type">
       <p class="cover-eyebrow"></p>
@@ -115,6 +129,12 @@
     <div class="grid-more"><button type="button" class="more-btn" hidden></button></div>
   </section>
 
+  <!-- The abstract motif that used to live in the hero, now a transition
+       between the archive and the long-form work. -->
+  <div class="interlude" aria-hidden="true">
+    <div class="orb-field orbs-interlude"></div>
+  </div>
+
   <!-- =================== 4. SELECTED PRODUCTION SYSTEMS ================== -->
   <section id="systems" class="systems" aria-labelledby="systems-label">
     <header class="band-head" data-reveal>
@@ -140,6 +160,7 @@
 
   <!-- ========================== 6. EXPERIENCE MAP ======================== -->
   <section id="experience" class="exp" aria-labelledby="exp-label">
+    <div class="orb-field orbs-experience" aria-hidden="true"></div>
     <div class="exp-inner">
 
       <header class="exp-head" data-reveal>
@@ -191,6 +212,7 @@
 
   <!-- ========================== 8. CONTACT STAGE ========================= -->
   <section id="contact" class="contact" aria-labelledby="contact-label">
+    <div class="orb-field orbs-contact" aria-hidden="true"></div>
     <h2 class="band-label" id="contact-label">Contact</h2>
     <p class="contact-role"></p>
     <p class="contact-lead">Open to freelance and full-time opportunities.</p>
