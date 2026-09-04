@@ -917,20 +917,45 @@ a { color: inherit; }
 /* ========================= 5. ABOUT MANIFESTO =========================== */
 
 .about { border-top: 1px solid var(--hairline); background: var(--paper-2); }
+
+/* The statement and the photograph share one canvas. The picture is the
+   section's whole visual plane; the type lives on the empty wall it already
+   contains, and the heading starts further right than the body on purpose. */
+.about-stage {
+  position: relative; isolation: isolate; overflow: clip;
+  min-height: clamp(620px, 92svh, 1000px);
+  display: grid; grid-template-rows: auto 1fr;
+  padding: clamp(52px, 6.5vw, 104px) 0 clamp(44px, 5.5vw, 86px);
+  background: #efece7;               /* the wall, so nothing flashes white */
+}
+.about-photo { position: absolute; inset: 0; z-index: 0; display: block; }
+.about-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center center;
+}
+
 .about-statement {
-  max-width: var(--maxw); margin: 0 auto;
-  padding: clamp(60px, 9vw, 140px) var(--pad) clamp(30px, 4vw, 56px);
+  position: relative; z-index: 2;
+  /* narrow enough that it breaks into the reference's three lines, and the
+     short last line falls clear of the walking figure */
+  margin-left: 24%; max-width: min(40%, 640px);
   font-family: var(--display); font-weight: 600;
-  font-size: clamp(34px, 6.4vw, 104px); line-height: .95; letter-spacing: -.04em;
-  max-inline-size: 18ch;
+  font-size: clamp(30px, 4.4vw, 74px); line-height: .95; letter-spacing: -.04em;
 }
-.about-body-wrap {
-  max-width: var(--maxw); margin: 0 auto;
-  padding: 0 var(--pad) clamp(40px, 5vw, 70px);
-  display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  gap: clamp(32px, 5vw, 84px); align-items: start;
+.about-body {
+  position: relative; z-index: 2; align-self: end;
+  /* narrow enough to stay off the walking figure at every width */
+  margin-left: 6.5%; max-width: min(660px, 36%);
 }
-.about-body p { margin: 0 0 1.1em; font-size: clamp(18px, 1.5vw, 22px); line-height: 1.58; max-width: 46ch; }
+.about-body p { margin: 0 0 1.1em; font-size: clamp(16px, 1.15vw, 18px); line-height: 1.62; }
+.about-body p:last-child { margin-bottom: 0; }
+
+/* the paragraphs arrive on a short stagger, once */
+.about-body p { transition: opacity .6s var(--ease), transform .6s var(--ease); }
+.about-body p:nth-child(2) { transition-delay: 90ms; }
+.about-body p:nth-child(3) { transition-delay: 180ms; }
+.about-body.is-armed p { opacity: 0; transform: translateY(14px); }
+.about-body[data-reveal].is-armed { opacity: 1; transform: none; }
 
 
 .clients-wall { border-top: 1px solid var(--hairline); }
@@ -1053,6 +1078,13 @@ body.is-locked { overflow: hidden; }
   .index-peek { width: 190px; }
 }
 
+/* the composition holds on a tablet, with the offsets pulled in */
+@media (max-width: 1024px) {
+  .about-stage { min-height: clamp(560px, 88svh, 820px); }
+  .about-statement { margin-left: 16%; max-width: 70%; font-size: clamp(28px, 5.4vw, 56px); }
+  .about-body { margin-left: 6%; max-width: min(560px, 56%); }
+}
+
 /* the negative space narrows before the subject does */
 @media (max-width: 1000px) {
   .cover-type, .cover-foot { max-width: 44%; }
@@ -1066,7 +1098,6 @@ body.is-locked { overflow: hidden; }
   .viewer-inner { grid-template-columns: 1fr; }
   .viewer-info { position: static; }
   .tag-list { columns: 3 140px; }
-  .about-body-wrap { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 1080px) {
@@ -1131,6 +1162,21 @@ body.is-locked { overflow: hidden; }
   }
   .cover-photo img { object-position: center top; }
   .cover-type { max-width: 100%; }
+
+  /* the overlay composition needs width it does not have here, so the
+     section becomes a deliberate stack: heading, copy, then the picture */
+  .about-stage {
+    min-height: 0; padding: clamp(44px, 8vw, 70px) var(--pad) 0;
+    grid-template-rows: auto auto auto;
+  }
+  .about-photo {
+    position: relative; inset: auto; order: 3;
+    height: min(calc(100vw * 1.25), 62svh);
+    margin: clamp(28px, 5vw, 44px) calc(var(--pad) * -1) 0;
+  }
+  .about-photo img { object-position: center center; }
+  .about-statement { order: 1; margin-left: 0; max-width: 100%; font-size: clamp(30px, 7.4vw, 56px); }
+  .about-body { order: 2; margin-left: 0; max-width: 100%; margin-top: clamp(22px, 4vw, 34px); }
 
   .system-inner { grid-template-columns: 1fr; min-height: 0; gap: 24px; }
   .caps-body { grid-template-columns: 1fr; }
@@ -1281,6 +1327,7 @@ body.is-locked { overflow: hidden; }
   .group-head.is-armed .group-title,
   .group-head.is-armed .group-blurb { opacity: 1; transform: none; }
   .role::before { transition: none; }
+  .about-body.is-armed p { opacity: 1; transform: none; }
 }
 
 @media print {

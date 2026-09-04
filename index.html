@@ -198,10 +198,27 @@
   <!-- =========================== 7. ABOUT ================================ -->
   <section id="about" class="about" aria-labelledby="about-label">
     <h2 class="visually-hidden" id="about-label">About</h2>
-    <div class="about-statement"><span class="reveal"></span></div>
 
-    <div class="about-body-wrap">
-      <div class="about-body"></div>
+    <!-- One editorial plane: the photograph is the section's background and
+         the statement and body sit on the empty wall it already provides. -->
+    <div class="about-stage">
+      <picture class="about-photo">
+        <source media="(max-width: 760px)" type="image/webp"
+                srcset="assets/images/sections/brand-systems-mobile-900.webp 900w,
+                        assets/images/sections/brand-systems-mobile-1200.webp 1200w"
+                sizes="100vw">
+        <source type="image/webp"
+                srcset="assets/images/sections/brand-systems-1400.webp 1400w,
+                        assets/images/sections/brand-systems-1800.webp 1800w,
+                        assets/images/sections/brand-systems-2400.webp 2400w"
+                sizes="100vw">
+        <img src="assets/images/sections/brand-systems-1800.webp" width="3278" height="2111"
+             alt="Luis Moreno walking in front of a physical brand moodboard."
+             loading="lazy" decoding="async">
+      </picture>
+
+      <div class="about-statement"><span class="reveal"></span></div>
+      <div class="about-body" data-reveal></div>
     </div>
 
     <div class="clients-wall">
