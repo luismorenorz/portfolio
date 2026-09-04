@@ -19,6 +19,10 @@
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
 
   var TAG_FILTER_MIN = 3;
+  /* Tags that cut across every discipline and are worth a chip of their own in
+     the filter bar, so they never hide behind "Filter by tag". They stay tags:
+     a project keeps its category, its colour and its place in the file. */
+  var QUICK_TAGS = ["Beauty"];
   var DEFAULT_VIEW = "grid";
   var CURATED_COUNT = 12;
   var GRID_PAGE = 24;
@@ -113,6 +117,25 @@
   function slugify(s) {
     return s.toLowerCase().replace(/&/g, " ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
   }
+  /* Tags travel in the URL as slugs, so ?tag=beauty has to find "Beauty"
+     again. Read back from the data, never from a hardcoded list. */
+  function tagFromSlug(slug) {
+    var found = null;
+    PROJECTS.forEach(function (p) {
+      p.tags.forEach(function (t) { if (!found && slugify(t) === slug) found = t; });
+    });
+    return found;
+  }
+  function tagsFromParam(v) {
+    if (!v) return [];
+    var out = [];
+    v.split(",").forEach(function (s) {
+      var t = tagFromSlug(s.trim().toLowerCase());
+      if (t && out.indexOf(t) === -1) out.push(t);
+    });
+    return out;
+  }
+
   function catFromSlug(slug) {
     for (var i = 0; i < CATEGORIES.length; i++) {
       if (slugify(CATEGORIES[i]) === slug) return CATEGORIES[i];
@@ -673,6 +696,30 @@
       .filter(function (t) { return counts[t] >= TAG_FILTER_MIN; })
       .sort(function (a, b) { return a.localeCompare(b); });
 
+    /* The cross-discipline chips. They sit in the filter line itself, outside
+       the tools that collapse behind "Refine", so they stay reachable at every
+       width without hover and without opening a panel. */
+    var quick = $(".quick-tags");
+    if (quick) {
+      quick.innerHTML = "";
+      QUICK_TAGS.forEach(function (t) {
+        if (!counts[t]) return;
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "quick-tag"; b.dataset.value = t;
+        b.setAttribute("aria-pressed", "false");
+        var mark = document.createElement("span");
+        mark.className = "qt-mark"; mark.setAttribute("aria-hidden", "true");
+        mark.textContent = "\u2713";
+        var n = document.createElement("span");
+        n.className = "qt-n"; n.textContent = counts[t];
+        b.appendChild(mark);
+        b.appendChild(document.createTextNode(t + " "));
+        b.appendChild(n);
+        b.addEventListener("click", function () { toggleTag(t); });
+        quick.appendChild(b);
+      });
+    }
+
     var list = $(".tag-list");
     filterable.forEach(function (t) {
       var b = document.createElement("button");
@@ -683,6 +730,37 @@
     });
     $(".tag-note").textContent = (Object.keys(counts).length - filterable.length) +
       " narrower tags live on the projects. Open one and click a tag to find its relatives.";
+
+    /* A filter is only shareable if the reader can get hold of the link. The
+       address bar already carries it; this hands it over in one click. */
+    var share = $(".share-link"), said = $(".share-said"),
+        field = $(".share-url"), sayTimer;
+    if (share) {
+      share.addEventListener("click", function () {
+        var url = shareHref();
+        clearTimeout(sayTimer);
+        copyText(url).then(function () {
+          field.hidden = true;
+          share.textContent = "Link copied";
+          said.textContent = state.q
+            ? "Link copied. Search terms are not part of the link."
+            : "Link copied.";
+        }, function () {
+          /* Some browsers refuse the clipboard off https, and a file:// page
+             always does. Put the link on screen instead, selected, so it can
+             still be copied by hand rather than silently going nowhere. */
+          share.textContent = "Copy link";
+          field.hidden = false;
+          field.value = url;
+          field.focus(); field.select();
+          said.textContent = "Copy this link: " + url;
+        });
+        sayTimer = setTimeout(function () {
+          share.textContent = "Copy link"; said.textContent = "";
+        }, 6000);
+      });
+      field.addEventListener("focus", function () { field.select(); });
+    }
 
     var toggle = $(".tag-toggle"), panel = $(".tag-panel");
     toggle.addEventListener("click", function () {
@@ -771,6 +849,8 @@
     var i = state.tags.indexOf(t);
     if (i === -1) state.tags.push(t); else state.tags.splice(i, 1);
     state.shown = GRID_PAGE;
+    writeURL(true, "#archive");
+    writeTitle();
     render();
   }
 
@@ -791,16 +871,19 @@
       b.setAttribute("aria-pressed", String(b.dataset.slug === active.slug));
     });
 
-    $$(".tag-list .tag").forEach(function (b) {
+    $$(".tag-list .tag, .quick-tags .quick-tag").forEach(function (b) {
       b.setAttribute("aria-pressed", String(state.tags.indexOf(b.dataset.value) !== -1));
     });
     $$(".view").forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.dataset.view === state.view));
     });
 
+    /* Tags that already have a chip in the filter line are not repeated here:
+       the chip is the control, and two pills for one tag read as two filters. */
     var bar = $(".active-tags");
     bar.innerHTML = "";
     state.tags.forEach(function (t) {
+      if (QUICK_TAGS.indexOf(t) !== -1) return;
       var b = document.createElement("button");
       b.type = "button"; b.className = "active-tag";
       b.setAttribute("aria-label", "Remove tag " + t);
@@ -815,6 +898,21 @@
       state.tags.length ? "Filter by tag (" + state.tags.length + ")" : "Filter by tag";
     var narrowed = !!state.cat || state.tags.length > 0 || !!state.q;
     $$(".clear-filters").forEach(function (b) { b.hidden = !narrowed; });
+
+    /* Only offered when the URL actually carries the selection. A search-only
+       view has nothing to put in a link, so the button stays away. */
+    var share = $(".share-link");
+    if (share) {
+      var shareable = !!state.cat || state.tags.length > 0;
+      share.hidden = !shareable;
+      if (shareable) {
+        share.title = "Copy a link to this selection: " + shareHref();
+      } else {
+        share.textContent = "Copy link";
+        $(".share-said").textContent = "";
+        $(".share-url").hidden = true;
+      }
+    }
   }
 
   // keep the selected tab in view when the row scrolls sideways on a phone
@@ -898,7 +996,11 @@
       ? all.length + (all.length === 1 ? " project" : " projects")
       : (curated ? "12 selected of " + PROJECTS.length
                  : all.length + " projects");
-    $(".work-title").textContent = state.cat || "All work";
+    var heading = state.cat || "All work";
+    if (state.tags.length) {
+      heading = (state.cat ? state.cat + " \u00b7 " : "") + state.tags.join(" + ");
+    }
+    $(".work-title").textContent = heading;
     $(".work-count").textContent = count;
     $(".filter-count").textContent = count;
 
@@ -1089,17 +1191,48 @@
 
   var BASE_TITLE = "";
 
-  // the AI filter is a link people share, so it gets its own document title
+  // filters people share get their own document title
   function writeTitle() {
     if (!BASE_TITLE) BASE_TITLE = document.title;
-    document.title = state.cat === "AI" ? "AI Work | " + SITE.name : BASE_TITLE;
+    var quick = state.tags.length === 1 && QUICK_TAGS.indexOf(state.tags[0]) !== -1;
+    if (state.cat === "AI") document.title = "AI Work | " + SITE.name;
+    else if (quick && !state.cat) document.title = state.tags[0] + " Work | " + SITE.name;
+    else document.title = BASE_TITLE;
+  }
+
+  function filterQuery() {
+    var qs = [];
+    if (state.cat) qs.push("category=" + slugify(state.cat));
+    if (state.tags.length) qs.push("tag=" + state.tags.map(slugify).join(","));
+    if (state.view !== DEFAULT_VIEW) qs.push("view=" + state.view);
+    return qs.length ? "?" + qs.join("&") : "";
+  }
+
+  /* The link a reader can hand to someone else. Absolute, and always pointed
+     at the archive, so it opens on the work and not on the cover. */
+  function shareHref() {
+    return location.origin + location.pathname + filterQuery() + "#archive";
+  }
+
+  function copyText(t) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(t);
+    }
+    return new Promise(function (res, rej) {
+      var ta = document.createElement("textarea");
+      ta.value = t; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.top = "-1000px";
+      document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, t.length);
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      ok ? res() : rej(new Error("copy blocked"));
+    });
   }
 
   function writeURL(push, hash) {
-    var qs = [];
-    if (state.cat) qs.push("category=" + slugify(state.cat));
-    if (state.view !== DEFAULT_VIEW) qs.push("view=" + state.view);
-    var url = location.pathname + (qs.length ? "?" + qs.join("&") : "") + (hash || "");
+    var url = location.pathname + filterQuery() + (hash || "");
     if (push) history.pushState(null, "", url);
     else history.replaceState(null, "", url);
   }
@@ -1131,13 +1264,13 @@
     render({ light: true });
   }
 
-  // The URL carries category and view. Tags and the search box are not in it,
-  // so a history move has to clear them or a stale query keeps filtering.
+  // The URL carries category, tag and view. The search box is not in it, so a
+  // history move has to clear it or a stale query keeps filtering.
   function applyURL(fromPop) {
     var q = new URLSearchParams(location.search);
     var view = q.get("view");
     state.view = (view === "grid" || view === "index" || view === "curated") ? view : DEFAULT_VIEW;
-    state.tags = [];
+    state.tags = tagsFromParam(q.get("tag"));
     state.q = "";
     var box = $(".search input");
     if (box) box.value = "";

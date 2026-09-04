@@ -3,7 +3,7 @@
 **https://luismorenorz.github.io/portfolio/**
 
 A static production-design portfolio built from the Figma file
-*Oct-2025-Luis-Moreno-Resume* plus a folder of motion work. 76 projects, 232
+*Oct-2025-Luis-Moreno-Resume* plus a folder of motion work. 82 projects, 282
 pieces, 10 disciplines. No build step, no dependencies. Anyone with the link
 can see the work.
 

@@ -99,7 +99,7 @@ const STORIES = [
     ],
     line: "One inbox system stretched across drops, education and apparel.",
     cover: { image: "2-10" },
-    next: "cafe-cafe",
+    next: "sky18",
     projects: ["rove-campaigns", "rove-education", "rove-heroes"],
     sections: [
       { kind: "text", title: "Overview",
@@ -136,52 +136,64 @@ const STORIES = [
   },
 
   {
-    id: "cafe-cafe",
+    id: "sky18",
     number: "03",
-    client: "Café Café",
-    title: "Brand Identity",
-    disciplines: ["Branding", "Print", "Art Direction"],
-    year: "2025",
+    client: "Sky 18 Capital",
+    title: "Rebrand and Rollout",
+    disciplines: ["Branding", "Web & UI", "Motion"],
+    year: "2026",
     role: "Designer",
     deliverables: [
       "Logotype and mark",
       "Colour and type system",
-      "Uniforms and signage",
-      "Packaging and print",
-      "Verbal identity"
+      "Website design",
+      "Email newsletter and signature",
+      "LinkedIn graphics",
+      "Brand film"
     ],
-    line: "A neighbourhood coffee shop that repeats itself on purpose.",
-    cover: { image: "3-17-03" },
+    line: "A private lender rebuilt from the mark out to the live site.",
+    cover: { image: "sky18-rebrand-01" },
     next: "greenhouse",
-    projects: ["cafe-cafe"],
+    projects: ["sky18-rebrand", "sky18-site", "sky18-film"],
     sections: [
       { kind: "text", title: "Overview",
-        body: "A full identity for a neighbourhood coffee shop: mark, palette, type, uniforms, signage, packaging and voice. Ten applications in the set." },
+        body: "Sky 18 Capital is a private lending firm in North Miami that funds real estate investors. The rebrand covers the mark, the palette, the website, the email system and the social graphics, and ends with the live site at sky18capital.com and a brand film." },
 
       { kind: "text", title: "Challenge",
-        body: "The name says the same word twice. That could read as a mistake or as a decision. The identity had to make it obviously the second one, and stay warm rather than clever." },
+        body: "Private lending sells on trust and speed at the same time. The identity had to look like an institution a broker would send a deal to, and still move at the pace the category promises. Nothing in the category's usual toolkit — stock skylines, gold gradients — does both." },
 
-      { kind: "quote", text: "Café Café. Repite después de mí." },
+      { kind: "duo", images: ["sky18-rebrand-01", "sky18-rebrand-03"],
+        caption: "The lockup set on charcoal and on white: horizontal, stacked and the mark on its own." },
 
-      { kind: "duo", images: ["3-17-04", "3-17-03"],
-        caption: "The wordmark set in a hand-drawn circle, and the same letters loose on ochre." },
+      { kind: "text", title: "The mark",
+        body: "The symbol reads two ways at once: a skyline of vertical bars and a bar chart. It carries the property side and the capital side in one shape, and it survives being shrunk to a favicon or a LinkedIn avatar because it has no detail to lose." },
 
-      { kind: "text", title: "Creative approach",
-        body: "Repetition became the whole system. The wordmark curves around on itself so the two words meet. The voice repeats its own lines. A hand-drawn smile works as a mark small enough for a cup and large enough for a wall." },
+      { kind: "quote", text: "Capital that moves as fast as your next deal." },
 
-      { kind: "aside", image: "3-17-08", title: "Palette",
-        body: "Six named colours: ocre, maroon, midnight, lait, dalgona, tan and cielo. Warm and slightly dusty, closer to paper stock than to a screen palette, which is what the print and uniform applications needed." },
+      { kind: "aside", image: "sky18-rebrand-05", title: "Palette",
+        body: "Five named colours: Charcoal Trust, Skyline Blue, Capital Blue, Limestone White and Sandstone Beige. The blues carry the finance signal, and the two warm neutrals keep the documents and long-form pages from reading as cold." },
 
-      { kind: "trio", images: ["3-17-02", "3-17-05", "3-17-09"],
-        caption: "Photography sits in the same warm register as the palette." },
+      { kind: "text", title: "The site",
+        body: "The website was designed around the questions an investor actually arrives with. Three loan programs — fix and flip, bridge loans and ground-up construction — then a five-step funding review, a checklist of the documents to prepare before requesting terms, a map of the Florida markets served, a comparison table across programs, and a form to submit a deal." },
 
-      { kind: "text", title: "Applications",
-        body: "Uniforms carry the smile as embroidery and the wordmark across the back. Signage puts the mark at architectural scale next to the street number. The cup, the apron and the shopfront all read from different distances with the same two elements." },
+      { kind: "full", image: "sky18-site-01",
+        caption: "The live site at sky18capital.com, top to bottom." },
 
-      { kind: "duo", images: ["3-17-07", "3-17-10"],
-        caption: "Uniform and shopfront." },
+      { kind: "text", title: "The system in use",
+        body: "Beyond the site, the identity had to hold in the places a lender actually appears: a campaign newsletter, an email signature that doubles as a business card, and a LinkedIn set covering the profile banner, the post format and the profile frame." },
 
-      { kind: "full", image: "3-17-06", caption: "Nos repetimos porque lo simple se disfruta dos veces." }
+      { kind: "trio", images: ["sky18-rebrand-06", "sky18-rebrand-07", "sky18-rebrand-08"],
+        caption: "Email newsletter, email signature and the LinkedIn graphics." },
+
+      { kind: "text", title: "Motion",
+        body: "A 78-second brand film closes the rollout, introducing the firm and the three programs in the same palette and type the rest of the system uses." },
+
+      { kind: "reel", videos: ["sky18-film-01"],
+        caption: "The brand film." },
+
+      { kind: "full", image: "sky18-rebrand-02",
+        caption: "We are private lenders." }
     ]
   }
+
 ];

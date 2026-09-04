@@ -143,6 +143,47 @@ const PROJECTS = [
     images: ["2-12", "2-13", "2-14", "2-15", "18-19", "18-921"]
   },
   {
+    id: "ff-emails",
+    title: "Finding Ferdinand Email Campaigns",
+    client: "Finding Ferdinand",
+    category: "Email",
+    tags: ["Email", "Beauty", "Cosmetics", "Ecommerce", "Email Production"],
+    year: "2026",
+    summary:
+      "Five campaign emails for a New York lip-colour brand, from Spring's Softest Shade through a summer packing edit, National Lipstick Day and National Kiss & Make Up Day. Beauty crops carry the hero, product rows carry the shade story.",
+    images: [
+      "ff-emails-01", "ff-emails-02", "ff-emails-03", "ff-emails-04",
+      "ff-emails-05"
+    ]
+  },
+  {
+    id: "puregenius-emails",
+    title: "Pure Genius Email Campaigns",
+    client: "Pure Genius",
+    category: "Email",
+    tags: ["Email", "Wellness", "Supplements", "Ecommerce", "Email Production"],
+    year: "2026",
+    summary:
+      "Five campaign emails for a protein and fiber shot: a first-order welcome, the flavour line-up, a founder story, a comparison table against powders and a clinician section.",
+    images: [
+      "puregenius-emails-01", "puregenius-emails-02", "puregenius-emails-03", "puregenius-emails-04",
+      "puregenius-emails-05"
+    ]
+  },
+  {
+    id: "snow-emails",
+    title: "SNOW Email Campaigns",
+    client: "SNOW",
+    category: "Email",
+    tags: ["Email", "Beauty", "Oral Care", "Ecommerce", "Email Production"],
+    year: "2026",
+    summary:
+      "Three campaign emails for a teeth-whitening brand: a best-sellers spotlight, a back-to-school send and an extra-strength results email. Close beauty portraits do the selling; the product sits underneath.",
+    images: [
+      "snow-emails-01", "snow-emails-02", "snow-emails-03"
+    ]
+  },
+  {
     id: "golden-hour-hemp",
     title: "Wholesale promo emails",
     client: "Golden Hour Hemp",
@@ -251,6 +292,54 @@ const PROJECTS = [
     summary:
       "Eight paid social and display assets for premium Apple Watch bands, all running the line \"when the occasion calls for something sharper\".",
     images: ["156-100", "156-101", "156-102", "156-103", "156-104", "156-97", "156-98", "156-99"]
+  },
+  {
+    id: "vysen-summer",
+    title: "Vysen Summer Campaign",
+    client: "Vysen",
+    category: "Advertising",
+    tags: ["Advertising", "Beauty", "AI-Assisted", "Eyewear", "Paid Social"],
+    year: "2026",
+    isAI: true,
+    summary:
+      "Sixteen 4:5 paid-social frames for an eyewear brand, cut across three campaign lines: heat and craftsmanship, summer looks and leave your mark. Editorial portraits and product-only frames run on the same grid, and most of the set was built with AI-assisted imagery.",
+    images: [
+      "vysen-summer-01", "vysen-summer-02", "vysen-summer-03", "vysen-summer-04",
+      "vysen-summer-05", "vysen-summer-06", "vysen-summer-07", "vysen-summer-08",
+      "vysen-summer-09", "vysen-summer-10", "vysen-summer-11", "vysen-summer-12",
+      "vysen-summer-13", "vysen-summer-14", "vysen-summer-15", "vysen-summer-16"
+    ]
+  },
+  {
+    id: "equilibrio-gut1",
+    title: "Gut 1 AI Product Imagery",
+    client: "equilibri-o",
+    category: "Advertising",
+    tags: ["Advertising", "AI-Assisted", "Product Imagery", "Wellness", "Supplements"],
+    year: "2026",
+    isAI: true,
+    summary:
+      "Fifteen AI-assisted product images for a gut-health supplement tub: studio shots on plinths, flat lays, stacked and grouped packs, and in-home lifestyle frames. One sage palette holds the whole library together.",
+    images: [
+      "equilibrio-gut1-01", "equilibrio-gut1-02", "equilibrio-gut1-03", "equilibrio-gut1-04",
+      "equilibrio-gut1-05", "equilibrio-gut1-06", "equilibrio-gut1-07", "equilibrio-gut1-08",
+      "equilibrio-gut1-09", "equilibrio-gut1-10", "equilibrio-gut1-11", "equilibrio-gut1-12",
+      "equilibrio-gut1-13", "equilibrio-gut1-14", "equilibrio-gut1-15"
+    ]
+  },
+  {
+    id: "vysen-boss",
+    title: "Vysen The Boss Campaign",
+    client: "Vysen",
+    category: "Advertising",
+    tags: ["Advertising", "Beauty", "Eyewear", "Paid Social", "Campaign Production"],
+    year: "2026",
+    summary:
+      "Six 4:5 frames for the brand's statement-frame line. One editorial portrait, one message and one call to action per frame, shot against tailoring, clay and low light.",
+    images: [
+      "vysen-boss-01", "vysen-boss-02", "vysen-boss-03", "vysen-boss-04",
+      "vysen-boss-05", "vysen-boss-06"
+    ]
   },
   {
     id: "greenhouse-smoothies",
@@ -562,7 +651,7 @@ const PROJECTS = [
     title: "Wellness brand feed",
     client: "IDUNA",
     category: "Social",
-    tags: ["Social", "Art Direction", "Wellness", "Editorial", "Spanish"],
+    tags: ["Social", "Art Direction", "Beauty", "Wellness", "Editorial", "Spanish"],
     year: "2025",
     summary:
       "Monochrome social system for a body and wellness brand, positioned as \"a new approach to beauty and health\".",

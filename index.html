@@ -94,6 +94,11 @@
       <!-- level two: everything that narrows the selection further -->
       <div class="filter-line">
         <p class="filter-count" aria-hidden="true"></p>
+        <!-- cross-discipline tags, always visible: they never collapse behind Refine -->
+        <div class="quick-tags" role="group" aria-label="Filter by cross-discipline tag"></div>
+        <button type="button" class="share-link" hidden>Copy link</button>
+        <input class="share-url" type="text" readonly hidden aria-label="Link to this selection">
+        <span class="share-said" role="status" aria-live="polite"></span>
         <button type="button" class="refine-toggle" aria-expanded="false" aria-controls="refine">Refine<span class="chev" aria-hidden="true">&#8964;</span></button>
         <div class="filter-tools" id="refine">
           <div class="active-tags" aria-live="polite"></div>
