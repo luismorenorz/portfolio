@@ -121,6 +121,8 @@
   function categoryCounts() {
     var c = {};
     PROJECTS.forEach(function (p) { c[p.category] = (c[p.category] || 0) + 1; });
+    // AI counts every project marked AI, whatever discipline it belongs to
+    c["AI"] = PROJECTS.filter(isAI).length;
     return c;
   }
   function storyFor(id) {
@@ -130,8 +132,18 @@
     return null;
   }
 
+  /* AI is the one discipline that overlaps: a project keeps its own category
+     and still answers to the AI filter when it is marked `isAI: true`. The
+     flag is deliberate and never inferred from a tag, because "AI" also
+     appears as a sector tag on work made FOR an AI company, which is not
+     AI-assisted production and must not be counted as such. */
+  function isAI(p) {
+    return p.category === "AI" || p.isAI === true;
+  }
+
   function matches(p) {
-    if (state.cat && p.category !== state.cat) return false;
+    if (state.cat === "AI") { if (!isAI(p)) return false; }
+    else if (state.cat && p.category !== state.cat) return false;
     for (var i = 0; i < state.tags.length; i++) {
       if (p.tags.indexOf(state.tags[i]) === -1) return false;
     }
@@ -895,6 +907,14 @@
      the tag links and the history. Nothing else may set state.cat.
      ----------------------------------------------------------------------- */
 
+  var BASE_TITLE = "";
+
+  // the AI filter is a link people share, so it gets its own document title
+  function writeTitle() {
+    if (!BASE_TITLE) BASE_TITLE = document.title;
+    document.title = state.cat === "AI" ? "AI Work | " + SITE.name : BASE_TITLE;
+  }
+
   function writeURL(push, hash) {
     var qs = [];
     if (state.cat) qs.push("category=" + slugify(state.cat));
@@ -912,6 +932,7 @@
     // curated is a hand-picked twelve; narrowing to one discipline leaves it
     if (c.cat && state.view === "curated") state.view = "grid";
     if (opts.push !== false) writeURL(true, "#archive");
+    writeTitle();
     render(opts);
     scrollTabIntoView();
     if (opts.scroll) {
@@ -1030,6 +1051,7 @@
         fig.appendChild(cap);
       }
       box.appendChild(fig); idx++;
+      watchOffscreen(v);
     });
 
     (p.images || []).forEach(function (key) {
@@ -1064,6 +1086,19 @@
     if (pushHash) writeURL(false, "#" + p.id);
   }
 
+  /* A clip that scrolls out of the panel stops playing: no audio or decoding
+     work continues behind the reader's back. */
+  var offscreen = null;
+  function watchOffscreen(v) {
+    if (!window.IntersectionObserver) return;
+    if (!offscreen) {
+      offscreen = new IntersectionObserver(function (rows) {
+        rows.forEach(function (r) { if (!r.isIntersecting && !r.target.paused) r.target.pause(); });
+      }, { root: $(".viewer-body"), threshold: 0.05 });
+    }
+    offscreen.observe(v);
+  }
+
   function addFact(dl, term, value) {
     var row = document.createElement("div");
     var dt = document.createElement("dt"); dt.textContent = term;
@@ -1083,6 +1118,7 @@
     viewer.hidden = true;
     document.body.classList.remove("is-locked");
     $$("video", viewer).forEach(function (v) { v.pause(); });
+    if (offscreen) { offscreen.disconnect(); offscreen = null; }
     $(".viewer-images").innerHTML = "";
     if (skipURL !== true) writeURL(false, "");
     if (lastFocus && lastFocus.focus) lastFocus.focus();

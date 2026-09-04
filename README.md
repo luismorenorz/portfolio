@@ -184,6 +184,7 @@ site/            the website, the only folder you need to publish
   assets/full/       166 full-size WebP images
   assets/thumb/      166 grid thumbnails
   assets/video/      54 clips, assets/preview/ hover loops, assets/poster/ stills
+                     keys are <project-id>-NN; provenance in MOTION-MANIFEST.md
 
 build/           the extraction pipeline, kept for re-runs. Not published.
   manifest.tsv       every artboard pulled out of Figma
@@ -198,6 +199,14 @@ build/           the extraction pipeline, kept for re-runs. Not published.
 
 `build/raw/` is your full-resolution archive. Worth keeping, but do not upload
 it with the site.
+
+## Where the motion came from
+
+`MOTION-MANIFEST.md` maps every clip back to its original Google Drive file:
+Drive filename, original size, local key, optimized size, dimensions, project,
+category and AI flag. The 1.28 GB of originals stay in Drive; the repository
+carries 46 MB of optimized MP4 plus 3 MB of hover loops and 2 MB of posters.
+Nothing over 8 MB is committed.
 
 ## A note on the source Figma file
 

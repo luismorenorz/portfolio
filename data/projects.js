@@ -33,6 +33,12 @@
    stays clickable from the preview sheet.
 --------------------------------------------------------------------------- */
 
+/* AI is an overlapping filter. A project appears under it when its category
+   is "AI" or when it carries `isAI: true`, which is how an AI-assisted piece
+   in another discipline joins the filter without leaving its own category.
+   The flag is never inferred from the "AI" tag: that tag also marks work made
+   for AI companies, which is a client sector, not a production method. */
+
 const SITE = {
   name: "Luis Moreno",
   role: "Production Designer & Graphic Designer",
@@ -64,7 +70,7 @@ const SITE = {
   capabilities: [
     ["Campaign production", "One idea carried across every placement a launch needs.", "156-113", "image"],
     ["Paid social & display", "Feed, story and banner sets, resized and re-cropped per platform.", "156-100", "image"],
-    ["Motion graphics", "Animated heroes, shoppable spots and campaign cuts.", "hero-1", "poster"],
+    ["Motion graphics", "Animated heroes, shoppable spots and campaign cuts.", "rove-heroes-01", "poster"],
     ["Email design", "Lifecycle and promotional email, built for the clients that break things.", "2-10", "image"],
     ["Retail & print", "Displays, cooler wraps and shelf blades, render through to dielines.", "171-31", "image"],
     ["Packaging", "Cartons, sleeves and spec sheets ready for a printer.", "156-40", "image"],
@@ -72,7 +78,7 @@ const SITE = {
     ["Web & landing pages", "Responsive pages built around one clear first step.", "3-41", "image"],
     ["Brand-system execution", "Extending an identity across the applications that prove it holds.", "3-17-03", "image"],
     ["Bilingual adaptation", "EN/FR layouts where every line length changes.", "156-50", "image"],
-    ["AI-assisted workflows", "Generated film and image-to-video, used where it earns its place.", "vid-6-16x9", "poster"]
+    ["AI-assisted workflows", "Generated film and image-to-video, used where it earns its place.", "generac-ai-film-02", "poster"]
   ]
 };
 
@@ -231,7 +237,7 @@ const PROJECTS = [
     year: "2025",
     summary: "New arrivals email for a fine jewelry retailer: type on white above a single product shot, with the hero animated.",
     images: ["18-2"],
-    videos: ["giffycanvas-1"]
+    videos: ["ben-bridge-01"]
   },
 
   /* ---------------------------- ADVERTISING ---------------------------- */
@@ -363,10 +369,10 @@ const PROJECTS = [
     year: "2025",
     summary:
       "Seven cuts for a juice and protein brand across vertical, square and widescreen: the microplastics explainer, the Green Ritual banner, a Union Station screen, an Instacart shoppable spot.",
-    videos: ["20250409-gh-microplasticsvideos-solution-108", "20250606-gh-greenritual-banner-video-1080x19",
-             "20251112-gh-dtd-hdvideobanner-b-1080x1920-v2", "20251113-gh-dtd-fg-instacart-shoppable-video",
-             "20250613-gh-proteinplus-union-station-video", "20250812-gh-protein-paid-ads-1080x1080-2",
-             "202511051703-2"]
+    videos: ["gh-campaign-video-01", "gh-campaign-video-02",
+             "gh-campaign-video-03", "gh-campaign-video-04",
+             "gh-campaign-video-05", "gh-campaign-video-06",
+             "gh-campaign-video-07"]
   },
   {
     id: "gh-protein-heroes",
@@ -376,7 +382,7 @@ const PROJECTS = [
     tags: ["Motion", "Email", "CPG", "Product Photography"],
     year: "2025",
     summary: "Two animated email heroes for the Protein+ shake launch, built on the line \"we solved the protein problem\".",
-    videos: ["hero-animation", "hero-anim-protein-2"]
+    videos: ["gh-protein-heroes-01", "gh-protein-heroes-02"]
   },
   {
     id: "rove-heroes",
@@ -387,8 +393,8 @@ const PROJECTS = [
     year: "2025",
     summary:
       "Nine looping heroes for a cannabis lifestyle brand, covering the apparel drops and the Drink Loud beverage line.",
-    videos: ["hero-1", "hero-2", "hero-3", "giffycanvas", "ezgif-5bb2358e64c93237",
-             "97e71b26-0574-48ce-8db6-422924ca689d", "gif", "gif-1", "gif-2"]
+    videos: ["rove-heroes-01", "rove-heroes-02", "rove-heroes-03", "rove-heroes-04", "rove-heroes-05",
+             "rove-heroes-06", "rove-heroes-07", "rove-heroes-08", "rove-heroes-09"]
   },
   {
     id: "songer-heroes",
@@ -399,7 +405,7 @@ const PROJECTS = [
     year: "2025",
     summary:
       "Six heroes for a songwriting app, most of them countdown-driven: Halloween, Black Friday, and the 92%-off early access run.",
-    videos: ["hero", "hero-4", "hero-5", "hero-6", "ezgif-1e222236e4ffc1", "ezgif-32d33707b55529bd"]
+    videos: ["songer-heroes-01", "songer-heroes-02", "songer-heroes-03", "songer-heroes-04", "songer-heroes-05", "songer-heroes-06"]
   },
   {
     id: "puregenius-heroes",
@@ -409,7 +415,7 @@ const PROJECTS = [
     tags: ["Motion", "Email", "CPG", "Ecommerce", "Health"],
     year: "2025",
     summary: "Four heroes for a 23g protein drink, from a back-in-stock alert to a daily-habit push carried by review screenshots.",
-    videos: ["attachment-1", "frame-81", "group-66", "ezgif-1691e8e992ef9045"]
+    videos: ["puregenius-heroes-01", "puregenius-heroes-02", "puregenius-heroes-03", "puregenius-heroes-04"]
   },
   {
     id: "zillow-rentals-motion",
@@ -420,8 +426,8 @@ const PROJECTS = [
     year: "2025",
     summary:
       "Seven pieces for the leasing-season launch, from teaser bumpers to a 79-second sizzle reel aimed at property managers.",
-    videos: ["zillowrentals-asclaunchsizzle-reachzillions", "asc-teaser-v2-2", "edit-main-comp",
-             "v3-mixed-portfolio-animation-mel-2-1", "merge", "artboard4", "artboard5"]
+    videos: ["zillow-rentals-motion-01", "zillow-rentals-motion-02", "zillow-rentals-motion-03",
+             "zillow-rentals-motion-04", "zillow-rentals-motion-05", "zillow-rentals-motion-06", "zillow-rentals-motion-07"]
   },
   {
     id: "zillow-product-motion",
@@ -432,7 +438,7 @@ const PROJECTS = [
     year: "2025",
     summary:
       "Screen-recorded product walkthroughs cut to music, including the property-management integrations flow and the OpenAI demo.",
-    videos: ["zillow-openai-demo-v6-final-4k-100325", "emtrata-2", "final-rev-1"]
+    videos: ["zillow-product-motion-01", "zillow-product-motion-02", "zillow-product-motion-03"]
   },
   {
     id: "jewelry-apparel-heroes",
@@ -442,7 +448,7 @@ const PROJECTS = [
     tags: ["Motion", "Email", "Jewelry", "Ecommerce", "Apparel"],
     year: "2025",
     summary: "Three animated heroes built around a countdown: a flash sale, a sample sale and a swimwear push led by customer reviews.",
-    videos: ["giffycanvas-12", "ezgif-12628e0e63447042", "giffycanvas-2"]
+    videos: ["jewelry-apparel-heroes-01", "jewelry-apparel-heroes-02", "jewelry-apparel-heroes-03"]
   },
   {
     id: "gelmoment-packaging-video",
@@ -452,7 +458,7 @@ const PROJECTS = [
     tags: ["Motion", "Packaging", "Beauty", "Product Photography"],
     year: "2026",
     summary: "A vertical spot walking the full product range, one pack at a time.",
-    videos: ["packagings"]
+    videos: ["gelmoment-packaging-video-01"]
   },
   {
     id: "generac-promo-video",
@@ -462,7 +468,7 @@ const PROJECTS = [
     tags: ["Motion", "Advertising", "Home Services", "Lead Generation"],
     year: "2026",
     summary: "A January promotion spot pricing out a home standby generator and its seven-year warranty.",
-    videos: ["gscvid"]
+    videos: ["generac-promo-video-01"]
   },
   {
     id: "sky18-film",
@@ -472,7 +478,7 @@ const PROJECTS = [
     tags: ["Motion", "Finance", "B2B", "Brand Film"],
     year: "2026",
     summary: "A 78-second film introducing a private lending firm.",
-    videos: ["sky18-hero-vid-2"]
+    videos: ["sky18-film-01"]
   },
   {
     id: "cne-deals-video",
@@ -482,7 +488,7 @@ const PROJECTS = [
     tags: ["Motion", "Advertising", "Campaign", "Events"],
     year: "2025",
     summary: "A widescreen promo for an annual insider list, with a PS5 and a ticket upgrade as the hook.",
-    videos: ["wheel-video-1920x1080"]
+    videos: ["cne-deals-video-01"]
   },
   {
     id: "blaze-product-video",
@@ -492,7 +498,7 @@ const PROJECTS = [
     tags: ["Motion", "Product Photography", "Accessories"],
     year: "2025",
     summary: "A short reveal for an eyewear release, shot against black.",
-    videos: ["video-template-aep"]
+    videos: ["blaze-product-video-01"]
   },
   {
     id: "sko-film",
@@ -502,7 +508,7 @@ const PROJECTS = [
     tags: ["Motion", "Presentation", "Data Visualisation", "B2B"],
     year: "2026",
     summary: "A sales-kickoff opener, built to run before the deck rather than inside it.",
-    videos: ["luis-marketing-challenger-sko"]
+    videos: ["sko-film-01"]
   },
 
   /* --------------------------------- AI --------------------------------- */
@@ -515,7 +521,7 @@ const PROJECTS = [
     year: "2026",
     summary:
       "A mascot-led campaign generated end to end with AI video, cut in four versions: two vertical, two widescreen, the longest running just under three minutes.",
-    videos: ["vid-final-16x9-30seg-no-edit-sin-qr", "vid-6-16x9", "vid-9-9x16", "vid-3-9x16"]
+    videos: ["generac-ai-film-01", "generac-ai-film-02", "generac-ai-film-03", "generac-ai-film-04"]
   },
   {
     id: "ai-experiments",
@@ -525,7 +531,7 @@ const PROJECTS = [
     tags: ["AI", "Motion", "Product Photography", "R&D"],
     year: "2026",
     summary: "Two tests turning a single still into motion, checking how far a generated camera move holds up on a product shot.",
-    videos: ["magnific-animate-the-provided-imag-rgggxfixt", "woman-resting-on-stone-wall-202608060051"]
+    videos: ["ai-experiments-01", "ai-experiments-02"]
   },
 
   /* ------------------------------- SOCIAL ------------------------------ */

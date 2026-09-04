@@ -76,7 +76,7 @@ const STORIES = [
       { kind: "text", title: "Motion",
         body: "Seven cuts extended the platform into video across vertical, square and widescreen: a microplastics explainer, the Green Ritual banner, a screen at Union Station, and an Instacart shoppable spot." },
 
-      { kind: "reel", videos: ["20250409-gh-microplasticsvideos-solution-108", "20251112-gh-dtd-hdvideobanner-b-1080x1920-v2", "20250613-gh-proteinplus-union-station-video"],
+      { kind: "reel", videos: ["gh-campaign-video-01", "gh-campaign-video-03", "gh-campaign-video-05"],
         caption: "Three of the seven cuts." },
 
       { kind: "full", image: "171-31", caption: "Defend The Day, installed." }
@@ -125,7 +125,7 @@ const STORIES = [
       { kind: "text", title: "Motion",
         body: "Nine heroes animate the top of the email. Each is a short loop, exported light enough for the inbox, covering apparel drops and the Drink Loud beverage line." },
 
-      { kind: "reel", videos: ["hero-1", "hero-2", "hero-3", "giffycanvas"],
+      { kind: "reel", videos: ["rove-heroes-01", "rove-heroes-02", "rove-heroes-03", "rove-heroes-04"],
         caption: "Four of the nine animated heroes." },
 
       { kind: "duo", images: ["2-6", "2-8"],
