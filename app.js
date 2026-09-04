@@ -577,9 +577,10 @@
     // on a phone the row is scrolled, and the selected tab has to be the one
     // you can see. The first attempt lands before the webfont settles, so
     // take it again once the widths are final.
-    window.addEventListener("load", scrollTabIntoView);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(scrollTabIntoView);
-    setTimeout(scrollTabIntoView, 450);
+    var placeTab = function () { scrollTabIntoView(true); };
+    window.addEventListener("load", placeTab);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeTab);
+    setTimeout(placeTab, 450);
   }
 
   /* One compact tab per configured category. A button, not a link: it filters
@@ -648,12 +649,15 @@
   }
 
   // keep the selected tab in view when the row scrolls sideways on a phone
-  function scrollTabIntoView() {
+  function scrollTabIntoView(instant) {
     var row = $(".cats");
     var on = $('.cats .cat[aria-pressed="true"]');
     if (!row || !on || row.scrollWidth <= row.clientWidth + 2) return;
-    var want = on.offsetLeft - (row.clientWidth - on.offsetWidth) / 2;
-    row.scrollTo({ left: Math.max(0, want), behavior: prefersReduced() ? "auto" : "smooth" });
+    var want = Math.max(0, on.offsetLeft - (row.clientWidth - on.offsetWidth) / 2);
+    // placing it on load should not animate; only a category the reader just
+    // picked is worth sliding to
+    if (instant === true || prefersReduced()) row.scrollLeft = want;
+    else row.scrollTo({ left: want, behavior: "smooth" });
   }
 
   /* ------------------------------- rendering ------------------------------
