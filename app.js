@@ -29,7 +29,7 @@
      wide renders, tall email, square social and motion. Order matters — the
      grid gives positions 1, 2, 8 and 12 the most room. */
   var CURATED = [
-    "spartan-watch-bands", "greenhouse-dtd-displays", "rove-campaigns", "cafe-cafe",
+    "spartan-watch-bands", "greenhouse-dtd-displays", "rove-campaigns", "sky18-rebrand",
     "gh-campaign-video", "cosmedica-social", "carevio", "pkg-vibrance",
     "greenhouse-smoothies", "deck-trace-ai", "greenhouse-fridge", "zillow-rentals-motion"
   ];
@@ -1183,7 +1183,12 @@
 
     // some projects ship as a running prototype rather than a flat export
     var live = $(".viewer-live");
-    if (p.link) { live.hidden = false; live.href = p.link; }
+    /* Most links point at a published prototype; a few point at the live
+       site the client actually runs. `linkLabel` names which. */
+    if (p.link) {
+      live.hidden = false; live.href = p.link;
+      live.textContent = (p.linkLabel || "Open the live prototype") + " \u2197";
+    }
     else { live.hidden = true; live.removeAttribute("href"); }
 
     var facts = $(".viewer-facts");

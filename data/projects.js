@@ -732,6 +732,17 @@ const PROJECTS = [
     images: ["morelia-paletas-01"]
   },
   {
+    id: "sky18-site",
+    title: "Private lending website",
+    client: "Sky 18 Capital",
+    category: "Web & UI",
+    tags: ["Web & UI", "Finance", "B2B", "Landing Page", "Lead Generation"],
+    summary: "The live site for a Florida private lender: the three loan programs, a five-step funding review, a document checklist, a market map and a deal-submission form.",
+    link: "https://sky18capital.com/",
+    linkLabel: "Open the live site",
+    images: ["sky18-site-01"]
+  },
+  {
     id: "carevio",
     title: "Healthcare app UI",
     client: "Carevio",
@@ -808,6 +819,18 @@ const PROJECTS = [
   },
 
   /* ------------------------------ BRANDING ----------------------------- */
+  {
+    id: "sky18-rebrand",
+    title: "Rebrand and identity system",
+    client: "Sky 18 Capital",
+    category: "Branding",
+    tags: ["Branding", "Identity", "Logo", "Finance", "Design System", "Email", "Social"],
+    summary: "A rebrand for a private lending firm: a skyline mark with horizontal, stacked and symbol-only lockups, light and dark applications, a five-colour palette, and the system carried into the website, email newsletter, email signature and LinkedIn graphics.",
+    images: [
+      "sky18-rebrand-01", "sky18-rebrand-02", "sky18-rebrand-03", "sky18-rebrand-04",
+      "sky18-rebrand-05", "sky18-rebrand-06", "sky18-rebrand-07", "sky18-rebrand-08"
+    ]
+  },
   {
     id: "cafe-cafe",
     title: "Brand identity",
