@@ -75,11 +75,13 @@ and animates the swap. Nothing else may set the active category.
     (grid is the default, so it is the one view the URL leaves out)
     ?category=email                                one discipline
     ?category=email&view=index#archive             both together
+    ?tag=beauty#archive                            one cross-discipline tag
+    ?category=email&tag=beauty#archive             a tag inside a discipline
     #project-id                                    opens that project's panel
     case.html?story=greenhouse                     a long-form case study
 
-Back, Forward and reload all restore the view and the category. Tags and the
-search box are deliberately not in the URL, so a history move clears them.
+Back, Forward and reload all restore the view, the category and the tags. The
+search box is deliberately not in the URL, so a history move clears it.
 
 ## Update the live site
 
@@ -87,13 +89,22 @@ The repo mirrors this folder, with the contents of `site/` at the root. To
 publish a change:
 
 ```bash
+# 1. stamp the assets so browsers fetch the new code, not their cached copy
+python3 build/bump.py
+
 cd /path/to/your/clone-of-portfolio
-# copy in whatever you changed, e.g. the data file:
+# 2. copy in whatever you changed, e.g. the data file:
 #   cp "…/Portfolio/site/data/projects.js" data/projects.js
 git add -A
 git commit -m "Update projects"
 git push
 ```
+
+**Never skip step 1 after touching a `.js` or `.css` file.** GitHub Pages
+serves them with a ten-minute cache and no fingerprint in the filename, so
+without a fresh `?v=` stamp a browser that already has the page open keeps
+running the old code against the new data. The deploy then looks like it
+never happened, which is the single most confusing failure this site has.
 
 GitHub Pages rebuilds in about a minute.
 
