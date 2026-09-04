@@ -692,6 +692,16 @@ const PROJECTS = [
     images: ["137-618", "137-1477"]
   },
   {
+    id: "morelia-paletas",
+    title: "Gourmet paletas ecommerce site",
+    client: "Morelia Gourmet Paletas",
+    category: "Web & UI",
+    tags: ["Web & UI", "Ecommerce", "Food & Beverage", "Landing Page", "Franchise"],
+    summary: "A full storefront for a handcrafted paleta brand: build-your-own flavour flow, a shop finder across three countries, franchise enquiry and gift cards.",
+    link: "https://paleta-joyful-redo.lovable.app/",
+    images: ["morelia-paletas-01"]
+  },
+  {
     id: "carevio",
     title: "Healthcare app UI",
     client: "Carevio",

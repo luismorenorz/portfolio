@@ -1012,6 +1012,11 @@
       caseLink.hidden = true;
     }
 
+    // some projects ship as a running prototype rather than a flat export
+    var live = $(".viewer-live");
+    if (p.link) { live.hidden = false; live.href = p.link; }
+    else { live.hidden = true; live.removeAttribute("href"); }
+
     var facts = $(".viewer-facts");
     facts.innerHTML = "";
     addFact(facts, "Client", p.client);

@@ -762,6 +762,9 @@ a { color: inherit; }
 .viewer-tags button:hover { color: var(--ink); border-bottom-color: var(--ink); }
 .viewer-case { display: inline-block; font-size: 13px; text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 3px; color: var(--ink); }
 .viewer-case[hidden] { display: none; }
+.viewer-live { display: inline-block; margin-top: 10px; font-size: 13px; text-decoration: none; border-bottom: 1px solid var(--hairline); padding-bottom: 3px; color: var(--muted); transition: color .2s var(--ease), border-color .2s var(--ease); }
+.viewer-live:hover { color: var(--ink); border-bottom-color: var(--ink); }
+.viewer-live[hidden] { display: none; }
 
 .viewer-images { display: flex; flex-direction: column; gap: clamp(20px, 2.4vw, 28px); min-width: 0; }
 .viewer-images figure { margin: 0; }
