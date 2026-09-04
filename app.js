@@ -573,6 +573,13 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureCats);
     setTimeout(measureCats, 400);
     measureCats();
+
+    // on a phone the row is scrolled, and the selected tab has to be the one
+    // you can see. The first attempt lands before the webfont settles, so
+    // take it again once the widths are final.
+    window.addEventListener("load", scrollTabIntoView);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(scrollTabIntoView);
+    setTimeout(scrollTabIntoView, 450);
   }
 
   /* One compact tab per configured category. A button, not a link: it filters
