@@ -9,11 +9,12 @@ can see the work.
 
 Production first, case studies second: the work is two scrolls from the top.
 
-## The seven parts
+## The eight parts
 
-1. **Cover** — 100svh of type and four abstract shapes drawn in CSS. No
-   artwork, no thumbnails, no requests to `assets/`. The block is
-   self-contained so it can later be swapped for one photograph.
+1. **Cover** — one full-bleed photograph with the copy in the negative space
+   the frame already leaves on the left. The hero height tracks the picture's
+   own 2.21:1 proportion, and the phone gets its own 4:5 crop of the same
+   file rather than a squeezed version of the desktop one.
 2. **Browse by discipline** — a six-column matrix of all eleven selectors
    with live counts. Selecting one fills that tile in its category colour,
    updates the archive in place and writes the URL; nothing reloads.
@@ -35,7 +36,8 @@ Production first, case studies second: the work is two scrolls from the top.
    time and a timeline would read concurrent contract work as a mistake. Each
    card opens in place into the full résumé detail; Full Profile folds skills,
    tools, education and languages away until asked for.
-7. **About** — the statement and the body copy.
+7. **About** — the statement and the body copy set on a second full-bleed
+   photograph, heading and body on deliberately different left offsets.
 8. **Contact** — near-black, the email at full scale.
 
 Every number on the page is measured from the files, never estimated: piece
@@ -176,13 +178,13 @@ matrix: `[name, what it is, preview key, "image" | "poster"]`.
 
 ```
 site/            the website, the only folder you need to publish
-  index.html         the seven parts
+  index.html         the eight parts
   case.html          the case-study template, driven by ?story=
   styles.css         the shell
   case.css           the long-form layer
-  app.js             cover, menu, archive, systems, capabilities, panel
+  app.js             menu, archive, systems, capabilities, experience, panel
   case.js            renders one story
-  data/projects.js   ← all 70 projects and your details
+  data/projects.js   ← all 74 projects and your details
   data/stories.js    ← the three production systems / case studies
   data/experience.js ← the roles, metrics, achievements and full profile
   assets/documents/  the résumé PDF the Experience section links to

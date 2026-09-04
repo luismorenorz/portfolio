@@ -25,15 +25,6 @@
 
   --accent: #b5462a;
 
-  /* deep, controlled accents. No purple, no neon, nothing electric. */
-  --accent-oxblood: #7c2837;
-  --accent-rust: #a84a32;
-  --accent-sand: #d7c4b3;
-  --accent-charcoal: #232320;
-  --accent-olive: #455148;
-  --accent-teal: #28575a;
-  --accent-slate: #444b52;
-
   --display: Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 
@@ -132,88 +123,6 @@ a { color: inherit; }
      photograph's own pixels, these two clear AA with room to spare. */
   --cover-2nd: #333029;
 }
-
-/* ------------------------------------------------------------------------
-   The orb motif. These four shapes opened the site before the photograph
-   arrived; they are kept exactly as they were — same silhouettes, same
-   gradients, same 2px blur, same drift — and turned into a field that can be
-   dropped anywhere. Only the placements below are new.
-   ------------------------------------------------------------------------ */
-
-.orb-field {
-  position: absolute; inset: 0; z-index: 0;
-  pointer-events: none;                 /* never in the way of a link */
-  overflow: clip;                       /* and never a source of sideways scroll */
-}
-.gradient-shape { position: absolute; }
-.gradient-shape::before {
-  content: ""; position: absolute; inset: 0;
-  transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
-  animation: shape-idle var(--dur, 18s) ease-in-out var(--delay, 0s) infinite;
-  filter: blur(2px);                    /* static, never animated */
-}
-/* off screen: stop paying for the drift */
-.orb-field.is-idle .gradient-shape::before { animation-play-state: paused; }
-
-.orb-field.is-intro .gradient-shape {
-  animation: shape-in var(--in, 860ms) var(--ease) backwards;
-  animation-delay: var(--in-delay, 0ms);
-}
-@keyframes shape-in { from { opacity: 0; transform: scale(.96); } }
-@keyframes shape-idle {
-  0%, 100% { transform: translate3d(var(--px, 0px), var(--py, 0px), 0) rotate(0deg); }
-  50%      { transform: translate3d(var(--px, 0px), calc(var(--py, 0px) + var(--rise, -9px)), 0) rotate(var(--tilt, 1.2deg)); }
-}
-
-/* ---- the four skins, unchanged ---- */
-.gradient-shape-1 { --dur: 19s; --rise: -11px; --tilt: 1.1deg; }
-.gradient-shape-1::before {
-  border-radius: 34% 58% 30% 52% / 44% 30% 58% 40%;
-  background:
-    radial-gradient(115% 88% at 6% 2%, rgba(215, 196, 179, .40) 0%, rgba(215, 196, 179, 0) 58%),
-    linear-gradient(148deg, var(--accent-rust) 0%, var(--accent-oxblood) 46%, #58202a 100%);
-}
-.gradient-shape-2 { --dur: 22s; --rise: 8px; --tilt: -0.9deg; }
-.gradient-shape-2::before {
-  border-radius: 40% 42% 26% 30% / 14% 16% 84% 82%;
-  background:
-    radial-gradient(135% 66% at 100% 8%, rgba(168, 74, 50, .30) 0%, rgba(168, 74, 50, 0) 62%),
-    linear-gradient(196deg, var(--accent-charcoal) 0%, #4a453f 62%, #6d5c52 100%);
-  opacity: .62;
-}
-.gradient-shape-3 { --dur: 16s; --rise: -7px; --tilt: 1.4deg; }
-.gradient-shape-3::before {
-  border-radius: 52% 34% 46% 30% / 34% 48% 34% 56%;
-  background:
-    radial-gradient(120% 92% at 4% 4%, rgba(215, 196, 179, .55) 0%, rgba(215, 196, 179, 0) 60%),
-    linear-gradient(160deg, var(--accent-sand) 0%, #bc7359 46%, #8a3040 100%);
-}
-.gradient-shape-4 { --dur: 14s; --rise: 10px; --tilt: -1.3deg; }
-.gradient-shape-4::before {
-  border-radius: 30% 44% 38% 26% / 18% 22% 78% 80%;
-  background:
-    radial-gradient(125% 70% at 96% 96%, rgba(215, 196, 179, .42) 0%, rgba(215, 196, 179, 0) 62%),
-    linear-gradient(176deg, var(--accent-charcoal) 0%, #5d2733 58%, #93796a 100%);
-}
-
-/* ---- placement 1: a band between the archive and the long-form work ---- */
-.interlude {
-  position: relative; height: clamp(240px, 30vw, 360px);
-  background: var(--paper-2); border-top: 1px solid var(--hairline);
-  border-bottom: 1px solid var(--hairline); overflow: clip;
-}
-.orbs-interlude .gradient-shape-1 { left: 6%;  top: -34%; width: 20vw; aspect-ratio: 1 / 1.06; }
-.orbs-interlude .gradient-shape-3 { left: 38%; bottom: -46%; width: 13vw; aspect-ratio: 1 / 1.2; }
-.orbs-interlude .gradient-shape-2 { right: -4vw; top: -18%; width: 11vw; height: 150%; }
-
-/* ---- placement 2: a counterweight in the experience section ---- */
-.orbs-experience .gradient-shape-4 { right: -5vw; top: 8%;  width: 12vw; height: 26%; }
-.orbs-experience .gradient-shape-3 { right: 4vw;  bottom: 6%; width: 8vw; aspect-ratio: 1 / 1.2; opacity: .8; }
-
-/* ---- placement 3: the closing cluster on the contact stage ---- */
-.orbs-contact .gradient-shape-2 { right: 2vw;  top: -12%; width: 15vw; height: 78%; }
-.orbs-contact .gradient-shape-1 { right: 20vw; bottom: -26%; width: 17vw; aspect-ratio: 1 / 1.06; }
-.orbs-contact .gradient-shape-4 { right: 36vw; top: -8%;  width: 7vw;  height: 34%; }
 
 /* ------------------------------------------------------------------------
    The cover. One photograph, full bleed, with the copy in the negative space
@@ -691,10 +600,8 @@ a { color: inherit; }
    Dates, locations and summaries here are information, not decoration, so the
    section uses two darker greys of the same family: 5.85:1 and 5.03:1. */
 .exp { --exp-muted: #615d56; --exp-faint: #6b675f;
-  position: relative; overflow: clip;      /* the orb field's containing block */
   border-top: 1px solid var(--ink); background: var(--paper); }
 .exp-inner {
-  position: relative; z-index: 1;          /* content always above the motif */
   max-width: var(--maxw); margin: 0 auto;
   padding: clamp(56px, 7vw, 116px) var(--pad) clamp(50px, 6vw, 100px);
 }
@@ -974,12 +881,9 @@ a { color: inherit; }
 /* ========================== 6. CONTACT STAGE ============================ */
 
 .contact {
-  position: relative; overflow: clip;      /* the orb field's containing block */
   background: var(--black); color: var(--d-ink);
   padding: clamp(64px, 10vw, 150px) var(--pad) clamp(56px, 8vw, 110px);
 }
-/* every piece of contact information sits above the shapes */
-.contact > *:not(.orb-field) { position: relative; z-index: 1; }
 .contact > * { max-width: var(--maxw); margin-left: auto; margin-right: auto; }
 .contact .band-label { color: var(--d-muted); }
 .contact-lead { margin: clamp(20px, 3vw, 34px) auto 0; font-size: clamp(17px, 1.5vw, 22px); color: var(--d-muted); }
@@ -1286,19 +1190,6 @@ body.is-locked { overflow: hidden; }
   .cover-photo { height: min(calc(100vw * 1.25), 58svh); }
 }
 
-/* phones: fewer shapes at once, and smaller, but never none */
-@media (max-width: 760px) {
-  .interlude { height: clamp(180px, 42vw, 240px); }
-  .orbs-interlude .gradient-shape-2,
-  .orbs-experience .gradient-shape-3,
-  .orbs-contact .gradient-shape-4 { display: none; }
-  .orbs-interlude .gradient-shape-1 { width: 38vw; }
-  .orbs-interlude .gradient-shape-3 { width: 26vw; left: 52%; }
-  .orbs-experience .gradient-shape-4 { width: 26vw; height: 18%; right: -9vw; }
-  .orbs-contact .gradient-shape-2 { width: 34vw; }
-  .orbs-contact .gradient-shape-1 { width: 40vw; right: 8vw; }
-}
-
 /* the narrowest phones: six labels will not fit however tight the tracking,
    so the row scrolls sideways rather than the page doing it */
 @media (max-width: 480px) {
@@ -1328,7 +1219,6 @@ body.is-locked { overflow: hidden; }
   .entry-link:hover .arrow, .entry-link:focus-visible .arrow { transform: none; }
   .grid.is-in .entry, .entry { animation: none; }
   .grid.is-out { opacity: 1; transform: none; }
-  .gradient-shape::before, .orb-field.is-intro .gradient-shape { animation: none; }
   .is-armed .route { transform: none; opacity: 1; }
   .exp-metrics.is-armed .metric, .ach.is-armed,
   .group-head.is-armed .group-num,
