@@ -441,14 +441,14 @@ const PROJECTS = [
     videos: ["zillow-product-motion-01", "zillow-product-motion-02", "zillow-product-motion-03"]
   },
   {
-    id: "jewelry-apparel-heroes",
-    title: "Sale email heroes",
-    client: "Jewelry and apparel brands",
+    id: "dtc-email-heroes",
+    title: "Promotional email heroes",
+    client: "Various DTC brands",
     category: "Motion",
-    tags: ["Motion", "Email", "Jewelry", "Ecommerce", "Apparel"],
+    tags: ["Motion", "Email", "Ecommerce", "Jewelry", "Apparel", "Beauty"],
     year: "2025",
     summary: "Three animated heroes built around a countdown: a flash sale, a sample sale and a swimwear push led by customer reviews.",
-    videos: ["jewelry-apparel-heroes-01", "jewelry-apparel-heroes-02", "jewelry-apparel-heroes-03"]
+    videos: ["dtc-email-heroes-01", "dtc-email-heroes-02", "dtc-email-heroes-03"]
   },
   {
     id: "gelmoment-packaging-video",

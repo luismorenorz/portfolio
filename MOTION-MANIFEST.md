@@ -31,9 +31,9 @@ to MP4; no GIF is served as playback.
 | `202511051703 (2).mp4` | root | 11.8 MB | `gh-campaign-video-07` | 0.2 MB | 406×720 | `gh-campaign-video` | Motion | — |
 | `hero animation.mp4` | root | 7.1 MB | `gh-protein-heroes-01` | 0.3 MB | 576×720 | `gh-protein-heroes` | Motion | — |
 | `hero anim protein 2.mp4` | root | 4.3 MB | `gh-protein-heroes-02` | 0.2 MB | 882×720 | `gh-protein-heroes` | Motion | — |
-| `Email hero animations/giffycanvas (12).gif` | Email hero animations | 3.8 MB | `jewelry-apparel-heroes-01` | 0.0 MB | 514×720 | `jewelry-apparel-heroes` | Motion | — |
-| `Email hero animations/ezgif-12628e0e63447042.gif` | Email hero animations | 2.7 MB | `jewelry-apparel-heroes-02` | 0.1 MB | 500×720 | `jewelry-apparel-heroes` | Motion | — |
-| `Email hero animations/giffycanvas (2).gif` | Email hero animations | 1.4 MB | `jewelry-apparel-heroes-03` | 0.0 MB | 532×720 | `jewelry-apparel-heroes` | Motion | — |
+| `Email hero animations/giffycanvas (12).gif` | Email hero animations | 3.8 MB | `dtc-email-heroes-01` | 0.0 MB | 514×720 | `dtc-email-heroes` | Motion | — |
+| `Email hero animations/ezgif-12628e0e63447042.gif` | Email hero animations | 2.7 MB | `dtc-email-heroes-02` | 0.1 MB | 500×720 | `dtc-email-heroes` | Motion | — |
+| `Email hero animations/giffycanvas (2).gif` | Email hero animations | 1.4 MB | `dtc-email-heroes-03` | 0.0 MB | 532×720 | `dtc-email-heroes` | Motion | — |
 | `Email hero animations/attachment (1).gif` | Email hero animations | 3.7 MB | `puregenius-heroes-01` | 0.1 MB | 604×720 | `puregenius-heroes` | Motion | — |
 | `Frame 81.mp4` | root | 9.7 MB | `puregenius-heroes-02` | 0.4 MB | 854×720 | `puregenius-heroes` | Motion | — |
 | `Group 66.mp4` | root | 11.5 MB | `puregenius-heroes-03` | 0.4 MB | 862×720 | `puregenius-heroes` | Motion | — |
@@ -79,7 +79,7 @@ to MP4; no GIF is served as playback.
 | `generac-promo-video` | Generac dealer | Generator promotion video | Motion | 1 | Motion, Advertising, Home Services, Lead Generation |
 | `gh-campaign-video` | Greenhouse | Product and campaign video | Motion | 7 | Motion, Advertising, CPG, Food & Beverage, Paid Social |
 | `gh-protein-heroes` | Greenhouse | Protein+ hero animations | Motion | 2 | Motion, Email, CPG, Product Photography |
-| `jewelry-apparel-heroes` | Jewelry and apparel brands | Sale email heroes | Motion | 3 | Motion, Email, Jewelry, Ecommerce, Apparel |
+| `dtc-email-heroes` | Various DTC brands | Promotional email heroes | Motion | 3 | Motion, Email, Ecommerce, Jewelry, Apparel, Beauty |
 | `puregenius-heroes` | Pure Genius | Animated email heroes | Motion | 4 | Motion, Email, CPG, Ecommerce, Health |
 | `rove-heroes` | Rove | Animated email heroes | Motion | 9 | Motion, Email, Cannabis, Art Direction, Ecommerce |
 | `sko-film` | Self-initiated | Marketing Challenger SKO film | Motion | 1 | Motion, Presentation, Data Visualisation, B2B |
@@ -95,6 +95,20 @@ to MP4; no GIF is served as playback.
 - Largest committed clip: 7.5 MB
 - Hover loops: 3.0 MB
 - Posters: 1.8 MB
+
+## Identification notes
+
+Generic source filenames were identified from the artwork itself, not guessed:
+`Group 66.mp4` and `Frame 81.mp4` carry Pure Genius branding, `Merge.mp4`,
+`Artboard4.mp4` and `Artboard5.mp4` carry Zillow Rentals branding. Nothing was
+published under a name the frames do not support.
+
+The five clips in the Drive folder "Email hero animations" were grouped by the
+brand visible in each frame rather than by folder: two are Pure Genius, three
+are separate direct-to-consumer brands (770 Fine Jewelry, SNOW, and an
+unbranded swimwear piece) collected as `dtc-email-heroes`. One swimwear clip
+carries no visible brand, so no client name is claimed for it beyond that
+grouping.
 
 Re-run `python3 build/motion.py <folder>` to re-encode from the originals.
 It derives keys from source filenames; the descriptive keys above were
