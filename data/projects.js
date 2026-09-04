@@ -42,7 +42,7 @@
 const SITE = {
   name: "Luis Moreno",
   role: "Production Designer & Graphic Designer",
-  location: "Monterrey, Mexico",
+  location: "San Pedro Garza García, Nuevo León, México",
   issue: "Selected work · 2025–2026",
 
   /* The cover. `headline` runs at full editorial scale, `support` is the one
