@@ -26,6 +26,7 @@
     <a class="nav-work" href="#archive">Work</a>
     <a href="#systems"><span class="nav-long">Production </span>Systems</a>
     <a href="#capabilities">Capabilities</a>
+    <a href="#experience">Experience</a>
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -137,7 +138,43 @@
     </div>
   </section>
 
-  <!-- ========================= 5. ABOUT MANIFESTO ======================== -->
+  <!-- ========================== 6. EXPERIENCE MAP ======================== -->
+  <section id="experience" class="exp" aria-labelledby="exp-label">
+    <div class="exp-inner">
+
+      <header class="exp-head" data-reveal>
+        <div class="exp-head-aside">
+          <p class="band-label exp-eyebrow"></p>
+          <p class="exp-note"></p>
+        </div>
+        <div class="exp-head-main">
+          <h2 class="exp-title" id="exp-label"></h2>
+          <p class="exp-intro"></p>
+        </div>
+      </header>
+
+      <ul class="exp-metrics" data-reveal></ul>
+
+      <div class="exp-groups"></div>
+
+      <section class="exp-achievements" aria-labelledby="ach-label">
+        <h3 class="band-label" id="ach-label">Selected achievements</h3>
+        <ol class="ach-list"></ol>
+      </section>
+
+      <section class="exp-profile" aria-labelledby="profile-label">
+        <h3 class="visually-hidden" id="profile-label">Full profile</h3>
+        <button type="button" class="profile-toggle" aria-expanded="false" aria-controls="full-profile">
+          Full profile<span class="chev" aria-hidden="true">&#8964;</span>
+        </button>
+        <div class="profile-body" id="full-profile" hidden></div>
+        <a class="resume-link" href="assets/documents/Luis-Moreno-RZ-Resume-Aug-2026.pdf" target="_blank" rel="noopener"></a>
+      </section>
+
+    </div>
+  </section>
+
+  <!-- =========================== 7. ABOUT ================================ -->
   <section id="about" class="about" aria-labelledby="about-label">
     <h2 class="visually-hidden" id="about-label">About</h2>
     <div class="about-statement"><span class="reveal"></span></div>
@@ -152,7 +189,7 @@
     </div>
   </section>
 
-  <!-- ========================== 6. CONTACT STAGE ========================= -->
+  <!-- ========================== 8. CONTACT STAGE ========================= -->
   <section id="contact" class="contact" aria-labelledby="contact-label">
     <h2 class="band-label" id="contact-label">Contact</h2>
     <p class="contact-role"></p>
@@ -209,6 +246,7 @@
 <script src="data/videos.js"></script>
 <script src="data/projects.js"></script>
 <script src="data/stories.js"></script>
+<script src="data/experience.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

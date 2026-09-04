@@ -692,6 +692,36 @@ const PROJECTS = [
     images: ["137-618", "137-1477"]
   },
   {
+    id: "argento-registry",
+    title: "Luxury wedding registry site",
+    client: "il'argento",
+    category: "Web & UI",
+    tags: ["Web & UI", "Ecommerce", "Luxury", "Landing Page", "Jewelry"],
+    summary: "A guided registry experience for a luxury tableware retailer: curated brand partners, in-person design sessions, cash funds and a registry finder.",
+    link: "https://argent-whisper.lovable.app/",
+    images: ["argento-registry-01"]
+  },
+  {
+    id: "polar-monkeys-one",
+    title: "Cold plunge product page",
+    client: "Polar Monkeys",
+    category: "Web & UI",
+    tags: ["Web & UI", "Ecommerce", "Product Design", "Landing Page", "Wellness"],
+    summary: "A single-product page built around one claim: temperature. Specs, comparison table and configuration carry the argument from headline to order.",
+    link: "https://polar-one-zen.lovable.app/polar-monkeys-one",
+    images: ["polar-monkeys-one-01"]
+  },
+  {
+    id: "pro-performance-md",
+    title: "Wholesale provider homepage",
+    client: "Pro Performance MD",
+    category: "Web & UI",
+    tags: ["Web & UI", "B2B", "Healthcare", "Landing Page", "Ecommerce"],
+    summary: "A gated wholesale homepage for licensed providers: verification flow, product catalogue, account management and a four-step onboarding path.",
+    link: "https://perform-access-app.lovable.app/",
+    images: ["pro-performance-md-01"]
+  },
+  {
     id: "morelia-paletas",
     title: "Gourmet paletas ecommerce site",
     client: "Morelia Gourmet Paletas",

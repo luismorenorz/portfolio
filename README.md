@@ -30,8 +30,13 @@ Production first, case studies second: the work is two scrolls from the top.
 5. **Production capabilities** — eleven lines from brief to shippable file,
    with a preview panel. AI sits lower in the hierarchy: a way of working,
    not a headline craft.
-6. **About** — the statement and the body copy.
-7. **Contact** — near-black, the email at full scale.
+6. **Experience map** — a decade of roles grouped by the kind of environment
+   they happened in, never plotted on a time axis: several ran at the same
+   time and a timeline would read concurrent contract work as a mistake. Each
+   card opens in place into the full résumé detail; Full Profile folds skills,
+   tools, education and languages away until asked for.
+7. **About** — the statement and the body copy.
+8. **Contact** — near-black, the email at full scale.
 
 Every number on the page is measured from the files, never estimated: piece
 counts are the images and clips themselves, and "formats" is the count of
@@ -179,6 +184,8 @@ site/            the website, the only folder you need to publish
   case.js            renders one story
   data/projects.js   ← all 70 projects and your details
   data/stories.js    ← the three production systems / case studies
+  data/experience.js ← the roles, metrics, achievements and full profile
+  assets/documents/  the résumé PDF the Experience section links to
   data/images.js     ← auto-generated image sizes
   data/videos.js     ← auto-generated clip sizes and durations
   assets/full/       166 full-size WebP images

@@ -486,6 +486,228 @@
     });
   }
 
+
+  /* ---------------------- 6. the experience map --------------------------
+     Grouped by environment, never by date: several of these ran at the same
+     time, and a timeline would read concurrent contract work as an error.
+     Every card is a real <button> driving a real panel, so the whole thing
+     works from the keyboard and more than one can stay open.
+     ----------------------------------------------------------------------- */
+
+  function buildExperience() {
+    if (typeof EXPERIENCE === "undefined") return;
+    var X = EXPERIENCE;
+
+    $(".exp-eyebrow").textContent = X.eyebrow;
+    $(".exp-note").textContent = X.note;
+    $(".exp-title").textContent = X.heading;
+    $(".exp-intro").textContent = X.intro;
+
+    var mwrap = $(".exp-metrics");
+    X.metrics.forEach(function (m, i) {
+      var li = document.createElement("li");
+      li.className = "metric";
+      li.style.setProperty("--i", i);
+      var v = document.createElement("p");
+      v.className = "metric-value"; v.textContent = m.value;
+      var l = document.createElement("p");
+      l.className = "metric-label"; l.textContent = m.label;
+      li.appendChild(v); li.appendChild(l);
+      mwrap.appendChild(li);
+    });
+
+    var gwrap = $(".exp-groups");
+    X.groups.forEach(function (g) {
+      var sec = document.createElement("section");
+      sec.className = "exp-group";
+      sec.setAttribute("aria-labelledby", "grp-" + g.id);
+      sec.style.setProperty("--exp", g.color);
+
+      var head = document.createElement("header");
+      head.className = "group-head";
+      head.setAttribute("data-reveal", "");
+      var num = document.createElement("p");
+      num.className = "group-num"; num.textContent = g.number;
+      var h3 = document.createElement("h3");
+      h3.className = "group-title"; h3.id = "grp-" + g.id; h3.textContent = g.title;
+      var blurb = document.createElement("p");
+      blurb.className = "group-blurb"; blurb.textContent = g.blurb;
+      head.appendChild(num); head.appendChild(h3); head.appendChild(blurb);
+      sec.appendChild(head);
+
+      var list = document.createElement("div");
+      list.className = "role-list";
+      g.roles.forEach(function (r, i) {
+        list.appendChild(roleCard(r, i));
+      });
+      sec.appendChild(list);
+      gwrap.appendChild(sec);
+    });
+
+    var ach = $(".ach-list");
+    X.achievements.forEach(function (a, i) {
+      var li = document.createElement("li");
+      li.className = "ach";
+      li.setAttribute("data-reveal", "");
+      li.style.setProperty("--i", i);
+      var n = document.createElement("p");
+      n.className = "ach-num"; n.textContent = "0" + (i + 1);
+      var h4 = document.createElement("h4");
+      h4.className = "ach-title"; h4.textContent = a.title;
+      var c = document.createElement("p");
+      c.className = "ach-copy"; c.textContent = a.copy;
+      li.appendChild(n); li.appendChild(h4); li.appendChild(c);
+      ach.appendChild(li);
+    });
+
+    buildProfile(X.profile);
+
+    var link = $(".resume-link");
+    link.textContent = X.resume.label;
+    link.href = X.resume.href;
+    link.setAttribute("aria-label", X.resume.label + ", opens in a new tab");
+
+    var toggle = $(".profile-toggle"), body = $(".profile-body");
+    toggle.addEventListener("click", function () {
+      var open = body.hidden;
+      body.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+    });
+  }
+
+  function roleCard(r, i) {
+    var art = document.createElement("article");
+    art.className = "role";
+    art.style.setProperty("--i", i);
+
+    var h4 = document.createElement("h4");
+    h4.className = "role-heading";
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "role-btn";
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-controls", "role-" + r.id);
+
+    var top = document.createElement("span");
+    top.className = "role-top";
+    var co = document.createElement("span");
+    co.className = "role-co"; co.textContent = r.company;
+    var env = document.createElement("span");
+    env.className = "role-env"; env.textContent = r.env;
+    top.appendChild(co); top.appendChild(env);
+
+    var title = document.createElement("span");
+    title.className = "role-title"; title.textContent = r.role;
+
+    var meta = document.createElement("span");
+    meta.className = "role-meta";
+    var d = document.createElement("span"); d.textContent = r.dates;
+    var loc = document.createElement("span"); loc.textContent = r.location;
+    meta.appendChild(d); meta.appendChild(loc);
+
+    var sum = document.createElement("span");
+    sum.className = "role-sum"; sum.textContent = r.summary;
+
+    btn.appendChild(top); btn.appendChild(title); btn.appendChild(meta); btn.appendChild(sum);
+
+    if (r.facts && r.facts.length) {
+      var facts = document.createElement("span");
+      facts.className = "role-facts";
+      r.facts.forEach(function (f) {
+        var s2 = document.createElement("span");
+        s2.className = "fact"; s2.textContent = f;
+        facts.appendChild(s2);
+      });
+      btn.appendChild(facts);
+    }
+
+    var mark = document.createElement("span");
+    mark.className = "role-mark"; mark.setAttribute("aria-hidden", "true");
+    btn.appendChild(mark);
+    h4.appendChild(btn);
+
+    var panel = document.createElement("div");
+    panel.className = "role-panel";
+    panel.id = "role-" + r.id;
+    panel.hidden = true;
+    var ul = document.createElement("ul");
+    r.details.forEach(function (line) {
+      var li = document.createElement("li");
+      li.textContent = line;
+      ul.appendChild(li);
+    });
+    panel.appendChild(ul);
+
+    btn.addEventListener("click", function () {
+      var open = panel.hidden;
+      panel.hidden = !open;
+      btn.setAttribute("aria-expanded", String(open));
+      art.classList.toggle("is-open", open);
+    });
+
+    art.appendChild(h4); art.appendChild(panel);
+    return art;
+  }
+
+  function buildProfile(pr) {
+    var body = $(".profile-body");
+    var lead = document.createElement("p");
+    lead.className = "profile-lead"; lead.textContent = pr.summary;
+    body.appendChild(lead);
+
+    var cols = document.createElement("div");
+    cols.className = "profile-cols";
+    pr.columns.forEach(function (c) {
+      var d = document.createElement("div");
+      d.className = "profile-col";
+      var h = document.createElement("h4");
+      h.className = "profile-col-title"; h.textContent = c.title;
+      var ul = document.createElement("ul");
+      c.items.forEach(function (it) {
+        var li = document.createElement("li"); li.textContent = it; ul.appendChild(li);
+      });
+      d.appendChild(h); d.appendChild(ul);
+      cols.appendChild(d);
+    });
+    body.appendChild(cols);
+
+    var foot = document.createElement("div");
+    foot.className = "profile-foot";
+
+    var ed = document.createElement("div");
+    ed.className = "profile-col";
+    var eh = document.createElement("h4");
+    eh.className = "profile-col-title"; eh.textContent = "Education";
+    var edl = document.createElement("dl");
+    edl.className = "profile-dl";
+    [["Institution", pr.education.institution], ["Location", pr.education.location],
+     ["Degree", pr.education.degree], ["Dates", pr.education.dates]].forEach(function (pair) {
+      var row = document.createElement("div");
+      var dt = document.createElement("dt"); dt.textContent = pair[0];
+      var dd = document.createElement("dd"); dd.textContent = pair[1];
+      row.appendChild(dt); row.appendChild(dd); edl.appendChild(row);
+    });
+    ed.appendChild(eh); ed.appendChild(edl);
+
+    var la = document.createElement("div");
+    la.className = "profile-col";
+    var lh = document.createElement("h4");
+    lh.className = "profile-col-title"; lh.textContent = "Languages";
+    var ldl = document.createElement("dl");
+    ldl.className = "profile-dl";
+    pr.languages.forEach(function (l) {
+      var row = document.createElement("div");
+      var dt = document.createElement("dt"); dt.textContent = l.name;
+      var dd = document.createElement("dd"); dd.textContent = l.level;
+      row.appendChild(dt); row.appendChild(dd); ldl.appendChild(row);
+    });
+    la.appendChild(lh); la.appendChild(ldl);
+
+    foot.appendChild(ed); foot.appendChild(la);
+    body.appendChild(foot);
+  }
+
   /* ------------------------------ 3. archive ----------------------------- */
 
   function tagCounts() {
@@ -1240,9 +1462,32 @@
   buildFilters();
   buildSystems();
   buildCapabilities();
+  buildExperience();
 
   var start = applyURL(false);
   measureHeader();
+
+  /* A cold load of /index.html#experience lands nowhere: the browser scrolls
+     to the fragment before JS has built the archive, and the target then moves
+     down the page. Re-apply it once the sections have their real height. */
+  (function landOnHash() {
+    var id = location.hash.replace("#", "");
+    if (!id || PROJECTS.some(function (p) { return p.id === id; })) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    // "instant", not "auto": html has scroll-behavior smooth, and nobody wants
+    // to watch the page glide six thousand pixels on arrival
+    var place = function () {
+      var top = el.getBoundingClientRect().top + window.pageYOffset -
+                parseFloat(getComputedStyle(el).scrollMarginTop || 0);
+      window.scrollTo({ top: Math.max(0, top), behavior: "instant" });
+    };
+    place();
+    // once more after the webfont and the lazy images have settled the layout
+    setTimeout(place, 320);
+    window.addEventListener("load", function () { setTimeout(place, 60); });
+  })();
+
   watchHeader();
   armReveals();
   if (start) openProject(start, false);
