@@ -1078,11 +1078,34 @@ body.is-locked { overflow: hidden; }
   .index-peek { width: 190px; }
 }
 
-/* the composition holds on a tablet, with the offsets pulled in */
-@media (max-width: 1024px) {
-  .about-stage { min-height: clamp(560px, 88svh, 820px); }
-  .about-statement { margin-left: 16%; max-width: 70%; font-size: clamp(28px, 5.4vw, 56px); }
-  .about-body { margin-left: 6%; max-width: min(560px, 56%); }
+/* Below 1200 the wall to the left of the walking figure is simply not wide
+   enough for a comfortable column of text, so the section stops overlaying
+   and becomes a deliberate stack: heading, copy, then the picture. */
+@media (max-width: 1199px) {
+  .about-stage {
+    min-height: 0; padding: clamp(44px, 6vw, 78px) var(--pad) 0;
+    grid-template-rows: auto auto auto;
+  }
+  .about-photo {
+    position: relative; inset: auto; order: 3;
+    height: min(calc(100vw / 1.553), 68svh);
+    margin: clamp(28px, 4vw, 48px) calc(var(--pad) * -1) 0;
+  }
+  .about-photo img { object-position: center center; }
+  .about-statement {
+    order: 1; margin-left: 0; max-width: min(100%, 15ch);
+    font-size: clamp(30px, 5.6vw, 68px);
+  }
+  .about-body {
+    order: 2; margin-left: 0; max-width: 62ch;
+    margin-top: clamp(22px, 3vw, 36px);
+  }
+}
+
+/* phones show the vertical crop instead of the full frame */
+@media (max-width: 760px) {
+  .about-photo { height: min(calc(100vw * 1.25), 62svh); }
+  .about-statement { max-width: 100%; font-size: clamp(30px, 7.4vw, 52px); }
 }
 
 /* the negative space narrows before the subject does */
@@ -1162,21 +1185,6 @@ body.is-locked { overflow: hidden; }
   }
   .cover-photo img { object-position: center top; }
   .cover-type { max-width: 100%; }
-
-  /* the overlay composition needs width it does not have here, so the
-     section becomes a deliberate stack: heading, copy, then the picture */
-  .about-stage {
-    min-height: 0; padding: clamp(44px, 8vw, 70px) var(--pad) 0;
-    grid-template-rows: auto auto auto;
-  }
-  .about-photo {
-    position: relative; inset: auto; order: 3;
-    height: min(calc(100vw * 1.25), 62svh);
-    margin: clamp(28px, 5vw, 44px) calc(var(--pad) * -1) 0;
-  }
-  .about-photo img { object-position: center center; }
-  .about-statement { order: 1; margin-left: 0; max-width: 100%; font-size: clamp(30px, 7.4vw, 56px); }
-  .about-body { order: 2; margin-left: 0; max-width: 100%; margin-top: clamp(22px, 4vw, 34px); }
 
   .system-inner { grid-template-columns: 1fr; min-height: 0; gap: 24px; }
   .caps-body { grid-template-columns: 1fr; }
