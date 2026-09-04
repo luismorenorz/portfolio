@@ -37,17 +37,12 @@ const SITE = {
   name: "Luis Moreno",
   role: "Production Designer & Graphic Designer",
   location: "Monterrey, Mexico",
-  issue: "Selected work 2025–2026",
+  issue: "Selected work · 2025–2026",
 
-  /* The cover. `headline` runs at full editorial scale; `support` is the line
-     under it; the three proofs sit below as a spec strip. */
+  /* The cover. `headline` runs at full editorial scale, `support` is the one
+     line under it. The art beside them is drawn in CSS, not from the archive. */
   headline: "Design at production scale.",
-  support: "High-volume, brand-consistent creative across advertising, motion, email, retail, packaging, web and presentations.",
-  proofs: [
-    "High-volume production",
-    "Multi-format adaptation",
-    "Brand-system consistency"
-  ],
+  support: "Brand-consistent creative built across formats, channels and campaigns.",
 
   email: "moreno.luisrz@gmail.com",
   links: [

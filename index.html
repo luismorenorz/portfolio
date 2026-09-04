@@ -35,50 +35,58 @@
 
   <!-- =========================== 1. LIVING COVER ========================= -->
   <section class="cover" aria-labelledby="cover-headline">
-    <div class="cover-stack" aria-hidden="true"></div>
+    <!-- Four CSS shapes, no artwork. Kept as a self-contained block so it can
+         later be swapped for a single photograph without touching the type. -->
+    <div class="cover-art is-intro" aria-hidden="true">
+      <span class="gradient-shape gradient-shape-1"></span>
+      <span class="gradient-shape gradient-shape-2"></span>
+      <span class="gradient-shape gradient-shape-3"></span>
+      <span class="gradient-shape gradient-shape-4"></span>
+    </div>
 
     <div class="cover-type">
       <p class="cover-eyebrow"></p>
       <h1 class="cover-headline" id="cover-headline"><span class="reveal"></span></h1>
       <p class="cover-support"></p>
-      <ul class="cover-proofs"></ul>
     </div>
 
     <div class="cover-foot">
-      <p class="cover-issue">Selected work 2025–2026</p>
-      <a class="cover-cue" href="#browse">Scroll to explore <span aria-hidden="true">↓</span></a>
+      <p class="cover-issue"></p>
+      <a class="cover-cue" href="#browse">Browse projects <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 
-  <!-- ====================== 2. QUICK PRODUCTION MENU ===================== -->
+  <!-- ====================== 2. BROWSE BY DISCIPLINE ====================== -->
   <section id="browse" class="browse" aria-labelledby="browse-label">
-    <h2 class="band-label" id="browse-label">Browse production work</h2>
-    <nav class="browse-grid" aria-label="Jump to a discipline"></nav>
+    <header class="browse-head" data-reveal>
+      <p class="band-label">Selected work</p>
+      <h2 class="browse-title" id="browse-label">Browse by discipline</h2>
+      <p class="browse-note">Choose a category to update the projects below.</p>
+    </header>
+    <nav class="browse-grid" aria-label="Browse by discipline" data-reveal></nav>
   </section>
-
-  <!-- compact version, pinned once the menu above scrolls away -->
-  <div class="quickbar" hidden>
-    <nav class="quickbar-inner" aria-label="Production shortcuts"></nav>
-  </div>
 
   <!-- ========================== 3. WORK ARCHIVE ========================== -->
   <section id="archive" class="work" aria-labelledby="archive-title">
     <header class="work-head">
       <h2 class="work-title" id="archive-title">Work archive</h2>
-      <button type="button" class="work-back" hidden>← All work</button>
+      <p class="work-count" aria-live="polite"></p>
     </header>
 
-    <div class="filters" role="region" aria-label="Filter projects">
+    <div class="filters" role="region" aria-label="Browse and filter projects">
+      <!-- level one: the categories, the loudest control in the bar -->
+      <nav class="cats" aria-label="Filter by category"></nav>
+      <!-- level two: everything that narrows the selection further -->
       <div class="filter-line">
-        <nav class="cats" aria-label="Filter by category"></nav>
-        <div class="filter-tools">
+        <p class="filter-count" aria-hidden="true"></p>
+        <button type="button" class="refine-toggle" aria-expanded="false" aria-controls="refine">Refine<span class="chev" aria-hidden="true">&#8964;</span></button>
+        <div class="filter-tools" id="refine">
           <div class="active-tags" aria-live="polite"></div>
           <button class="tag-toggle" type="button" aria-expanded="false">Filter by tag<span class="chev" aria-hidden="true">&#8964;</span></button>
           <label class="search">
             <span class="visually-hidden">Search projects</span>
             <input type="search" placeholder="Search projects" autocomplete="off">
           </label>
-          <p class="work-count" aria-live="polite"></p>
           <div class="views" role="group" aria-label="Change how the archive is shown">
             <button type="button" class="view" data-view="grid" aria-pressed="true">Grid</button>
             <button type="button" class="view" data-view="curated" aria-pressed="false">Curated</button>
@@ -108,7 +116,7 @@
 
   <!-- =================== 4. SELECTED PRODUCTION SYSTEMS ================== -->
   <section id="systems" class="systems" aria-labelledby="systems-label">
-    <header class="band-head">
+    <header class="band-head" data-reveal>
       <h2 class="band-label" id="systems-label">Selected production systems</h2>
       <p class="band-note">Campaigns built across formats, sizes and channels.</p>
     </header>
@@ -118,7 +126,7 @@
   <!-- ===================== 5. PRODUCTION CAPABILITIES ==================== -->
   <section id="capabilities" class="caps" aria-labelledby="caps-label">
     <div class="caps-inner">
-      <header class="caps-head">
+      <header class="caps-head" data-reveal>
         <h2 class="band-label" id="caps-label">Production capabilities</h2>
         <p class="caps-note">What I can take from brief to shippable file.</p>
       </header>

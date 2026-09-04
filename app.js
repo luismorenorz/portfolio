@@ -46,22 +46,6 @@
     return out.slice(0, CURATED_COUNT);
   }
 
-  /* The cover composition: four real pieces at four scales, one each from
-     advertising, email, retail and motion. Advertising leads; email is the
-     narrow piece on the left, so no single channel owns the page. */
-  var COVER = [
-    { cls: "p1", key: "156-113", kind: "image" },                                        // Greenhouse advertising
-    { cls: "p2", key: "2-10",    kind: "image" },                                        // Rove email, tall
-    { cls: "p3", key: "171-31",  kind: "image" },                                        // Greenhouse retail
-    { cls: "p4", key: "20251112-gh-dtd-hdvideobanner-b-1080x1920-v2", kind: "poster" }   // motion frame
-  ];
-
-  /* the quick production menu: the four routes people ask for first, then
-     the rest. AI is a way of working, not a route, so it stays in the
-     archive filters and in the capability list. */
-  var ROUTES_LEAD = ["Advertising", "Motion", "Email"];
-  var ROUTES_REST = ["Social", "Retail", "Packaging", "Web & UI", "Branding", "Presentations"];
-
   /* ------------------------------ helpers ------------------------------- */
 
   function thumbSrc(k) { return "assets/thumb/" + k + ".webp"; }
@@ -184,12 +168,15 @@
 
   function visibleProjects() { return spread(PROJECTS.filter(matches)); }
 
-  /* --------------------------- reveal on scroll -------------------------- */
+  /* ----------------------- reveal on scroll ------------------------------
+     Elements start visible; JS arms the hidden state and an observer disarms
+     it. A timed sweep clears anything the observer missed, so a stalled
+     animation clock can never leave content hidden. Runs once per element.
+     ----------------------------------------------------------------------- */
 
-  // Elements start visible; JS arms the hidden state and an observer disarms
-  // it. A sweep clears anything the observer missed, so nothing can stay down.
   function armReveals() {
-    var items = $$(".reveal").map(function (el) { return el.parentNode; });
+    var items = $$(".reveal").map(function (el) { return el.parentNode; })
+      .concat($$("[data-reveal]"));
     if (prefersReduced() || !window.IntersectionObserver) return;
     items.forEach(function (el) { el.classList.add("is-armed"); });
     var io = new IntersectionObserver(function (rows) {
@@ -198,161 +185,148 @@
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.1 });
     items.forEach(function (el) { io.observe(el); });
-    setTimeout(function () { items.forEach(function (el) { el.classList.remove("is-armed"); }); }, 2400);
+    setTimeout(function () { items.forEach(function (el) { el.classList.remove("is-armed"); }); }, 2600);
   }
 
-  /* --------------------------- 1. living cover --------------------------- */
+  /* --------------------------- 1. living cover ---------------------------
+     Four abstract CSS shapes. No project artwork, no requests to assets/.
+     Three layers of motion, each on its own element so none overwrite each
+     other: intro on the wrapper, idle keyframes on the painted ::before, and
+     parallax through --px / --py, which the idle keyframes read.
+     ----------------------------------------------------------------------- */
 
-  function buildCover() {
-    var stack = $(".cover-stack");
-    COVER.forEach(function (spec) {
-      var d = document.createElement("div");
-      d.className = "cover-piece " + spec.cls;
-      var img = document.createElement("img");
-      img.src = srcOf(spec, false);
-      img.alt = "";
-      img.decoding = "async";
-      img.fetchPriority = spec.cls === "p1" ? "high" : "auto";
-      d.appendChild(img);
-      stack.appendChild(d);
-    });
-    parallax();
-  }
+  function buildCoverArt() {
+    var art = $(".cover-art");
+    if (!art) return;
 
-  // 10–20px of drift, read on a throttled timer rather than on every event
-  function parallax() {
+    // the intro animation is decorative; drop it after it has had its run so a
+    // frozen clock can never leave the shapes at opacity 0
+    setTimeout(function () { art.classList.remove("is-intro"); }, 1800);
+
     if (prefersReduced()) return;
-    var pieces = $$(".cover-piece");
-    if (!pieces.length) return;
-    var depth = [16, -12, 20, -18];
-    var cover = $(".cover");
-    var ticking = false;
 
-    function update() {
-      ticking = false;
-      var r = cover.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > window.innerHeight) return;
-      var t = Math.max(-1, Math.min(1, -r.top / window.innerHeight));
-      pieces.forEach(function (el, i) {
-        el.style.transform = "translate3d(0," + (t * (depth[i] || 12)).toFixed(1) + "px,0)";
+    var shapes = $$(".gradient-shape", art);
+    var depth = [22, -16, 18, -20];          // scroll parallax, px
+    var drift = [7, -5, 8, -6];              // pointer parallax, px
+    var cover = $(".cover");
+    var sy = 0, mx = 0, my = 0, frame = null;
+
+    function paint() {
+      frame = null;
+      shapes.forEach(function (el, i) {
+        el.style.setProperty("--py", (sy * (depth[i] || 16) + my * (drift[i] || 5)).toFixed(1) + "px");
+        el.style.setProperty("--px", (mx * (drift[i] || 5)).toFixed(1) + "px");
       });
     }
-    function onScroll() { if (ticking) return; ticking = true; setTimeout(update, 16); }
+    function schedule() { if (!frame) frame = requestAnimationFrame(paint); }
+
+    function onScroll() {
+      var r = cover.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > window.innerHeight) return;
+      sy = Math.max(-1, Math.min(1, -r.top / Math.max(1, window.innerHeight)));
+      schedule();
+    }
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
-    update();
+    onScroll();
+
+    // pointer parallax only where there is a real pointer
+    if (window.matchMedia && window.matchMedia("(pointer: fine)").matches) {
+      cover.addEventListener("mousemove", function (e) {
+        var r = cover.getBoundingClientRect();
+        mx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+        my = ((e.clientY - r.top) / r.height - 0.5) * 2;
+        schedule();
+      });
+      cover.addEventListener("mouseleave", function () { mx = 0; my = 0; schedule(); });
+    }
   }
 
-  /* ---------------------- 2. quick production menu ----------------------- */
+  /* --------------- 2. the category system: one configuration -------------
+     Every selector on the page is built from CATS. Labels, order, colour and
+     counts live here and nowhere else; the counts come from the projects.
+     ----------------------------------------------------------------------- */
 
-  function routeLink(label, cat, count, cls) {
-    var a = document.createElement("a");
-    a.className = "route" + (cls ? " " + cls : "");
-    a.href = cat ? "?category=" + slugify(cat) + "&view=grid#archive" : "?view=grid#archive";
-    a.addEventListener("click", function (e) {
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-      e.preventDefault();
-      if (state.view === "curated") state.view = "grid";
-      setCategory(cat);
+  var CAT_COLOR = {
+    "all":           "#171714",
+    "advertising":   "#7c2837",
+    "social":        "#7c2837",
+    "email":         "#a24b32",
+    "motion":        "#2a2927",
+    "ai":            "#2a2927",
+    "retail":        "#455148",
+    "packaging":     "#455148",
+    "web-ui":        "#28575a",
+    "branding":      "#68313a",
+    "presentations": "#444b52"
+  };
+  // reading order of the tiles, loudest disciplines first
+  var CAT_ORDER = ["Advertising", "Motion", "Email", "Web & UI", "Branding",
+                   "Social", "Retail", "Packaging", "Presentations", "AI"];
+
+  var CATS = [];
+
+  function buildCatConfig() {
+    var counts = categoryCounts();
+    var seen = {};
+    CATS = [{ slug: "all", label: "All work", cat: null, color: CAT_COLOR.all, order: 0, count: PROJECTS.length }];
+    CAT_ORDER.concat(CATEGORIES).forEach(function (name) {
+      if (seen[name] || !counts[name]) return;
+      seen[name] = true;
+      var slug = slugify(name);
+      CATS.push({
+        slug: slug, label: name, cat: name,
+        color: CAT_COLOR[slug] || "#2a2927",
+        order: CATS.length, count: counts[name]
+      });
     });
-    var name = document.createElement("span");
-    name.className = "route-name";
-    name.appendChild(document.createTextNode(label + " "));
-    var arrow = document.createElement("span");
-    arrow.className = "arrow"; arrow.setAttribute("aria-hidden", "true"); arrow.textContent = "→";
-    name.appendChild(arrow);
-    var n = document.createElement("span");
-    n.className = "route-count";
-    n.textContent = count + (count === 1 ? " project" : " projects");
-    a.appendChild(name); a.appendChild(n);
-    return a;
   }
 
+  function catBySlug(slug) {
+    for (var i = 0; i < CATS.length; i++) if (CATS[i].slug === slug) return CATS[i];
+    return null;
+  }
+  function catFor(name) {
+    return catBySlug(name ? slugify(name) : "all") || CATS[0];
+  }
+  function catHref(c) {
+    var qs = [];
+    if (c.cat) qs.push("category=" + c.slug);
+    if (state.view !== DEFAULT_VIEW) qs.push("view=" + state.view);
+    return location.pathname + (qs.length ? "?" + qs.join("&") : "") + "#archive";
+  }
+
+  /* the big selector */
   function buildBrowse() {
     var wrap = $(".browse-grid");
-    var counts = categoryCounts();
-    wrap.appendChild(routeLink("All work", null, PROJECTS.length, "is-all"));
-    ROUTES_LEAD.forEach(function (c) {
-      if (counts[c]) wrap.appendChild(routeLink(c, c, counts[c]));
-    });
-    ROUTES_REST.forEach(function (c) {
-      if (counts[c]) wrap.appendChild(routeLink(c, c, counts[c], "is-minor"));
-    });
-  }
-
-  /* The same menu, compressed, once the full one has scrolled away. It steps
-     aside while the archive's own filter bar owns the sticky band, so the two
-     never stack on top of each other. */
-  function buildQuickbar() {
-    var bar = $(".quickbar");
-    var inner = $(".quickbar-inner");
-    var counts = categoryCounts();
-
-    function shortcut(label, cat, lead) {
+    wrap.innerHTML = "";
+    CATS.forEach(function (c, i) {
       var a = document.createElement("a");
-      a.href = cat ? "?category=" + slugify(cat) + "&view=grid#archive" : "?view=grid#archive";
-      if (lead) a.className = "is-lead";
-      a.textContent = label;
+      a.className = "route" + (c.slug === "all" ? " is-all" : "");
+      a.href = catHref(c);
+      a.dataset.slug = c.slug;
+      a.style.setProperty("--cat", c.color);
+      a.style.setProperty("--i", Math.min(i, 11));
+
+      var name = document.createElement("span");
+      name.className = "route-name";
+      name.appendChild(document.createTextNode(c.label));
+      var arrow = document.createElement("span");
+      arrow.className = "arrow"; arrow.setAttribute("aria-hidden", "true"); arrow.textContent = "→";
+      name.appendChild(arrow);
+
+      var n = document.createElement("span");
+      n.className = "route-count";
+      n.textContent = c.count + (c.count === 1 ? " project" : " projects");
+
+      a.appendChild(name); a.appendChild(n);
       a.addEventListener("click", function (e) {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
         e.preventDefault();
-        if (!cat && state.view === "curated") state.view = "grid";
-        setCategory(cat);
-        closeMore();
+        applyCategory(c.slug, { scroll: true, push: true });
       });
-      return a;
-    }
-
-    inner.appendChild(shortcut("Work", null, true));
-    ROUTES_LEAD.forEach(function (c) { if (counts[c]) inner.appendChild(shortcut(c, c)); });
-
-    var wrapMore = document.createElement("div");
-    wrapMore.className = "more-wrap";
-    var moreBtn = document.createElement("button");
-    moreBtn.type = "button";
-    moreBtn.setAttribute("aria-expanded", "false");
-    moreBtn.textContent = "More ▾";
-    var list = document.createElement("div");
-    list.className = "more-list";
-    list.hidden = true;
-    ROUTES_REST.forEach(function (c) { if (counts[c]) list.appendChild(shortcut(c, c)); });
-    if (counts["AI"]) list.appendChild(shortcut("AI", "AI"));
-    wrapMore.appendChild(moreBtn); wrapMore.appendChild(list);
-    inner.appendChild(wrapMore);
-
-    function closeMore() { list.hidden = true; moreBtn.setAttribute("aria-expanded", "false"); }
-    moreBtn.addEventListener("click", function () {
-      var open = list.hidden;
-      list.hidden = !open;
-      moreBtn.setAttribute("aria-expanded", String(open));
+      wrap.appendChild(a);
     });
-    document.addEventListener("click", function (e) {
-      if (list.hidden || wrapMore.contains(e.target)) return;
-      closeMore();
-    });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && !list.hidden) { closeMore(); moreBtn.focus(); }
-    });
-
-    var browse = $("#browse"), archive = $("#archive");
-    var on = false, ticking = false;
-    function update() {
-      ticking = false;
-      var head = $(".masthead").getBoundingClientRect().height;
-      var b = browse.getBoundingClientRect();
-      var a = archive.getBoundingClientRect();
-      // past the menu, and not while the archive's filter bar is pinned
-      var want = b.bottom < head + 4 && !(a.top < head + 60 && a.bottom > head + 120);
-      if (want === on) return;
-      on = want;
-      bar.hidden = false;
-      bar.classList.toggle("is-on", on);
-      if (!on) closeMore();
-    }
-    function onScroll() { if (ticking) return; ticking = true; setTimeout(update, 16); }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    update();
   }
 
   /* ------------------- 4. selected production systems -------------------- */
@@ -510,10 +484,8 @@
 
   function buildFilters() {
     var catWrap = $(".cats");
-    catWrap.appendChild(catButton("All work", null));
-    var present = {};
-    PROJECTS.forEach(function (p) { present[p.category] = true; });
-    CATEGORIES.forEach(function (c) { if (present[c]) catWrap.appendChild(catButton(c, c)); });
+    catWrap.innerHTML = "";
+    CATS.forEach(function (c) { catWrap.appendChild(catTab(c)); });
 
     var counts = tagCounts();
     var filterable = Object.keys(counts)
@@ -547,11 +519,20 @@
       }
     });
 
+    // "Refine" only exists on narrow screens; on desktop the tools are always
+    // out, so the button is hidden by CSS and its state is irrelevant there
+    var refine = $(".refine-toggle"), filters = $(".filters");
+    refine.addEventListener("click", function () {
+      var open = !filters.classList.contains("refine-open");
+      filters.classList.toggle("refine-open", open);
+      refine.setAttribute("aria-expanded", String(open));
+    });
+
     $$(".clear-filters").forEach(function (b) {
       b.addEventListener("click", function () {
-        state.cat = null; state.tags = []; state.q = ""; state.shown = GRID_PAGE;
+        state.tags = []; state.q = "";
         $(".search input").value = "";
-        writeURL(true); render();
+        applyCategory("all", { scroll: false, push: true });
       });
     });
 
@@ -559,14 +540,13 @@
     search.addEventListener("input", function () {
       clearTimeout(t);
       t = setTimeout(function () {
-        state.q = search.value.trim(); state.shown = GRID_PAGE; render();
-      }, 120);
+        state.q = search.value.trim(); state.shown = GRID_PAGE; render({ soft: true });
+      }, 140);
     });
 
     $$(".view").forEach(function (b) {
       b.addEventListener("click", function () { setView(b.dataset.view); });
     });
-    $(".work-back").addEventListener("click", function () { setCategory(null); });
 
     // the category row is the only thing on the page allowed to scroll
     // sideways, and it says so only when it has somewhere to scroll
@@ -583,14 +563,17 @@
     measureCats();
   }
 
-  function catButton(label, value) {
+  /* One compact tab per configured category. A button, not a link: it filters
+     the list in place rather than going anywhere. */
+  function catTab(c) {
     var b = document.createElement("button");
     b.type = "button"; b.className = "cat";
-    if (value !== null) b.dataset.value = value;
+    b.dataset.slug = c.slug;
+    b.style.setProperty("--cat", c.color);
     b.setAttribute("aria-pressed", "false");
-    b.textContent = label;
+    b.textContent = c.label;
     b.addEventListener("click", function () {
-      setCategory((value === null || state.cat === value) ? null : value, { scroll: false });
+      applyCategory(c.slug, { scroll: false, push: true });
     });
     return b;
   }
@@ -602,11 +585,23 @@
     render();
   }
 
+  /* Every surface that shows the current selection is written here, so the
+     tiles, the tabs, the heading, the counts and the URL can never disagree. */
   function syncFilters() {
-    $$(".cats .cat").forEach(function (b) {
-      var v = "value" in b.dataset ? b.dataset.value : null;
-      b.setAttribute("aria-pressed", String(state.cat === v));
+    var active = catFor(state.cat);
+
+    $$(".browse-grid .route").forEach(function (a) {
+      var on = a.dataset.slug === active.slug;
+      a.classList.toggle("is-active", on);
+      if (on) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+      a.href = catHref(catBySlug(a.dataset.slug));
     });
+
+    $$(".cats .cat").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.slug === active.slug));
+    });
+
     $$(".tag-list .tag").forEach(function (b) {
       b.setAttribute("aria-pressed", String(state.tags.indexOf(b.dataset.value) !== -1));
     });
@@ -629,11 +624,51 @@
 
     $(".tag-toggle").firstChild.nodeValue =
       state.tags.length ? "Filter by tag (" + state.tags.length + ")" : "Filter by tag";
-    var active = !!state.cat || state.tags.length > 0 || !!state.q;
-    $$(".clear-filters").forEach(function (b) { b.hidden = !active; });
+    var narrowed = !!state.cat || state.tags.length > 0 || !!state.q;
+    $$(".clear-filters").forEach(function (b) { b.hidden = !narrowed; });
   }
 
-  function render() {
+  // keep the selected tab in view when the row scrolls sideways on a phone
+  function scrollTabIntoView() {
+    var row = $(".cats");
+    var on = $('.cats .cat[aria-pressed="true"]');
+    if (!row || !on || row.scrollWidth <= row.clientWidth + 2) return;
+    var want = on.offsetLeft - (row.clientWidth - on.offsetWidth) / 2;
+    row.scrollTo({ left: Math.max(0, want), behavior: prefersReduced() ? "auto" : "smooth" });
+  }
+
+  /* ------------------------------- rendering ------------------------------
+     `render` swaps the list. `opts.soft` skips the leave step for changes the
+     user is typing through; otherwise the old grid steps out, the new one
+     steps in. Both states are cleared by a timer as well as by the animation,
+     so a stalled clock can never leave the archive blank.
+     ----------------------------------------------------------------------- */
+
+  var swapTimer = null, enterTimer = null;
+
+  function render(opts) {
+    opts = opts || {};
+    var grid = $("#grid");
+    if (opts.soft || prefersReduced() || grid.hidden) { paint(); return; }
+
+    // hold the height so the page does not jump while the grid is out
+    var h = grid.getBoundingClientRect().height;
+    if (h > 40) grid.style.minHeight = h + "px";
+    grid.classList.add("is-out");
+    clearTimeout(swapTimer);
+    swapTimer = setTimeout(function () {
+      grid.classList.remove("is-out");
+      paint();
+      grid.classList.add("is-in");
+      clearTimeout(enterTimer);
+      enterTimer = setTimeout(function () {
+        grid.classList.remove("is-in");
+        grid.style.minHeight = "";
+      }, 900);
+    }, 150);
+  }
+
+  function paint() {
     var all = visibleProjects();
     var filtered = !!state.cat || state.tags.length > 0 || !!state.q;
     var grid = $("#grid"), indexWrap = $(".index-wrap");
@@ -652,7 +687,8 @@
     grid.innerHTML = "";
     indexWrap.hidden = state.view !== "index";
     grid.hidden = state.view === "index";
-    grid.className = "grid " + (curated ? "is-curated" : "is-uniform");
+    grid.className = "grid " + (curated ? "is-curated" : "is-uniform") +
+      (grid.classList.contains("is-in") ? " is-in" : "");
 
     if (state.view === "index") {
       renderIndex(all);
@@ -661,17 +697,18 @@
       $(".index-peek").classList.remove("is-on");
       list.forEach(function (p, i) {
         var el = entry(p, i + 1, curated);
-        el.style.setProperty("--i", Math.min(i, 8));
+        el.style.setProperty("--i", Math.min(i, 7));   // stagger the first eight only
         grid.appendChild(el);
       });
     }
 
-    $(".work-title").textContent = state.cat || "Work archive";
-    $(".work-count").textContent = filtered
-      ? all.length + " of " + PROJECTS.length
+    var count = filtered
+      ? all.length + (all.length === 1 ? " project" : " projects")
       : (curated ? "12 selected of " + PROJECTS.length
                  : all.length + " projects");
-    $(".work-back").hidden = !state.cat;
+    $(".work-title").textContent = state.cat || "All work";
+    $(".work-count").textContent = count;
+    $(".filter-count").textContent = count;
 
     var btn = $(".more-btn");
     if (curated) {
@@ -681,7 +718,7 @@
     } else if (more > 0) {
       btn.hidden = false;
       btn.textContent = "View more projects (" + more + " left)";
-      btn.onclick = function () { state.shown += GRID_PAGE; render(); };
+      btn.onclick = function () { state.shown += GRID_PAGE; render({ soft: true }); };
     } else {
       btn.hidden = true;
     }
@@ -690,15 +727,16 @@
     syncFilters();
   }
 
-  /* One cover. The card IS the artwork: a 4:5 crop, a category-coloured
-     scrim, and the four things a reviewer needs in three seconds — what kind
-     of work, for whom, what it is, and how much of it there was. */
+  /* One cover. The artwork is shown as shot, with no tint or gradient over
+     it; a solid panel in the category colour carries the words. */
   function entry(p, number, curated) {
     var cover = coverKey(p);
+    var conf = catFor(p.category);
 
     var art = document.createElement("article");
-    art.className = "entry cat-" + slugify(p.category) + (curated ? " is-curated-card" : "");
+    art.className = "entry cat-" + conf.slug + (curated ? " is-curated-card" : "");
     art.setAttribute("data-category", p.category);
+    art.style.setProperty("--cat", conf.color);
 
     var link = document.createElement("a");
     link.className = "entry-link";
@@ -726,37 +764,6 @@
     img.alt = altFor(p, 0);
     fig.appendChild(img);
 
-    // two layers: a constant scrim that guarantees the text contrast, and a
-    // flat tint that thins out on hover so more of the artwork comes through
-    var tint = document.createElement("span");
-    tint.className = "entry-tint"; tint.setAttribute("aria-hidden", "true");
-    var scrim = document.createElement("span");
-    scrim.className = "entry-scrim"; scrim.setAttribute("aria-hidden", "true");
-    fig.appendChild(tint); fig.appendChild(scrim);
-
-    var top = document.createElement("div");
-    top.className = "entry-top";
-    var kicker = document.createElement("p");
-    kicker.className = "entry-kicker"; kicker.textContent = p.category;
-    var who = document.createElement("p");
-    who.className = "entry-client";
-    who.textContent = p.client + (p.year ? " · " + p.year : "");
-    top.appendChild(kicker); top.appendChild(who);
-
-    var bottom = document.createElement("div");
-    bottom.className = "entry-bottom";
-    var title = document.createElement("h3");
-    title.className = "entry-title"; title.textContent = p.title;
-    var prod = document.createElement("p");
-    prod.className = "entry-prod";
-    prod.appendChild(document.createTextNode(deliverableLine(p) + " "));
-    var arrow = document.createElement("span");
-    arrow.className = "arrow"; arrow.setAttribute("aria-hidden", "true"); arrow.textContent = "↗";
-    prod.appendChild(arrow);
-    bottom.appendChild(title); bottom.appendChild(prod);
-
-    fig.appendChild(top); fig.appendChild(bottom);
-
     if (hasMotion(p)) {
       var badge = document.createElement("span");
       badge.className = "entry-play";
@@ -765,6 +772,19 @@
       fig.appendChild(badge);
       attachLoop(link, fig, p.videos[0]);
     }
+
+    // solid panel, no transparency, no gradient
+    var panel = document.createElement("div");
+    panel.className = "entry-panel";
+    var title = document.createElement("h3");
+    title.className = "entry-title"; title.textContent = p.title;
+    var meta = document.createElement("p");
+    meta.className = "entry-meta";
+    meta.textContent = p.client + (p.year ? " · " + p.year : "");
+    var arrow = document.createElement("span");
+    arrow.className = "arrow"; arrow.setAttribute("aria-hidden", "true"); arrow.textContent = "↗";
+    panel.appendChild(title); panel.appendChild(meta); panel.appendChild(arrow);
+    fig.appendChild(panel);
 
     link.appendChild(fig);
     art.appendChild(link);
@@ -870,7 +890,10 @@
     });
   }
 
-  /* ------------------------------ routing -------------------------------- */
+  /* ------------------------------ routing --------------------------------
+     One door in and out of a category change, used by the tiles, the tabs,
+     the tag links and the history. Nothing else may set state.cat.
+     ----------------------------------------------------------------------- */
 
   function writeURL(push, hash) {
     var qs = [];
@@ -881,17 +904,21 @@
     else history.replaceState(null, "", url);
   }
 
-  function setCategory(cat, opts) {
+  function applyCategory(slug, opts) {
     opts = opts || {};
-    state.cat = cat;
+    var c = catBySlug(String(slug || "all").toLowerCase()) || CATS[0];
+    state.cat = c.cat;
     state.shown = GRID_PAGE;
-    if (cat && state.view === "curated") state.view = "grid";
-    writeURL(true, "#archive");
-    render();
-    if (opts.scroll !== false) {
-      document.getElementById("archive").scrollIntoView({
-        block: "start", behavior: prefersReduced() ? "auto" : "smooth"
-      });
+    // curated is a hand-picked twelve; narrowing to one discipline leaves it
+    if (c.cat && state.view === "curated") state.view = "grid";
+    if (opts.push !== false) writeURL(true, "#archive");
+    render(opts);
+    scrollTabIntoView();
+    if (opts.scroll) {
+      var head = $(".work-head");
+      var top = head.getBoundingClientRect().top + window.pageYOffset -
+                ($(".masthead").getBoundingClientRect().height + 16);
+      window.scrollTo({ top: Math.max(0, top), behavior: prefersReduced() ? "auto" : "smooth" });
     }
   }
 
@@ -900,23 +927,20 @@
     state.view = v;
     state.shown = GRID_PAGE;
     writeURL(true, "#archive");
-    render();
+    render({ light: true });
   }
 
   // The URL carries category and view. Tags and the search box are not in it,
   // so a history move has to clear them or a stale query keeps filtering.
   function applyURL(fromPop) {
     var q = new URLSearchParams(location.search);
-    var cat = q.get("category") ? catFromSlug(q.get("category")) : null;
     var view = q.get("view");
-    state.cat = cat;
     state.view = (view === "grid" || view === "index" || view === "curated") ? view : DEFAULT_VIEW;
-    state.shown = GRID_PAGE;
     state.tags = [];
     state.q = "";
     var box = $(".search input");
     if (box) box.value = "";
-    render();
+    applyCategory(q.get("category") || "all", { push: false, soft: !fromPop });
 
     var hash = location.hash.replace("#", "");
     var isProject = hash && PROJECTS.some(function (p) { return p.id === hash; });
@@ -972,12 +996,12 @@
       var b = document.createElement("button");
       b.type = "button"; b.textContent = t;
       b.addEventListener("click", function () {
+        // a tag jump is a category change too: same door, so nothing drifts
         closeViewer(true);
-        state.cat = null; state.tags = [t]; state.q = ""; state.shown = GRID_PAGE;
+        state.tags = [t]; state.q = "";
         if (state.view === "curated") state.view = "grid";
         $(".search input").value = "";
-        writeURL(true, "#archive"); render();
-        document.getElementById("archive").scrollIntoView({ block: "start" });
+        applyCategory("all", { scroll: true, push: true });
       });
       li.appendChild(b); tags.appendChild(li);
     });
@@ -1099,21 +1123,9 @@
       about.appendChild(el);
     });
 
-    var eyebrow = $(".cover-eyebrow");
-    eyebrow.innerHTML = "";
-    [SITE.name, SITE.role, SITE.location].forEach(function (t) {
-      eyebrow.appendChild(document.createElement("span")).textContent = t;
-    });
+    $(".cover-eyebrow").textContent = [SITE.name, SITE.role, SITE.location].join(" · ");
     $(".cover-headline .reveal").textContent = SITE.headline;
     $(".cover-support").textContent = SITE.support;
-
-    var proofs = $(".cover-proofs");
-    (SITE.proofs || []).forEach(function (t) {
-      var li = document.createElement("li");
-      li.textContent = t;
-      proofs.appendChild(li);
-    });
-
     $(".cover-issue").textContent = SITE.issue;
     $(".about-statement .reveal").textContent = SITE.statement;
     $(".contact-role").textContent = SITE.role;
@@ -1169,8 +1181,9 @@
 
   window.addEventListener("resize", measureHeader);
 
+  buildCatConfig();
   fillChrome();
-  buildCover();
+  buildCoverArt();
   buildBrowse();
   buildFilters();
   buildSystems();
@@ -1178,7 +1191,6 @@
 
   var start = applyURL(false);
   measureHeader();
-  buildQuickbar();
   watchHeader();
   armReveals();
   if (start) openProject(start, false);

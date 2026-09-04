@@ -11,14 +11,12 @@ Production first, case studies second: the work is two scrolls from the top.
 
 ## The seven parts
 
-1. **Living cover** — 100svh, composed from four real pieces at four scales
-   (advertising, email, retail, motion), cropped by the edges, with a little
-   parallax. No placeholder, and no single channel dominating.
-2. **Quick production menu** — a full-bleed matrix of routes with live counts:
-   All work first, then Advertising, Motion, Email, then the rest. Once it
-   scrolls away it returns as a compact sticky bar (Work / Advertising /
-   Motion / Email / More), which steps aside while the archive's own filter
-   bar owns the sticky band.
+1. **Cover** — 100svh of type and four abstract shapes drawn in CSS. No
+   artwork, no thumbnails, no requests to `assets/`. The block is
+   self-contained so it can later be swapped for one photograph.
+2. **Browse by discipline** — a six-column matrix of all eleven selectors
+   with live counts. Selecting one fills that tile in its category colour,
+   updates the archive in place and writes the URL; nothing reloads.
 3. **Work archive** — the whole 70 in three views: **Grid** (the default),
    Curated and Index. Every card is a cover: the artwork full bleed at 4:5, a
    discipline-coloured scrim over it, and the four things a reviewer needs in
@@ -39,27 +37,30 @@ Every number on the page is measured from the files, never estimated: piece
 counts are the images and clips themselves, and "formats" is the count of
 distinct aspect ratios actually present in a project.
 
-## The card colour system
+## One category configuration
 
-One small palette of dark, muted colours, keyed by discipline in
-`site/styles.css`. Related disciplines share a family on purpose, so the
-archive reads as seven signals rather than ten:
+`CAT_COLOR` and `CAT_ORDER` near the top of **`site/app.js`** are the only
+place categories are described. `buildCatConfig()` turns them into `CATS`,
+a list of `{slug, label, cat, color, order, count}` with the counts read from
+the projects. The big tiles, the sticky tabs, the card panels and the URLs
+are all built from that one list, so they cannot drift apart.
 
-    Email                  terracotta   147 70 51
-    Advertising, Social    cobalt        40 71 154
-    Motion, AI             violet        85 59 120
-    Retail, Packaging      forest        64 90 69
-    Web & UI               deep teal     24 92 104
-    Branding               oxblood      104 57 75
-    Presentations          slate         63 70 86
+    All work        #171714
+    Advertising     #7c2837      Social          #7c2837
+    Email           #a24b32
+    Motion          #2a2927      AI              #2a2927
+    Retail          #455148      Packaging       #455148
+    Web & UI        #28575a
+    Branding        #68313a
+    Presentations   #444b52
 
-Each card gets `data-category`, a `cat-<slug>` class and a `--cat-rgb` custom
-property; nothing is styled per project. To recolour a discipline, change one
-line under "the category colour system". Two layers sit over the artwork: a
-constant scrim that owns the text contrast, and a flat tint that thins from
-30% to 14% on hover so more of the artwork shows without the words ever
-getting harder to read. Every family clears WCAG AA against a pure-white
-photograph, the worst case.
+Every one of them clears WCAG AA behind white text (5.85:1 at worst). Cards
+carry the colour as `--cat` on a solid panel over the bottom third of the
+artwork; the image itself is never tinted.
+
+Every entry point runs through `applyCategory(slug, opts)`, which sets the
+state, syncs both selectors, rewrites the heading, the counts and the URL,
+and animates the swap. Nothing else may set the active category.
 
 ## URLs worth knowing
 
