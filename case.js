@@ -178,10 +178,16 @@
   $(".wordmark-role").textContent = SITE.role;
   $(".foot-name").textContent = "© " + new Date().getFullYear() + " " + SITE.name;
 
+  /* Case studies that used to live here. Their links are out in the world, and
+     the work is still in the archive, so point each one at its project. */
+  var RETIRED = { "rove": "rove-campaigns" };
+
   var id = new URLSearchParams(location.search).get("story");
   var story = STORIES.filter(function (s) { return s.id === id; })[0];
   if (story) {
     render(story);
+  } else if (RETIRED[id]) {
+    location.replace("index.html#" + RETIRED[id]);
   } else if (typeof PROJECTS !== "undefined" &&
              PROJECTS.some(function (p) { return p.id === id; })) {
     /* A story that has been retired still has a live link out in the world.

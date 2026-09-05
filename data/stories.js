@@ -36,7 +36,7 @@ const STORIES = [
     ],
     line: "One immunity platform carried from the feed to the grocery aisle.",
     cover: { image: "171-31" },
-    next: "rove",
+    next: "gut1",
     projects: [
       "greenhouse-immunity", "greenhouse-smoothies", "greenhouse-promos",
       "greenhouse-dtd-displays", "greenhouse-fridge", "greenhouse-protein",
@@ -84,54 +84,69 @@ const STORIES = [
   },
 
   {
-    id: "rove",
+    id: "gut1",
     number: "02",
-    client: "Rove",
-    title: "Email Art Direction",
-    disciplines: ["Email", "Motion", "Art Direction"],
-    year: "2025",
+    client: "equilibri-o",
+    title: "AI Product Universe",
+    disciplines: ["Advertising", "AI-Assisted", "Product Imagery"],
+    year: "2026",
     role: "Designer",
     deliverables: [
-      "Promotional and launch emails",
-      "Long-form product education",
-      "Animated email heroes",
-      "Campaign art direction"
+      "Studio product imagery",
+      "Texture and ingredient shots",
+      "Packaging-format concepts",
+      "Lifestyle scenes",
+      "Atmospheric brand imagery",
+      "One-palette art direction"
     ],
-    line: "One inbox system stretched across drops, education and apparel.",
-    cover: { image: "2-10" },
+    line: "A whole product world for one tub, generated rather than shot.",
+    cover: { image: "equilibrio-gut1-01" },
     next: "sky18",
-    projects: ["rove-campaigns", "rove-education", "rove-heroes"],
+    projects: ["equilibrio-gut1"],
     sections: [
       { kind: "text", title: "Overview",
-        body: "Rove is a cannabis lifestyle brand that sells product, apparel and a beverage line from the same inbox. Twenty pieces in this story: eleven emails and nine animated heroes." },
+        body: "Gut 1 is a single product: a 435 g tub of lemon-lychee powder, a fiber, prebiotic, enzyme, electrolyte and amino-acid blend. Fifteen images build the entire visual world around it, all AI-assisted, all held to one palette." },
 
       { kind: "text", title: "Challenge",
-        body: "The mailing list gets a collaboration drop, a science-led sleep explainer and a streetwear launch in the same month. Each needs a different register, and none of them can read as a different company. The variety is the point, and so is the consistency." },
-
-      { kind: "duo", images: ["2-10", "2-9"],
-        caption: "A Labubu collaboration drop and the October Breast Cancer Awareness edition." },
+        body: "A launch product has no photo library, and a campaign needs one before it can start. There is no budget logic in booking a studio, a stylist, a model and a location for a single SKU with no history. The pack design is real and fixed. Everything around it had to be made." },
 
       { kind: "text", title: "Creative approach",
-        body: "I let the art direction change while the structure stayed fixed. Every email runs the same skeleton: full-bleed hero, one claim, one button, then modular product blocks. What moves is the treatment. Drops get saturated colour and heavy display type. Education emails drop to illustration and long copy. Apparel goes quiet and photographic." },
+        body: "Rather than generate fifteen unrelated images, I worked in four families: studio, texture, format and life. Each answers a different question a buyer asks, and together they cover a launch. What is it, what is inside, how does it arrive, and who is it for." },
 
-      { kind: "quote", text: "The layout is the constant. The tone is the variable." },
+      { kind: "trio", images: ["equilibrio-gut1-04", "equilibrio-gut1-05", "equilibrio-gut1-06"],
+        caption: "Studio: a reflective sweep, a plinth in hard light, and a block with the shadow thrown long." },
 
-      { kind: "trio", images: ["18-4", "2-7", "140-32"],
-        caption: "Product education: sleep, muscle recovery, and the Drink Loud line." },
+      { kind: "text", title: "One light, one palette",
+        body: "What makes a generated set read as one shoot is discipline about light. Every studio frame takes the same key from the upper left and the same sage-on-bone palette, so the shadows fall the same way from image to image and the label holds the same value. Nothing here is warmer or cooler than anything else." },
 
-      { kind: "text", title: "Visual system",
-        body: "Type does the register-switching. A condensed display face for drops, a lighter sans for education, and a lot of restraint on the apparel work. Product photography sits on flat colour rather than in scenes, which keeps assets reusable across emails and paid social." },
+      { kind: "quote", text: "The pack never changes. Everything around it does." },
 
-      { kind: "text", title: "Motion",
-        body: "Nine heroes animate the top of the email. Each is a short loop, exported light enough for the inbox, covering apparel drops and the Drink Loud beverage line." },
+      { kind: "aside", image: "equilibrio-gut1-11", title: "What is inside",
+        body: "Three tubs stacked with the middle one tipped and the powder running out onto the surface. It is the only frame that opens the product, and it is the one that makes the other fourteen credible: without it the tub is a shape, and with it there is something to buy." },
 
-      { kind: "reel", videos: ["rove-heroes-01", "rove-heroes-02", "rove-heroes-03", "rove-heroes-04"],
-        caption: "Four of the nine animated heroes." },
+      { kind: "trio", images: ["equilibrio-gut1-09", "equilibrio-gut1-10", "equilibrio-gut1-14"],
+        caption: "Format: a moulded pulp tray, a loose flat lay, and a clear carry bag." },
 
-      { kind: "duo", images: ["2-6", "2-8"],
-        caption: "A twenty-percent gear push and the pickleball giveaway." },
+      { kind: "text", title: "How it arrives",
+        body: "The format family does work beyond advertising. A pulp tray, a scattered set and a transparent multipack are three subscription and retail scenarios rendered before anyone commits to tooling. They are proposals as much as they are assets, and they cost nothing to revise." },
 
-      { kind: "full", image: "2-5", caption: "Taste the melon, feel the magic." }
+      { kind: "trio", images: ["equilibrio-gut1-03", "equilibrio-gut1-07", "equilibrio-gut1-08"],
+        caption: "Life: a hand reaching across a kitchen counter, the tub held at the waist in activewear, and a glass poured at home." },
+
+      { kind: "text", title: "People, kept quiet",
+        body: "The lifestyle frames stay deliberately low-key. No faces held to camera, no expression selling a feeling. A hand reaching, a torso, someone drinking while looking away. That keeps the product as the subject and stays out of the uncanny territory that generated faces walk into." },
+
+      { kind: "duo", images: ["equilibrio-gut1-13", "equilibrio-gut1-15"],
+        caption: "Atmosphere: caustics through shallow water, and the tub held up against cloud." },
+
+      { kind: "duo", images: ["equilibrio-gut1-01", "equilibrio-gut1-02"],
+        caption: "Carried: a string market bag with lemons, and the tub going into a gym bag." },
+
+      { kind: "text", title: "Holding it together",
+        body: "Fifteen images, one sage green, one light direction, one pack rendered consistently enough that the label reads the same in every frame. The set is meant to be used together, and the rule that makes that possible is the one it never breaks." },
+
+      { kind: "full", image: "equilibrio-gut1-12",
+        caption: "One tub, one pedestal, nothing else in the room." }
     ]
   },
 
