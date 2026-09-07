@@ -136,17 +136,27 @@ const EXPERIENCE = {
       ]
     },
     {
-      /* Dates and title supplied by Luis. No description on file yet: the
-         section renders company, role and dates and leaves the copy out
-         rather than inventing it. */
+      /* Copy taken from Luis's own LinkedIn entry for this role. Note that
+         LinkedIn lists this role as "Senior Graphic Designer, Jun 2017 – Jan
+         2018"; the title and dates kept here are the ones Luis supplied as
+         verified. Flagged rather than silently reconciled. */
       id: "revista-escaparate",
       company: "Revista Escaparate",
       role: "Editorial Designer",
-      env: "Editorial",
+      location: "México",
+      env: "Editorial · Fashion magazine",
       start: { m: 1, y: 2014 },
       end: { m: 5, y: 2015 },
-      summary: "",
-      details: []
+      summary: "Editorial design and art direction for a fashion magazine: covers, layouts, photo shoots and the brand system holding them together.",
+      details: [
+        "Designed editorial layouts and covers with strong hierarchy and a modern, trend-forward aesthetic.",
+        "Planned and art-directed fashion photo shoots, shaping concept, mood and overall visual direction, including sets and backdrops.",
+        "Developed brand identities and visual guidelines for the magazine, and kept them consistent across print, digital, social and event materials.",
+        "Retouched photography to editorial-ready standards.",
+        "Created event and social advertising for both digital and print placements.",
+        "Scouted and selected talent so each issue's visuals stayed cohesive and on brand.",
+        "Partnered with clients and collaborators to translate their ideas into clear, high-impact design."
+      ]
     },
     {
       id: "rio-da-prata",
