@@ -464,57 +464,99 @@
      works from the keyboard and more than one can stay open.
      ----------------------------------------------------------------------- */
 
+  /* ----------------------------- experience -----------------------------
+     One reverse-chronological list. Dates and durations both come from the
+     machine-readable start/end in data/experience.js, so they cannot drift
+     apart, and nothing here is an accordion: every role is readable on
+     arrival.
+     ----------------------------------------------------------------------- */
+
+  var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  var ROLE_POINTS = 3;   // how many detail lines each role shows
+
+  function monthLabel(d) {
+    if (!d || !d.y) return "";
+    return (d.m ? MONTHS[d.m - 1] + " " : "") + d.y;
+  }
+
+  function dateRange(r) {
+    var from = monthLabel(r.start);
+    var to = r.end ? monthLabel(r.end) : "Present";
+    if (!from) return to === "Present" ? "" : to;
+    return from + " – " + to;
+  }
+
+  /* Whole months, counted inclusively so Jun 2022 – Mar 2026 reads as the
+     3 yrs 10 mos a reader would expect, and an unfinished role counts up to
+     today. Returns "" when there is not enough date to be honest about. */
+  function durationBetween(start, end) {
+    if (!start || !start.y) return "";
+    var now = new Date();
+    var e = end && end.y ? end : { m: now.getMonth() + 1, y: now.getFullYear() };
+    var sm = start.m || 1, em = e.m || 12;
+    var months = (e.y * 12 + em) - (start.y * 12 + sm) + 1;
+    if (months < 1) return "";
+    var yrs = Math.floor(months / 12), mos = months % 12;
+    var parts = [];
+    if (yrs) parts.push(yrs + (yrs === 1 ? " yr" : " yrs"));
+    if (mos) parts.push(mos + (mos === 1 ? " mo" : " mos"));
+    return parts.join(" ");
+  }
+
+  // most recent first: latest end, then latest start for anything ending together
+  function byRecency(a, b) {
+    var ae = a.end ? a.end.y * 12 + (a.end.m || 12) : Infinity;
+    var be = b.end ? b.end.y * 12 + (b.end.m || 12) : Infinity;
+    if (ae !== be) return be - ae;
+    return (b.start.y * 12 + (b.start.m || 1)) - (a.start.y * 12 + (a.start.m || 1));
+  }
+
   function buildExperience() {
     if (typeof EXPERIENCE === "undefined") return;
     var X = EXPERIENCE;
 
     $(".exp-eyebrow").textContent = X.eyebrow;
-    $(".exp-note").textContent = X.note;
     $(".exp-title").textContent = X.heading;
-    $(".exp-intro").textContent = X.intro;
+    $(".exp-note").textContent = X.note;
 
-    var mwrap = $(".exp-metrics");
-    X.metrics.forEach(function (m, i) {
-      var li = document.createElement("li");
-      li.className = "metric";
-      li.style.setProperty("--i", i);
-      var v = document.createElement("p");
-      v.className = "metric-value"; v.textContent = m.value;
-      var l = document.createElement("p");
-      l.className = "metric-label"; l.textContent = m.label;
-      li.appendChild(v); li.appendChild(l);
-      mwrap.appendChild(li);
+    var roles = X.roles.slice().sort(byRecency);
+
+    /* The lead figures. "10+ years" is the stated claim, not a sum of the
+       roles: two of them overlap, so adding durations would double-count.
+       The span reads from the data so it cannot go stale. */
+    var earliest = roles.reduce(function (y, r) { return Math.min(y, r.start.y); }, 9999);
+    var lead = $(".exp-lead");
+    lead.innerHTML = "";
+
+    var big = document.createElement("p");
+    big.className = "exp-claim";
+    var bigV = document.createElement("span");
+    bigV.className = "exp-claim-v"; bigV.textContent = X.claim.value;
+    var bigL = document.createElement("span");
+    bigL.className = "exp-claim-l"; bigL.textContent = X.claim.label;
+    big.appendChild(bigV); big.appendChild(bigL);
+
+    var side = document.createElement("dl");
+    side.className = "exp-facts";
+    /* "Present" is the career span, not the end date of the latest role:
+       the practice is ongoing whether or not a staff role is running. */
+    [["Active", earliest + " – Present"],
+     ["Settings", X.span.label]].forEach(function (pair) {
+      var row = document.createElement("div");
+      var dt = document.createElement("dt"); dt.textContent = pair[0];
+      var dd = document.createElement("dd"); dd.textContent = pair[1];
+      row.appendChild(dt); row.appendChild(dd); side.appendChild(row);
     });
 
-    var gwrap = $(".exp-groups");
-    X.groups.forEach(function (g) {
-      var sec = document.createElement("section");
-      sec.className = "exp-group";
-      sec.setAttribute("aria-labelledby", "grp-" + g.id);
-      sec.style.setProperty("--exp", g.color);
+    lead.appendChild(big); lead.appendChild(side);
 
-      var head = document.createElement("header");
-      head.className = "group-head";
-      head.setAttribute("data-reveal", "");
-      var num = document.createElement("p");
-      num.className = "group-num"; num.textContent = g.number;
-      var h3 = document.createElement("h3");
-      h3.className = "group-title"; h3.id = "grp-" + g.id; h3.textContent = g.title;
-      var blurb = document.createElement("p");
-      blurb.className = "group-blurb"; blurb.textContent = g.blurb;
-      head.appendChild(num); head.appendChild(h3); head.appendChild(blurb);
-      sec.appendChild(head);
-
-      var list = document.createElement("div");
-      list.className = "role-list";
-      g.roles.forEach(function (r, i) {
-        list.appendChild(roleCard(r, i));
-      });
-      sec.appendChild(list);
-      gwrap.appendChild(sec);
-    });
+    var list = $(".exp-roles");
+    list.innerHTML = "";
+    roles.forEach(function (r, i) { list.appendChild(roleRow(r, i)); });
 
     var ach = $(".ach-list");
+    ach.innerHTML = "";
     X.achievements.forEach(function (a, i) {
       var li = document.createElement("li");
       li.className = "ach";
@@ -545,79 +587,72 @@
     });
   }
 
-  function roleCard(r, i) {
-    var art = document.createElement("article");
-    art.className = "role";
-    art.style.setProperty("--i", i);
+  /* Dates on the left, the job on the right, everything visible. On a phone
+     the two columns stack and the date stays directly above its company. */
+  function roleRow(r, i) {
+    var li = document.createElement("li");
+    li.className = "exp-role";
+    li.style.setProperty("--i", Math.min(i, 6));
+    li.setAttribute("data-reveal", "");
 
-    var h4 = document.createElement("h4");
-    h4.className = "role-heading";
-
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "role-btn";
-    btn.setAttribute("aria-expanded", "false");
-    btn.setAttribute("aria-controls", "role-" + r.id);
-
-    var top = document.createElement("span");
-    top.className = "role-top";
-    var co = document.createElement("span");
-    co.className = "role-co"; co.textContent = r.company;
-    var env = document.createElement("span");
-    env.className = "role-env"; env.textContent = r.env;
-    top.appendChild(co); top.appendChild(env);
-
-    var title = document.createElement("span");
-    title.className = "role-title"; title.textContent = r.role;
-
-    var meta = document.createElement("span");
-    meta.className = "role-meta";
-    var d = document.createElement("span"); d.textContent = r.dates;
-    var loc = document.createElement("span"); loc.textContent = r.location;
-    meta.appendChild(d); meta.appendChild(loc);
-
-    var sum = document.createElement("span");
-    sum.className = "role-sum"; sum.textContent = r.summary;
-
-    btn.appendChild(top); btn.appendChild(title); btn.appendChild(meta); btn.appendChild(sum);
-
-    if (r.facts && r.facts.length) {
-      var facts = document.createElement("span");
-      facts.className = "role-facts";
-      r.facts.forEach(function (f) {
-        var s2 = document.createElement("span");
-        s2.className = "fact"; s2.textContent = f;
-        facts.appendChild(s2);
-      });
-      btn.appendChild(facts);
+    var when = document.createElement("div");
+    when.className = "role-when";
+    var range = document.createElement("p");
+    range.className = "role-range";
+    var t = document.createElement("time");
+    t.textContent = dateRange(r);
+    range.appendChild(t);
+    when.appendChild(range);
+    var dur = durationBetween(r.start, r.end);
+    if (dur) {
+      var d = document.createElement("p");
+      d.className = "role-dur"; d.textContent = dur;
+      when.appendChild(d);
     }
 
-    var mark = document.createElement("span");
-    mark.className = "role-mark"; mark.setAttribute("aria-hidden", "true");
-    btn.appendChild(mark);
-    h4.appendChild(btn);
+    var what = document.createElement("div");
+    what.className = "role-what";
 
-    var panel = document.createElement("div");
-    panel.className = "role-panel";
-    panel.id = "role-" + r.id;
-    panel.hidden = true;
-    var ul = document.createElement("ul");
-    r.details.forEach(function (line) {
-      var li = document.createElement("li");
-      li.textContent = line;
-      ul.appendChild(li);
-    });
-    panel.appendChild(ul);
+    var h3 = document.createElement("h3");
+    h3.className = "role-co"; h3.textContent = r.company;
+    what.appendChild(h3);
 
-    btn.addEventListener("click", function () {
-      var open = panel.hidden;
-      panel.hidden = !open;
-      btn.setAttribute("aria-expanded", String(open));
-      art.classList.toggle("is-open", open);
-    });
+    var line = document.createElement("p");
+    line.className = "role-title";
+    line.appendChild(document.createTextNode(r.role));
+    if (r.type) {
+      var ty = document.createElement("span");
+      ty.className = "role-type"; ty.textContent = r.type;
+      line.appendChild(ty);
+    }
+    what.appendChild(line);
 
-    art.appendChild(h4); art.appendChild(panel);
-    return art;
+    var place = [r.env, r.location].filter(Boolean).join(" · ");
+    if (place) {
+      var pl = document.createElement("p");
+      pl.className = "role-place"; pl.textContent = place;
+      what.appendChild(pl);
+    }
+
+    if (r.summary) {
+      var sum = document.createElement("p");
+      sum.className = "role-sum"; sum.textContent = r.summary;
+      what.appendChild(sum);
+    }
+
+    if (r.details && r.details.length) {
+      var ul = document.createElement("ul");
+      ul.className = "role-points";
+      r.details.slice(0, ROLE_POINTS).forEach(function (line2) {
+        var pt = document.createElement("li");
+        pt.textContent = line2;
+        ul.appendChild(pt);
+      });
+      what.appendChild(ul);
+    }
+
+    li.appendChild(when); li.appendChild(what);
+    return li;
   }
 
   function buildProfile(pr) {
@@ -1200,6 +1235,14 @@
     else document.title = BASE_TITLE;
   }
 
+  /* The directory the site is served from. On Pages that is "/portfolio/";
+     from a file:// copy it is the folder the page sits in. Everything that
+     builds an absolute URL goes through this, so nothing hardcodes the repo
+     name and nothing assumes the site is at a domain root. */
+  function basePath() {
+    return location.pathname.replace(/[^/]*$/, "");
+  }
+
   function filterQuery() {
     var qs = [];
     if (state.cat) qs.push("category=" + slugify(state.cat));
@@ -1211,7 +1254,7 @@
   /* The link a reader can hand to someone else. Absolute, and always pointed
      at the archive, so it opens on the work and not on the cover. */
   function shareHref() {
-    return location.origin + location.pathname + filterQuery() + "#archive";
+    return location.origin + basePath() + "index.html" + filterQuery() + "#archive";
   }
 
   function copyText(t) {
@@ -1240,11 +1283,15 @@
   function applyCategory(slug, opts) {
     opts = opts || {};
     var c = catBySlug(String(slug || "all").toLowerCase()) || CATS[0];
+    /* Picking the tab that is already on changes nothing, so it must not add
+       a history entry: Back would otherwise walk through identical states. */
+    var same = state.cat === c.cat;
     state.cat = c.cat;
     state.shown = GRID_PAGE;
     // curated is a hand-picked twelve; narrowing to one discipline leaves it
-    if (c.cat && state.view === "curated") state.view = "grid";
-    if (opts.push !== false) writeURL(true, "#archive");
+    var viewChanged = false;
+    if (c.cat && state.view === "curated") { state.view = "grid"; viewChanged = true; }
+    if (opts.push !== false && (!same || viewChanged)) writeURL(true, "#archive");
     writeTitle();
     render(opts);
     scrollTabIntoView();
@@ -1287,15 +1334,117 @@
 
   window.addEventListener("popstate", function () { applyURL(true); });
 
+  /* ------------------------------ the home link --------------------------
+     The wordmark used to be href="#top", which only appended a fragment: it
+     left ?category, ?tag and ?view in the URL, left an open project open,
+     and landed under the sticky header instead of at the top. It is now a
+     real link to the site root that also clears the archive's state.
+     ----------------------------------------------------------------------- */
+
+  function toTop() {
+    var smooth = !prefersReduced();
+    if (window.scrollTo) {
+      try { window.scrollTo({ top: 0, left: 0, behavior: smooth ? "smooth" : "instant" }); }
+      catch (e) { window.scrollTo(0, 0); }
+    }
+    // a stalled animation clock must never leave the page mid-page
+    setTimeout(function () { if (window.pageYOffset > 0 && !smooth) window.scrollTo(0, 0); }, 700);
+  }
+
+  function goHome(push) {
+    // the archive's saved position is irrelevant now; the destination is the top
+    lastScroll = null;
+    closeViewer(true);
+    state.cat = null;
+    state.tags = [];
+    state.q = "";
+    state.view = DEFAULT_VIEW;
+    state.shown = GRID_PAGE;
+    var box = $(".search input");
+    if (box) box.value = "";
+    var home = basePath();
+    if (push) history.pushState(null, "", home);
+    else history.replaceState(null, "", home);
+    writeTitle();
+    render({ soft: true });
+    markSection("");
+    toTop();
+  }
+
+  function wireHome() {
+    var link = $(".wordmark");
+    if (!link) return;
+    // over http(s) the directory itself is the canonical home; index.html
+    // stays in the markup so a file:// copy still resolves
+    if (location.protocol === "http:" || location.protocol === "https:") {
+      link.setAttribute("href", basePath());
+    }
+    link.addEventListener("click", function (e) {
+      // let the browser handle new-tab, download and middle-click as a link
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      goHome(true);
+    });
+  }
+
+  /* ---------------------------- the section spy --------------------------
+     Marks the nav link for whatever section the reader is actually in, so
+     "where am I" is answered without opening anything. Discreet on purpose:
+     `aria-current` carries the meaning, the underline is the visible half. */
+
+  var SPY_IDS = ["archive", "systems", "capabilities", "experience", "about", "contact"];
+
+  function markSection(id) {
+    $$(".site-nav a[data-spy]").forEach(function (a) {
+      var on = a.dataset.spy === id;
+      a.classList.toggle("is-current", on);
+      if (on) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    });
+  }
+
+  /* A scroll position is easier to reason about than an intersection ratio:
+     the current section is simply the last one whose top has passed under the
+     masthead. Deterministic, and it cannot disagree with what is on screen. */
+  function watchSections() {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var line = ($(".masthead").getBoundingClientRect().height || 0) + 24;
+      var current = "";
+      SPY_IDS.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= line) current = id;
+      });
+      // the cover is nobody's section, and the foot belongs to the last one
+      if (window.pageYOffset < 40) current = "";
+      var atEnd = window.innerHeight + window.pageYOffset >=
+                  document.documentElement.scrollHeight - 4;
+      if (atEnd) current = SPY_IDS[SPY_IDS.length - 1];
+      markSection(current);
+    }
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    update();
+  }
+
   /* ------------------------------- viewer -------------------------------- */
 
   var viewer = $("#viewer");
   var lastFocus = null;
+  var lastScroll = null;
 
   function openProject(id, pushHash) {
     var p = PROJECTS.filter(function (x) { return x.id === id; })[0];
     if (!p) return;
     lastFocus = document.activeElement;
+    // where the archive was, so closing puts the reader back on the same row
+    lastScroll = window.pageYOffset;
 
     $(".viewer-client").textContent = p.client;
     $(".viewer-name").textContent = p.title;
@@ -1444,7 +1593,14 @@
     if (offscreen) { offscreen.disconnect(); offscreen = null; }
     $(".viewer-images").innerHTML = "";
     if (skipURL !== true) writeURL(false, "");
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
+    if (lastScroll != null && Math.abs(window.pageYOffset - lastScroll) > 2) {
+      window.scrollTo(0, lastScroll);
+    }
+    lastScroll = null;
+    if (lastFocus && lastFocus.focus) {
+      // preventScroll keeps the restored position from being overridden
+      try { lastFocus.focus({ preventScroll: true }); } catch (e) { lastFocus.focus(); }
+    }
   }
 
   $$("[data-close]", viewer).forEach(function (el) {
@@ -1481,6 +1637,17 @@
       el.textContent = para;
       about.appendChild(el);
     });
+    /* The second route into Experience. The header link is the first; this
+       one is where a reader who is already reading about Luis would look. */
+    var toExp = document.createElement("a");
+    toExp.className = "about-more";
+    toExp.href = "#experience";
+    toExp.textContent = "View full experience";
+    var arrow = document.createElement("span");
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = " \u2192";
+    toExp.appendChild(arrow);
+    about.appendChild(toExp);
 
     $(".cover-eyebrow").textContent = [SITE.name, SITE.role, SITE.location].join(" · ");
     $(".cover-headline .reveal").textContent = SITE.headline;
@@ -1573,6 +1740,8 @@
   })();
 
   watchHeader();
+  wireHome();
+  watchSections();
   armReveals();
   if (start) openProject(start, false);
 })();

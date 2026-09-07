@@ -17,24 +17,27 @@
 <link rel="preload" as="image" type="image/webp" fetchpriority="high"
       imagesrcset="assets/images/hero/luis-moreno-hero-mobile-900.webp 900w, assets/images/hero/luis-moreno-hero-mobile-1200.webp 1200w"
       imagesizes="100vw" media="(max-width: 760px)">
-<link rel="stylesheet" href="styles.css?v=202609050107">
+<link rel="stylesheet" href="styles.css?v=202609072343">
 </head>
 <body>
 
 <a class="skip" href="#archive">Skip to the work</a>
 
 <header class="masthead">
-  <a class="wordmark" href="#top">
+  <!-- A real link to the site root. `index.html` is the no-JS fallback that
+       also works from file://; over http(s) the script rewrites it to the
+       directory itself, which on Pages is /portfolio/. -->
+  <a class="wordmark" href="index.html" aria-label="Luis Moreno, Home">
     <span class="wordmark-name"></span>
     <span class="wordmark-role"></span>
   </a>
   <nav class="site-nav">
-    <a class="nav-work" href="#archive">Work</a>
-    <a href="#systems"><span class="nav-long">Production </span>Systems</a>
-    <a href="#capabilities">Capabilities</a>
-    <a href="#experience">Experience</a>
-    <a href="#about">About</a>
-    <a href="#contact">Contact</a>
+    <a class="nav-work" href="#archive" data-spy="archive">Work</a>
+    <a href="#systems" data-spy="systems"><span class="nav-long">Production </span>Systems</a>
+    <a href="#capabilities" data-spy="capabilities">Capabilities</a>
+    <a href="#experience" data-spy="experience">Experience</a>
+    <a href="#about" data-spy="about">About</a>
+    <a href="#contact" data-spy="contact">Contact</a>
   </nav>
 </header>
 
@@ -162,19 +165,17 @@
     <div class="exp-inner">
 
       <header class="exp-head" data-reveal>
-        <div class="exp-head-aside">
-          <p class="band-label exp-eyebrow"></p>
-          <p class="exp-note"></p>
-        </div>
-        <div class="exp-head-main">
-          <h2 class="exp-title" id="exp-label"></h2>
-          <p class="exp-intro"></p>
-        </div>
+        <p class="band-label exp-eyebrow"></p>
+        <h2 class="exp-title" id="exp-label"></h2>
       </header>
 
-      <ul class="exp-metrics" data-reveal></ul>
+      <!-- the lead figures: one large claim beside two small facts -->
+      <div class="exp-lead" data-reveal></div>
 
-      <div class="exp-groups"></div>
+      <!-- one reverse-chronological list, nothing collapsed -->
+      <ol class="exp-roles"></ol>
+
+      <p class="exp-note"></p>
 
       <section class="exp-achievements" aria-labelledby="ach-label">
         <h3 class="band-label" id="ach-label">Selected achievements</h3>
@@ -278,11 +279,11 @@
   </div>
 </div>
 
-<script src="data/images.js?v=202609050107"></script>
-<script src="data/videos.js?v=202609050107"></script>
-<script src="data/projects.js?v=202609050107"></script>
-<script src="data/stories.js?v=202609050107"></script>
-<script src="data/experience.js?v=202609050107"></script>
-<script src="app.js?v=202609050107"></script>
+<script src="data/images.js?v=202609072343"></script>
+<script src="data/videos.js?v=202609072343"></script>
+<script src="data/projects.js?v=202609072343"></script>
+<script src="data/stories.js?v=202609072343"></script>
+<script src="data/experience.js?v=202609072343"></script>
+<script src="app.js?v=202609072343"></script>
 </body>
 </html>

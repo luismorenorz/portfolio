@@ -94,7 +94,47 @@ a { color: inherit; }
 .masthead.on-dark .wordmark-role, .masthead.on-dark .site-nav a { color: var(--d-muted); }
 .masthead.on-dark .site-nav a:hover { color: var(--d-ink); }
 
-.wordmark { text-decoration: none; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+/* Every anchor target clears the sticky masthead, so a section title is
+   never hidden under it after a nav click or a cold load on a fragment. */
+#browse, #archive, #systems, #capabilities, #experience, #about, #contact {
+  scroll-margin-top: calc(var(--head-h) + 18px);
+}
+
+/* The wordmark is a link to the site root, and reads as one: pointer, focus
+   ring, and the same typographic treatment it always had. */
+.wordmark {
+  text-decoration: none; display: flex; align-items: baseline; gap: 14px;
+  flex-wrap: wrap; cursor: pointer; border-radius: 6px;
+}
+.wordmark:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+.masthead.on-dark .wordmark:focus-visible { outline-color: var(--d-ink); }
+.wordmark:hover .wordmark-name { color: var(--accent); }
+.wordmark-name { transition: color .2s var(--ease); }
+
+/* The section you are in, marked quietly. Not a tab, not a pill. */
+.site-nav a { position: relative; }
+.site-nav a.is-current { color: var(--ink); }
+/* absolutely positioned so turning it on cannot change the row's height */
+.site-nav a.is-current::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px;
+  height: 1px; background: currentColor;
+}
+.site-nav .nav-work.is-current::after { content: none; }
+.masthead.on-dark .site-nav a.is-current { color: var(--d-ink); }
+.site-nav a:focus-visible {
+  outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 4px;
+}
+.masthead.on-dark .site-nav a:focus-visible { outline-color: var(--d-ink); }
+
+/* The second door into Experience, from inside About. */
+.about-more {
+  display: inline-block; margin-top: clamp(16px, 1.8vw, 24px);
+  font-size: 14px; color: var(--ink); text-decoration: none;
+  border-bottom: 1px solid var(--hairline); padding-bottom: 3px;
+  transition: border-color .2s var(--ease);
+}
+.about-more:hover { border-bottom-color: var(--ink); }
+.about-more:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; border-radius: 3px; }
 .wordmark-name { font-family: var(--display); font-size: 16px; font-weight: 600; letter-spacing: -.015em; text-transform: none; }
 
 .site-nav { display: flex; gap: clamp(14px, 2vw, 28px); }
@@ -652,145 +692,96 @@ a { color: inherit; }
   max-width: var(--maxw); margin: 0 auto;
   padding: clamp(56px, 7vw, 116px) var(--pad) clamp(50px, 6vw, 100px);
 }
-#experience { scroll-margin-top: calc(var(--head-h) + 18px); }
+
 
 /* ---- editorial head: small aside, large statement ---- */
-.exp-head {
-  display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-  gap: clamp(24px, 4vw, 64px); align-items: start;
-  padding-bottom: clamp(34px, 4vw, 60px);
-}
-.exp-note {
-  margin: 14px 0 0; font-size: 12px; line-height: 1.55; color: var(--exp-faint);
-  max-width: 34ch; border-top: 1px solid var(--hairline); padding-top: 12px;
-}
+/* ---- editorial head ---- */
+.exp-head { padding-bottom: clamp(22px, 2.6vw, 34px); }
 .exp-title {
-  margin: 0; font-family: var(--display); font-weight: 600;
-  font-size: clamp(28px, 3.6vw, 56px); line-height: 1.02; letter-spacing: -.035em;
+  margin: 10px 0 0; font-family: var(--display); font-weight: 600;
+  font-size: clamp(30px, 4vw, 62px); line-height: 1.02; letter-spacing: -.035em;
   max-width: 20ch;
 }
-.exp-intro {
-  margin: clamp(18px, 2vw, 28px) 0 0; max-width: 62ch;
-  font-size: clamp(15px, 1.2vw, 18px); line-height: 1.55; color: var(--exp-muted);
-}
 
-/* ---- the evidence strip ---- */
-.exp-metrics {
-  list-style: none; margin: 0; padding: 0;
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1px; background: var(--hairline);
-  border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+/* ---- the lead figures: one claim, two facts, no badges and no cards ---- */
+.exp-lead {
+  display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  gap: clamp(20px, 3vw, 56px); align-items: end;
+  padding: clamp(22px, 2.6vw, 34px) 0 clamp(30px, 3.4vw, 46px);
+  border-top: 1px solid var(--ink);
 }
-.metric { background: var(--paper); padding: clamp(18px, 2vw, 28px) clamp(14px, 1.6vw, 24px); }
-.metric-value {
-  margin: 0; font-family: var(--display); font-weight: 600;
-  font-size: clamp(20px, 2.2vw, 32px); line-height: 1; letter-spacing: -.03em;
-  text-transform: uppercase;
-}
-.metric-label { margin: 10px 0 0; font-size: 12px; line-height: 1.45; color: var(--exp-muted); max-width: 26ch; }
-
-/* ---- one chapter per environment ---- */
-.exp-group { padding-top: clamp(44px, 5vw, 84px); }
-.group-head {
-  display: grid; grid-template-columns: auto minmax(0, 1fr);
-  gap: 6px clamp(16px, 2vw, 30px); align-items: baseline;
-  padding-bottom: clamp(18px, 2vw, 28px);
-  border-bottom: 2px solid var(--exp);
-}
-.group-num {
-  margin: 0; grid-row: span 2; font-family: var(--display); font-weight: 600;
-  font-size: clamp(28px, 3.4vw, 52px); line-height: .9; letter-spacing: -.04em;
-  color: var(--exp);
-}
-.group-title {
-  margin: 0; font-family: var(--display); font-weight: 600;
-  font-size: clamp(19px, 1.9vw, 28px); line-height: 1.06; letter-spacing: -.028em;
-  text-transform: uppercase;
-}
-.group-blurb { margin: 0; font-size: 14px; color: var(--exp-muted); max-width: 62ch; }
-
-.role-list { display: grid; gap: 1px; background: var(--hairline); border-bottom: 1px solid var(--hairline); }
-
-/* ---- one role, closed then open ---- */
-.role { background: var(--paper); position: relative; }
-
-.role-heading { margin: 0; font-weight: inherit; font-size: inherit; }
-.role-btn {
-  font: inherit; text-align: left; width: 100%; cursor: pointer;
-  background: none; border: 0; color: var(--ink);
-  display: grid; gap: 7px;
-  padding: clamp(18px, 2vw, 26px) clamp(52px, 5vw, 74px) clamp(18px, 2vw, 26px) clamp(14px, 1.6vw, 24px);
-  position: relative; z-index: 1;
-  transition: color .28s var(--ease);
-}
-.role-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
-
-/* the colour arrives as a wipe behind the text, so nothing shifts */
-.role::before {
-  content: ""; position: absolute; inset: 0; background: var(--exp);
-  transform: scaleY(0); transform-origin: 50% 100%;
-  transition: transform .3s var(--ease);
-}
-.role:hover::before { transform: scaleY(1); opacity: .07; }
-.role.is-open::before { transform: scaleY(1); opacity: 1; }
-
-.role-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
-.role-co {
+.exp-claim { margin: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 14px; }
+.exp-claim-v {
   font-family: var(--display); font-weight: 600;
-  font-size: clamp(18px, 1.7vw, 25px); line-height: 1.05; letter-spacing: -.026em;
+  font-size: clamp(46px, 8vw, 118px); line-height: .88; letter-spacing: -.045em;
 }
-.role-env {
-  font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: .14em;
-  color: var(--exp-muted); border: 1px solid var(--hairline); padding: 3px 8px;
-  transition: color .28s var(--ease), border-color .28s var(--ease);
+.exp-claim-l { font-size: clamp(13px, 1.1vw, 16px); color: var(--exp-muted); }
+.exp-facts { margin: 0; display: grid; gap: 12px; align-content: end; }
+.exp-facts > div {
+  display: grid; grid-template-columns: minmax(0, 5rem) minmax(0, 1fr);
+  gap: 4px 18px; padding-top: 10px; border-top: 1px solid var(--hairline);
 }
-.role-title { font-size: 14px; color: var(--ink); transition: color .28s var(--ease); }
-.role-meta { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--exp-faint); transition: color .28s var(--ease); }
-.role-sum { font-size: 14px; line-height: 1.5; color: var(--exp-muted); max-width: 62ch; transition: color .28s var(--ease); }
-.role-facts { display: flex; flex-wrap: wrap; gap: 5px 18px; margin-top: 3px; }
-.fact {
-  font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .1em;
-  color: var(--ink); border-top: 1px solid var(--exp); padding-top: 6px;
-  transition: color .28s var(--ease), border-color .28s var(--ease);
+.exp-facts dt {
+  font-size: 10px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .14em; color: var(--exp-faint);
+}
+.exp-facts dd { margin: 0; font-size: clamp(13px, 1vw, 15px); color: var(--ink); }
+
+/* ---- the list. Two columns, divided by hairlines, no rounded job cards ---- */
+.exp-roles {
+  list-style: none; margin: 0; padding: 0;
+  border-top: 1px solid var(--hairline);
+}
+.exp-role {
+  display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+  gap: 8px clamp(20px, 3vw, 64px);
+  padding: clamp(24px, 2.6vw, 38px) 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.role-when { padding-top: 3px; }
+.role-range {
+  margin: 0; font-size: clamp(13px, 1.05vw, 15px); font-weight: 500;
+  color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.role-dur { margin: 5px 0 0; font-size: 12px; color: var(--exp-faint); }
+.role-what { min-width: 0; }
+.role-co {
+  margin: 0; font-family: var(--display); font-weight: 600;
+  font-size: clamp(19px, 1.9vw, 28px); line-height: 1.1; letter-spacing: -.02em;
+}
+.role-title {
+  margin: 5px 0 0; font-size: clamp(14px, 1.15vw, 17px); color: var(--ink);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px;
+}
+.role-type {
+  font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--exp-faint); border: 1px solid var(--hairline);
+  border-radius: 999px; padding: 3px 8px;
+}
+.role-place {
+  margin: 7px 0 0; font-size: 12px; color: var(--exp-faint);
+}
+.role-sum {
+  margin: 12px 0 0; font-size: clamp(14px, 1.1vw, 16px); line-height: 1.55;
+  color: var(--exp-muted); max-width: 68ch;
+}
+.role-points {
+  margin: 12px 0 0; padding: 0; list-style: none;
+  display: grid; gap: 7px; max-width: 74ch;
+}
+.role-points li {
+  position: relative; padding-left: 16px;
+  font-size: 13px; line-height: 1.55; color: var(--exp-muted);
+}
+.role-points li::before {
+  content: ""; position: absolute; left: 0; top: .62em;
+  width: 6px; height: 1px; background: var(--exp-faint);
+}
+.exp-note {
+  margin: clamp(20px, 2.4vw, 30px) 0 0; font-size: 12px; line-height: 1.55;
+  color: var(--exp-faint); max-width: 62ch;
 }
 
-/* the open mark is a plus that becomes a minus: shape, not colour */
-.role-mark {
-  position: absolute; right: clamp(16px, 1.8vw, 26px); top: clamp(20px, 2.2vw, 30px);
-  width: 15px; height: 15px;
-}
-.role-mark::before, .role-mark::after {
-  content: ""; position: absolute; left: 0; top: 7px; width: 15px; height: 1.5px;
-  background: currentColor; transition: transform .3s var(--ease);
-}
-.role-mark::after { transform: rotate(90deg); }
-.role.is-open .role-mark::after { transform: rotate(0deg); }
-
-/* open: the card is solid, and everything on it turns to paper */
-.role.is-open .role-btn,
-.role.is-open .role-title { color: #fff; }
-.role.is-open .role-co { color: #fff; }
-.role.is-open .role-env { color: #fff; border-color: rgba(255, 255, 255, .5); }
-.role.is-open .role-meta, .role.is-open .role-sum { color: rgba(255, 255, 255, .92); }
-.role.is-open .fact { color: #fff; border-top-color: rgba(255, 255, 255, .5); }
-
-.role-panel {
-  position: relative; z-index: 1; color: #fff;
-  padding: 0 clamp(14px, 1.6vw, 24px) clamp(22px, 2.4vw, 32px);
-}
-.role-panel[hidden] { display: none; }
-.role-panel ul {
-  margin: 0; padding: 0; list-style: none;
-  display: grid; gap: 11px; max-width: 78ch;
-  border-top: 1px solid rgba(255, 255, 255, .28); padding-top: clamp(16px, 1.8vw, 22px);
-}
-.role-panel li { font-size: 14px; line-height: 1.55; padding-left: 18px; position: relative; }
-.role-panel li::before {
-  content: ""; position: absolute; left: 0; top: 9px;
-  width: 7px; height: 1px; background: rgba(255, 255, 255, .7);
-}
-
-/* ---- selected achievements ---- */
 .exp-achievements { padding-top: clamp(50px, 6vw, 96px); }
 .ach-list {
   list-style: none; margin: clamp(20px, 2.4vw, 32px) 0 0; padding: 0;
@@ -852,21 +843,11 @@ a { color: inherit; }
 .resume-link:hover { color: var(--ink); border-bottom-color: var(--ink); }
 
 /* ---- the staggered entrances, all one-shot ---- */
-.exp-metrics .metric, .ach {
+.ach {
   transition: opacity .6s var(--ease) calc(var(--i, 0) * 75ms),
               transform .6s var(--ease) calc(var(--i, 0) * 75ms);
 }
-.exp-metrics.is-armed .metric, .ach.is-armed { opacity: 0; transform: translateY(16px); }
-.exp-metrics[data-reveal].is-armed { opacity: 1; transform: none; }
-.group-head.is-armed .group-num,
-.group-head.is-armed .group-title,
-.group-head.is-armed .group-blurb { opacity: 0; transform: translateY(14px); }
-.group-head .group-num, .group-head .group-title, .group-head .group-blurb {
-  transition: opacity .55s var(--ease), transform .55s var(--ease);
-}
-.group-head .group-title { transition-delay: 70ms; }
-.group-head .group-blurb { transition-delay: 140ms; }
-.group-head[data-reveal].is-armed { opacity: 1; transform: none; }
+.ach.is-armed { opacity: 0; transform: translateY(16px); }
 
 /* ========================= 5. ABOUT MANIFESTO =========================== */
 
@@ -1088,6 +1069,15 @@ body.is-locked { overflow: hidden; }
 
 /* the second line collapses behind Refine before it starts to crowd */
 @media (max-width: 820px) {
+  /* Touch targets. The nav labels are small type by design, so the hit area
+     is grown with an overlay rather than with padding: 44px to tap, and the
+     masthead keeps exactly the height it had. */
+  .site-nav a::before, .wordmark::before {
+    content: ""; position: absolute; left: 0; right: 0;
+    top: 50%; transform: translateY(-50%); height: 44px;
+  }
+  .wordmark { position: relative; }
+
   .filter-line { gap: 12px; }
   /* the chips stay on the visible line; only the tools collapse behind Refine.
      Chip first, Refine last, so the disclosure stays at the end of the row. */
@@ -1116,9 +1106,9 @@ body.is-locked { overflow: hidden; }
 
 /* tablet and below */
 @media (max-width: 900px) {
-  .exp-head { grid-template-columns: 1fr; gap: 20px; }
   .exp-note { max-width: 52ch; }
-  .exp-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* the claim keeps the full width and the two facts sit under it */
+  .exp-lead { grid-template-columns: 1fr; gap: 22px; align-items: start; }
   .ach-list { grid-template-columns: 1fr; gap: 26px; }
   .ach:nth-child(2), .ach:nth-child(3) { margin-top: 0; }
 
@@ -1180,11 +1170,12 @@ body.is-locked { overflow: hidden; }
 }
 
 @media (max-width: 620px) {
-  /* the group number steps above the title so neither gets squeezed */
-  .group-head { grid-template-columns: 1fr; gap: 4px; }
-  .group-num { grid-row: auto; }
-  .role-btn { padding-right: 46px; }
-  .role-meta { gap: 2px 12px; }
+  /* Two columns stop working here. The row stacks and the date range stays
+     directly above the company it belongs to, never adrift from it. */
+  .exp-role { grid-template-columns: 1fr; gap: 6px; }
+  .role-when { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding-top: 0; }
+  .role-dur { margin: 0; }
+  .role-dur::before { content: "· "; color: var(--exp-faint); }
   .profile-cols, .profile-foot { grid-template-columns: 1fr; }
   .profile-dl div { grid-template-columns: 76px minmax(0, 1fr); }
 }
@@ -1275,11 +1266,7 @@ body.is-locked { overflow: hidden; }
   .grid.is-in .entry, .entry { animation: none; }
   .grid.is-out { opacity: 1; transform: none; }
   .is-armed .route { transform: none; opacity: 1; }
-  .exp-metrics.is-armed .metric, .ach.is-armed,
-  .group-head.is-armed .group-num,
-  .group-head.is-armed .group-title,
-  .group-head.is-armed .group-blurb { opacity: 1; transform: none; }
-  .role::before { transition: none; }
+  .ach.is-armed { opacity: 1; transform: none; }
   .about-body.is-armed p { opacity: 1; transform: none; }
 }
 

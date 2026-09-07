@@ -1,179 +1,167 @@
 /* =========================================================================
-   Experience map.
+   Experience.
 
-   Grouped by the kind of environment the work happened in, not by date. Some
-   of these run at the same time — the Flowium contract overlaps both the GAS
-   Group role and Coalition Technologies — and a timeline would read that as a
-   mistake instead of as concurrent client work.
+   One flat list, most recent first. Sorting and durations are derived in
+   app.js from the machine-readable `start` and `end` below, so the printed
+   dates and the printed durations can never disagree with each other.
 
-   Only Flowium is labelled a contract, because that is the only one the
-   résumé labels that way. Every other `env` describes the environment.
+   `end: null` means the role is current. Nothing here is estimated: every
+   date comes from the resume, and `Coalition Technologies` is kept with the
+   dates it already had on the site.
 
-   Edit freely: reorder `groups`, add a role to `roles`, change `metrics` or
-   `achievements`. Nothing here is hardcoded in the markup.
+   Only Flowium carries an employment `type`, because that is the only role
+   the resume labels a contract.
+
+   `details` holds everything that was verified for each role. The section
+   renders the first ROLE_POINTS of them (three) to stay scannable; the rest
+   stay here so raising that number is a one-line change.
    ========================================================================= */
 
 const EXPERIENCE = {
   eyebrow: "Experience",
-  heading: "Built across agencies, brands and high-volume creative systems.",
-  intro: "More than a decade of creative work across agency teams, corporate environments and concurrent contract engagements. The thread throughout is the same: clear ideas, scalable systems and production that performs under real deadlines.",
-  note: "Experience includes agency, corporate and contract engagements. Overlapping dates reflect concurrent contract work.",
+  heading: "More than a decade turning brand systems into production-ready work.",
 
-  /* Every figure here appears in the résumé. Nothing is estimated. */
-  metrics: [
-    { value: "10+ years", label: "Creative and marketing experience" },
-    { value: "8–15 / day", label: "Ecommerce emails at peak production" },
-    { value: "Up to 8", label: "Client accounts managed concurrently" },
-    { value: "3 languages", label: "Spanish, English and Portuguese" }
-  ],
+  /* The headline claim, not a sum. Concurrent contract work overlaps two
+     staff roles, so adding the individual durations would double-count. */
+  claim: { value: "10+ years", label: "of experience" },
+  span: { label: "Agency, in-house and contract work" },
 
-  groups: [
+  note: "Overlapping dates reflect concurrent contract work alongside a staff role.",
+
+  roles: [
     {
-      id: "agency",
-      number: "01",
-      title: "Agency & high-volume production",
-      blurb: "Campaign systems, multi-account production and creative built to perform at scale.",
-      color: "#7c2837",
-      roles: [
-        {
-          id: "gas-group",
-          company: "GAS Group",
-          role: "Marketing Designer",
-          location: "Manhattan, NY",
-          dates: "Jun 2022 – Mar 2026",
-          env: "Agency environment",
-          summary: "High-volume creative production, campaign systems and cross-channel direction for multiple accounts.",
-          facts: ["Up to 8 accounts", "~10 email campaigns weekly", "50+ web banners monthly"],
-          details: [
-            "Directed creative production for up to eight accounts per month, producing approximately ten social assets and ten email campaigns weekly, plus more than 50 web banners monthly, while maintaining concept quality at volume.",
-            "Built content buckets, creative kits and reusable template systems, then extended those systems into print collateral, retail materials, packaging updates and production-ready files.",
-            "Used performance signals, heatmaps, content structure and deliverability considerations to guide layout and hierarchy across landing pages, launches and paid-ready creative.",
-            "Turned product benefits into visual storytelling, carrying one message from email through landing page and paid social.",
-            "Closed asset gaps for brands with limited photo libraries through art direction and AI-assisted image creation when appropriate.",
-            "Led concept development for open briefs, including hiring campaigns, moodboards, alternative creative directions and rationale presented to creative leadership, project managers, copywriters and paid media teams."
-          ]
-        },
-        {
-          id: "flowium",
-          company: "Flowium",
-          role: "Graphic Designer (Contract)",
-          location: "New York, NY · Remote",
-          dates: "Sep 2023 – Feb 2026",
-          env: "Contract · Email agency",
-          summary: "Contract email design for ecommerce brands, translating strategy and performance signals into scalable Klaviyo campaigns.",
-          facts: ["8–15 emails daily", "Up to 8 clients", "Klaviyo"],
-          details: [
-            "Designed and shipped between eight and 15 emails per day for ecommerce brands, including campaigns, automated flows, opt-in forms, banners and reusable modules.",
-            "Used heatmaps, click behaviour, engagement patterns and campaign KPIs as design inputs to improve hierarchy, responsiveness, interaction clarity and conversion.",
-            "Built each send as a visual story from hook to offer to CTA, maintaining readability on mobile and in dark mode.",
-            "Introduced motion into email with After Effects while staying within email best practices and deliverability limits.",
-            "Created visual direction through design research and moodboards for brands that did not have an established system.",
-            "Produced brand-aligned visual assets for clients with limited or nonexistent creative libraries.",
-            "Collaborated with strategists, copywriters and project managers while managing up to eight clients simultaneously.",
-            "Worked across beauty, wellness, healthcare, fitness, cannabis, AI, SaaS and CPG accounts."
-          ]
-        },
-        {
-          id: "coalition",
-          company: "Coalition Technologies",
-          role: "Marketing Designer",
-          location: "Los Angeles, CA",
-          dates: "Jul 2022 – Mar 2023",
-          env: "Agency environment",
-          summary: "Fast modular Klaviyo production across multiple brands, including packaging and product-line work.",
-          facts: ["6–8 emails daily", "6–8 SKUs", "Modular systems"],
-          details: [
-            "Produced six to eight Klaviyo emails per day across multiple brands while maintaining each brand's standards at speed.",
-            "Built a modular production system using hero variants, product and benefit blocks, promotional modules, CTA styles and text-only alternatives.",
-            "Translated campaign goals into structured layouts with clear hierarchy and click intent.",
-            "Worked directly with strategists, copywriters and email marketing specialists.",
-            "Proposed packaging and naming direction for a beach and beauty product line.",
-            "Extended one design system across six to eight SKUs, including dielines and print-ready production files."
-          ]
-        }
+      id: "gas-group",
+      company: "GAS Group",
+      role: "Marketing Designer",
+      location: "Manhattan, NY",
+      env: "Agency",
+      start: { m: 6, y: 2022 },
+      end: { m: 3, y: 2026 },
+      summary: "High-volume creative production, campaign systems and cross-channel direction for multiple accounts.",
+      details: [
+        "Directed creative production for up to eight accounts per month, producing approximately ten social assets and ten email campaigns weekly, plus more than 50 web banners monthly, while maintaining concept quality at volume.",
+        "Built content buckets, creative kits and reusable template systems, then extended those systems into print collateral, retail materials, packaging updates and production-ready files.",
+        "Used performance signals, heatmaps, content structure and deliverability considerations to guide layout and hierarchy across landing pages, launches and paid-ready creative.",
+        "Turned product benefits into visual storytelling, carrying one message from email through landing page and paid social.",
+        "Closed asset gaps for brands with limited photo libraries through art direction and AI-assisted image creation when appropriate.",
+        "Led concept development for open briefs, including hiring campaigns, moodboards, alternative creative directions and rationale presented to creative leadership, project managers, copywriters and paid media teams."
       ]
     },
     {
-      id: "corporate",
-      number: "02",
-      title: "Corporate & brand systems",
-      blurb: "Brand consistency, sales enablement and creative systems for complex organizations.",
-      color: "#5a4a2c",
-      roles: [
-        {
-          id: "teleperformance",
-          company: "Teleperformance",
-          role: "Creative Content Coordinator",
-          location: "Monterrey, México",
-          dates: "Aug 2019 – Jun 2022",
-          env: "Corporate · B2B",
-          summary: "B2B sales enablement, event branding and immersive client-facing environments.",
-          facts: ["Sales enablement", "Event experiences", "Spatial design"],
-          details: [
-            "Produced B2B business-development collateral for sales enablement and client pitches, including presentations, one-pagers and event branding.",
-            "Designed event experiences that merged the Teleperformance brand with client brands.",
-            "Carried a single visual story across merchandise, signage, backdrops and on-site activations.",
-            "Built themed environments for visiting clients using branded spatial design to make each visit memorable and detail-driven."
-          ]
-        },
-        {
-          id: "conduent",
-          company: "Conduent",
-          role: "Brand Manager",
-          location: "Monterrey, México",
-          dates: "May 2015 – Sep 2016",
-          env: "Corporate · Brand systems",
-          summary: "Internal brand programs, executive communication and editorial assets across multiple stakeholder groups.",
-          facts: ["Brand programs", "Executive decks", "Editorial design"],
-          details: [
-            "Managed internal brand and communications programs across multiple stakeholder groups.",
-            "Used email engagement signals, including opens and clicks, to understand performance and adjust communication.",
-            "Designed executive-ready presentations for internal teams, sales enablement and client pitches.",
-            "Maintained clear arguments and consistent brand expression across presentation systems.",
-            "Produced editorial-style eBooks and long-form assets that translated brand guidelines into readable layouts."
-          ]
-        }
+      id: "flowium",
+      company: "Flowium",
+      role: "Graphic Designer",
+      type: "Contract",
+      location: "New York, NY · Remote",
+      env: "Email agency",
+      start: { m: 9, y: 2023 },
+      end: { m: 2, y: 2026 },
+      summary: "Contract email design for ecommerce brands, translating strategy and performance signals into scalable Klaviyo campaigns.",
+      details: [
+        "Designed and shipped between eight and 15 emails per day for ecommerce brands, including campaigns, automated flows, opt-in forms, banners and reusable modules.",
+        "Used heatmaps, click behaviour, engagement patterns and campaign KPIs as design inputs to improve hierarchy, responsiveness, interaction clarity and conversion.",
+        "Collaborated with strategists, copywriters and project managers while managing up to eight clients simultaneously.",
+        "Built each send as a visual story from hook to offer to CTA, maintaining readability on mobile and in dark mode.",
+        "Introduced motion into email with After Effects while staying within email best practices and deliverability limits.",
+        "Created visual direction through design research and moodboards for brands that did not have an established system.",
+        "Produced brand-aligned visual assets for clients with limited or nonexistent creative libraries.",
+        "Worked across beauty, wellness, healthcare, fitness, cannabis, AI, SaaS and CPG accounts."
       ]
     },
     {
-      id: "growth",
-      number: "03",
-      title: "Digital growth & creative leadership",
-      blurb: "Direct-response design, organic growth and hands-on marketing leadership.",
-      color: "#28575a",
-      roles: [
-        {
-          id: "svelte",
-          company: "Svelte Media Inc.",
-          role: "Creative Designer",
-          location: "West Palm Beach, FL",
-          dates: "Feb 2017 – Jul 2019",
-          env: "Digital growth · Ecommerce",
-          summary: "Direct-response landing pages and organic social content for a wellness ecommerce business.",
-          facts: ["Landing pages", "Direct response", "Organic social"],
-          details: [
-            "Designed high-converting landing pages for an ecommerce wellness business serving women from 40 to 60.",
-            "Built the visual argument around direct-response principles and the audience's decision triggers.",
-            "Established social content direction and produced organic creative.",
-            "Transformed supplied material into structured posts that maintained the brand's voice and messaging."
-          ]
-        },
-        {
-          id: "rio-da-prata",
-          company: "Rio da Prata",
-          role: "Marketing and Communications Manager",
-          location: "Mato Grosso do Sul, Brasil",
-          dates: "Jun 2013 – Jan 2014",
-          env: "Marketing leadership · Tourism",
-          summary: "Organic social strategy and communications for a tourism destination in Brazil.",
-          facts: ["Zero paid media", "2× to nearly 3× follower growth", "Multiple sub-brands"],
-          details: [
-            "Managed organic social media for a tourism destination with no paid-media budget.",
-            "Built the strategy around content direction, consistent publishing and community.",
-            "Doubled to nearly tripled follower growth within one year.",
-            "Created a structured posting system and tone-of-voice guidelines across multiple sub-brands."
-          ]
-        }
+      id: "coalition",
+      company: "Coalition Technologies",
+      role: "Marketing Designer",
+      location: "Los Angeles, CA",
+      env: "Agency",
+      start: { m: 7, y: 2022 },
+      end: { m: 3, y: 2023 },
+      summary: "Fast modular Klaviyo production across multiple brands, including packaging and product-line work.",
+      details: [
+        "Produced six to eight Klaviyo emails per day across multiple brands while maintaining each brand's standards at speed.",
+        "Built a modular production system using hero variants, product and benefit blocks, promotional modules, CTA styles and text-only alternatives.",
+        "Extended one design system across six to eight SKUs, including dielines and print-ready production files.",
+        "Translated campaign goals into structured layouts with clear hierarchy and click intent.",
+        "Worked directly with strategists, copywriters and email marketing specialists.",
+        "Proposed packaging and naming direction for a beach and beauty product line."
+      ]
+    },
+    {
+      id: "teleperformance",
+      company: "Teleperformance",
+      role: "Creative Content Coordinator",
+      location: "Monterrey, México",
+      env: "Corporate · B2B",
+      start: { m: 8, y: 2019 },
+      end: { m: 6, y: 2022 },
+      summary: "B2B sales enablement, event branding and immersive client-facing environments.",
+      details: [
+        "Produced B2B business-development collateral for sales enablement and client pitches, including presentations, one-pagers and event branding.",
+        "Designed event experiences that merged the Teleperformance brand with client brands.",
+        "Built themed environments for visiting clients using branded spatial design to make each visit memorable and detail-driven.",
+        "Carried a single visual story across merchandise, signage, backdrops and on-site activations."
+      ]
+    },
+    {
+      id: "svelte",
+      company: "Svelte Media Inc.",
+      role: "Creative Designer",
+      location: "West Palm Beach, FL",
+      env: "Digital growth · Ecommerce",
+      start: { m: 2, y: 2017 },
+      end: { m: 7, y: 2019 },
+      summary: "Direct-response landing pages and organic social content for a wellness ecommerce business.",
+      details: [
+        "Designed high-converting landing pages for an ecommerce wellness business serving women from 40 to 60.",
+        "Built the visual argument around direct-response principles and the audience's decision triggers.",
+        "Established social content direction and produced organic creative.",
+        "Transformed supplied material into structured posts that maintained the brand's voice and messaging."
+      ]
+    },
+    {
+      id: "conduent",
+      company: "Conduent",
+      role: "Brand Manager",
+      location: "Monterrey, México",
+      env: "Corporate · Brand systems",
+      start: { m: 5, y: 2015 },
+      end: { m: 9, y: 2016 },
+      summary: "Internal brand programs, executive communication and editorial assets across multiple stakeholder groups.",
+      details: [
+        "Managed internal brand and communications programs across multiple stakeholder groups.",
+        "Designed executive-ready presentations for internal teams, sales enablement and client pitches.",
+        "Produced editorial-style eBooks and long-form assets that translated brand guidelines into readable layouts.",
+        "Used email engagement signals, including opens and clicks, to understand performance and adjust communication.",
+        "Maintained clear arguments and consistent brand expression across presentation systems."
+      ]
+    },
+    {
+      /* Dates and title supplied by Luis. No description on file yet: the
+         section renders company, role and dates and leaves the copy out
+         rather than inventing it. */
+      id: "revista-escaparate",
+      company: "Revista Escaparate",
+      role: "Editorial Designer",
+      env: "Editorial",
+      start: { m: 1, y: 2014 },
+      end: { m: 5, y: 2015 },
+      summary: "",
+      details: []
+    },
+    {
+      id: "rio-da-prata",
+      company: "Rio da Prata",
+      role: "Marketing and Communications Manager",
+      location: "Mato Grosso do Sul, Brasil",
+      env: "Marketing leadership · Tourism",
+      start: { m: 6, y: 2013 },
+      end: { m: 1, y: 2014 },
+      summary: "Organic social strategy and communications for a tourism destination in Brazil.",
+      details: [
+        "Managed organic social media for a tourism destination with no paid-media budget.",
+        "Doubled to nearly tripled follower growth within one year.",
+        "Created a structured posting system and tone-of-voice guidelines across multiple sub-brands.",
+        "Built the strategy around content direction, consistent publishing and community."
       ]
     }
   ],
