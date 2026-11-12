@@ -150,10 +150,12 @@ const PROJECTS = [
     tags: ["Email", "Beauty", "Cosmetics", "Ecommerce", "Email Production"],
     year: "2026",
     summary:
-      "Five campaign emails for a New York lip-colour brand, from Spring's Softest Shade through a summer packing edit, National Lipstick Day and National Kiss & Make Up Day. Beauty crops carry the hero, product rows carry the shade story.",
+      "Fourteen campaign emails for a New York lip-colour brand, from Spring's Softest Shade and the Black Lip Balm story through Mother's Day, two restocks, balm and gloss pairings, a Pride edit, National Lipstick Day and National Kiss & Make Up Day. Beauty crops carry the hero, product rows carry the shade story.",
     images: [
       "ff-emails-01", "ff-emails-02", "ff-emails-03", "ff-emails-04",
-      "ff-emails-05"
+      "ff-emails-05", "ff-emails-06", "ff-emails-07", "ff-emails-08",
+      "ff-emails-09", "ff-emails-10", "ff-emails-11", "ff-emails-12",
+      "ff-emails-13", "ff-emails-14"
     ]
   },
   {
@@ -164,10 +166,12 @@ const PROJECTS = [
     tags: ["Email", "Wellness", "Supplements", "Ecommerce", "Email Production"],
     year: "2026",
     summary:
-      "Five campaign emails for a protein and fiber shot: a first-order welcome, the flavour line-up, a founder story, a comparison table against powders and a clinician section.",
+      "Fourteen emails for a protein and fiber shot: a first-order welcome, the Protein + Fiber early-access launch, bundle building, a subscribe-and-save flash sale, the brand story, a GLP-1 education send, a comparison against powders, site-abandonment and subscriber order updates.",
     images: [
       "puregenius-emails-01", "puregenius-emails-02", "puregenius-emails-03", "puregenius-emails-04",
-      "puregenius-emails-05"
+      "puregenius-emails-05", "puregenius-emails-06", "puregenius-emails-07", "puregenius-emails-08",
+      "puregenius-emails-09", "puregenius-emails-10", "puregenius-emails-11", "puregenius-emails-12",
+      "puregenius-emails-13", "puregenius-emails-14"
     ]
   },
   {
@@ -178,9 +182,23 @@ const PROJECTS = [
     tags: ["Email", "Beauty", "Oral Care", "Ecommerce", "Email Production"],
     year: "2026",
     summary:
-      "Three campaign emails for a teeth-whitening brand: a best-sellers spotlight, a back-to-school send and an extra-strength results email. Close beauty portraits do the selling; the product sits underneath.",
+      "Five campaign emails for a teeth-whitening brand: a best-sellers spotlight, a back-to-school send, an extra-strength results email, a 48-hour BOGO strip flash and a VIP early-access invite. Close beauty portraits do the selling; the product sits underneath.",
     images: [
-      "snow-emails-01", "snow-emails-02", "snow-emails-03"
+      "snow-emails-01", "snow-emails-02", "snow-emails-03", "snow-emails-04",
+      "snow-emails-05"
+    ]
+  },
+  {
+    id: "oneoff-emails",
+    title: "Single-send email designs",
+    client: "Various",
+    category: "Email",
+    tags: ["Email", "Art Direction", "Ecommerce", "Email Production"],
+    year: "2026",
+    summary:
+      "Four standalone emails outside the larger programs: a spring tailoring send for a menswear house, a hydration launch, a salon group's Brooklyn showroom anniversary and a sun-care welcome offer.",
+    images: [
+      "oneoff-emails-01", "oneoff-emails-02", "oneoff-emails-03", "oneoff-emails-04"
     ]
   },
   {

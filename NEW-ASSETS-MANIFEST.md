@@ -100,3 +100,47 @@ The folder holds 52 files. Two were dropped:
 | `snow-emails-01` | New emails | `23 - Best Sellers Spotlight - NL #6.png` | 1200x6309 |
 | `snow-emails-02` | New emails | `19 - Fresh Start, Bright Smile - NL #8v1.png` | 1200x5430 |
 | `snow-emails-03` | New emails | `19 - [NEW] V2_ Results Stats - The EXTRA STRENGTH Weekend - NL #4.png` | 1200x6413 |
+
+# New emails, November 2026
+
+Provenance for the 24 emails imported from the local Figma export folder
+`Top Email_Static Designs` (27 PNGs, all 1200 px wide). The Figma sub-folders
+carry no meaning and were ignored; each email was assigned by its content.
+Built with the same WebP rules as above.
+
+## Already published, skipped
+
+| File | Existing key | Evidence |
+|---|---|---|
+| `LS - 08/19 - Do the Math_ 20g Protein + 5g Fiber - NL #9.png` | `puregenius-emails-01` | same 1200x8012 frame, average-hash distance 1 |
+| `LS - 09/04 - New Here_ Meet Protein + Fiber (First-Order Offer) - NL #1.png` | `puregenius-emails-02` | same 1200x9586 frame, average-hash distance 1 |
+| `LS - 07/19 - [NEW] V2_ Results Stats - The EXTRA STRENGTH Weekend - NL #4.png` | `snow-emails-03` | same 1200x6413 frame, average-hash distance 2 |
+
+## Files
+
+| Key | Original filename | Source size |
+|---|---|---|
+| `puregenius-emails-06` | `LS - 08/09 - Us vs. Them - NL #2.png` | 1200x9056 |
+| `puregenius-emails-07` | `LS - 08/31 - First Look_ Protein + Fiber (Early Access) - NL #6 + SMS.png` | 1200x11057 |
+| `puregenius-emails-08` | `LS - 09/09 - Build Your Stack_ Protein + Protein & Fiber Pairing - NL #5.png` | 1200x8830 |
+| `puregenius-emails-09` | `09/18 - Flash Sale Reminder_ 10% Off Your First S&S Order - NL #8.png` | 1200x7681 |
+| `puregenius-emails-10` | `LS - 09/23 - The Genie in Your Pocket_ Our Story - NL #12.png` | 1200x10388 |
+| `puregenius-emails-11` | `10/11 - On a GLP-1_ Protein and Fiber Are Not Optional - NL #5.png` | 1200x9119 |
+| `puregenius-emails-12` | `LS - Site Abandonment Email #2v2_ Flavor Profiles.png` | 1200x7887 |
+| `puregenius-emails-13` | `Pure Genius_Mockup-1.png` | 1200x4892 |
+| `puregenius-emails-14` | `Pure Genius_Mockup.png` | 1200x7294 |
+| `ff-emails-06` | `LS - [04/07] - [Why Everyone Loves The Black Lip Balm] - [NL #3].png` | 1200x6973 |
+| `ff-emails-07` | `LS - [04/14] - [Intentional Beauty Rituals] - [NL #5].png` | 1200x7334 |
+| `ff-emails-08` | `LS - 05/06 Mother's Day Shipping Deadline _ Last Chance _ 10% off (PLUS SMS).png` | 1200x7242 |
+| `ff-emails-09` | `LS - [05/11] - [Restock _ Back by Popular Demand] - [NL #5].png` | 1200x5219 |
+| `ff-emails-10` | `LS - [05/20] - [Color Story_ Better Together _ Balm + Gloss Pairings] - [NL #7].png` | 1200x7516 |
+| `ff-emails-11` | `LS - [05/25] - [Your Summer Lip Wardrobe ] - [NL #8].png` | 1200x9677 |
+| `ff-emails-12` | `LS - [06/02] - [June Edit_ Pride Looks We Love] - [NL #1].png` | 1200x9880 |
+| `ff-emails-13` | `LS - [06/12] - [They're Back_ Delicious Balm Shades Restocked] - [NL #4].png` | 1200x8542 |
+| `ff-emails-14` | `LS - [06/19] - [Mon Chéri Gloss _ Balm to Gloss Transformation] - [NL #7].png` | 1200x8146 |
+| `snow-emails-04` | `LS - 10/27 - 48-Hour Strip Flash_ DiamondSeries 21 BOGO - NL #13 + SMS.png` | 1200x6438 |
+| `snow-emails-05` | `LS - 10/31 - The Early Access List Is Opening - NL #11.png` | 1200x3989 |
+| `oneoff-emails-01` | `Frame 1.png` (Paul Stuart) | 1200x11496 |
+| `oneoff-emails-02` | `Frame 16720.png` (Aluna) | 1200x6095 |
+| `oneoff-emails-03` | `LS 10/29 - Brooklyn Showroom Feature.png` (Milano Collection) | 1200x6428 |
+| `oneoff-emails-04` | `Standard Procedure_Email Concept Graphic.png` | 1200x10958 |
