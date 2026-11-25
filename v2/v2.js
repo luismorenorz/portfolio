@@ -375,16 +375,16 @@
 
   /* ================================================== the glass card tabs */
   var SYSTEMS = [   // from data/stories.js; pieces and formats counted from the files
-    { title: "Ads, retail and video", year: "2025-2026", pieces: 38, formats: 9,
-      line: "An immunity campaign for a Canadian juice brand, from paid social to the grocery store cooler.",
+    { title: "Campaign Ecosystem", year: "2025-2026", pieces: 38, formats: 9,
+      line: "One immunity platform carried from the feed to the grocery aisle.",
       href: "../case.html?story=greenhouse",
       list: ["Paid social and display", "Shoppable and banner video", "Free-standing retail displays", "Cooler wraps and shelf blades", "Print dielines"] },
-    { title: "AI product photos", year: "2026", pieces: 15, formats: 4,
-      line: "Fifteen AI-made images for a gut-health powder that had no photo library yet.",
+    { title: "AI Product Universe", year: "2026", pieces: 15, formats: 4,
+      line: "A whole product world for one tub, generated rather than shot.",
       href: "../case.html?story=gut1",
       list: ["Studio product imagery", "Texture and ingredient shots", "Packaging-format concepts", "Lifestyle scenes", "Atmospheric brand imagery", "One-palette art direction"] },
-    { title: "Rebrand and website", year: "2026", pieces: 10, formats: 8,
-      line: "A new logo, colors, website, emails and brand film for a private lender in North Miami.",
+    { title: "Rebrand and Rollout", year: "2026", pieces: 10, formats: 8,
+      line: "A private lender rebuilt from the mark out to the live site.",
       href: "../case.html?story=sky18",
       list: ["Logotype and mark", "Colour and type system", "Website design", "Email newsletter and signature", "LinkedIn graphics", "Brand film"] }
   ];
@@ -646,7 +646,7 @@
   /* ================================================== brands & results */
   var brands = $(".brands");
   var nums = $$(".num", brands);
-  var statsEl = $(".tally", brands);
+  var statsEl = $(".stats", brands);
   // reserve each number's final width so the sentence never reflows while counting
   nums.forEach(function (n) { n.style.minWidth = n.getAttribute("data-to").length + "ch"; });
   var brandList = $(".brand-list", brands);

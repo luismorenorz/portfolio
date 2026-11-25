@@ -691,23 +691,41 @@ html.lenis, html.lenis body { height: auto; }
 }
 .rv.is-in { opacity: 1; filter: blur(0); transform: none; }
 
-/* the numbers sit inside a sentence and count up when it arrives */
-.tally {
-  max-width: 30ch;
-  margin: 9vh 0 0;
-  font-family: var(--display);
-  font-weight: 600;
-  font-size: clamp(26px, 3.3vw, 56px);
-  line-height: 1.12;
-  letter-spacing: -.025em;
-  text-wrap: balance;
+.stats {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 12vh 0 0;
+  padding-top: 22px;
 }
-.tally .num {
-  display: inline-block;
-  color: var(--ember);
-  text-align: right;
+/* the rule draws itself across */
+.stats::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: #cfcac2;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 1.4s cubic-bezier(.22,.61,.36,1) .3s;
+}
+.stats.is-in::before { transform: scaleX(1); }
+.stat { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 10px; margin: 0; }
+.stat dt { color: #67635b; }
+.stat dd {
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(56px, 8vw, 136px);
+  line-height: .86;
+  letter-spacing: -.04em;
   font-variant-numeric: tabular-nums;
 }
+.stat .plus { color: var(--ember); }
 
 .brand-list {
   max-width: 1500px;
@@ -763,12 +781,14 @@ html.lenis, html.lenis body { height: auto; }
 }
 .exp-label { color: #67635b; }
 .exp-title {
+  max-width: 19ch;
   margin: 0 0 12vh;
   font-family: var(--display);
-  font-weight: 800;
-  font-size: clamp(56px, 11vw, 190px);
-  line-height: .82;
-  letter-spacing: -.04em;
+  font-weight: 700;
+  font-size: clamp(34px, 4.6vw, 80px);
+  line-height: .98;
+  letter-spacing: -.035em;
+  text-wrap: balance;
 }
 .exp-grid {
   display: grid;
@@ -946,7 +966,8 @@ html { scrollbar-width: thin; scrollbar-color: rgba(103,99,91,.7) transparent; }
   .menu-side { text-align: left; }
 
   .brands { padding: 12vh var(--pad) 14vh; border-radius: 22px 22px 0 0; }
-  .tally { font-size: 7.4vw; margin-top: 6vh; }
+  .stats { grid-template-columns: repeat(2, 1fr); row-gap: 40px; margin-top: 8vh; }
+  .stat dd { font-size: 17vw; }
   .brand-list { font-size: 7vw; margin-top: 10vh; }
   .peek { display: none; }
 
@@ -958,5 +979,5 @@ html { scrollbar-width: thin; scrollbar-color: rgba(103,99,91,.7) transparent; }
 
 @media (prefers-reduced-motion: reduce) {
   .pill-contact::before, .pill-dot, .roll > span, .tick-strip, .sys-bg, .glass-line, .glass-cta, .glass-list li,
-  .rv, .brand-list .w, .peek img, .odo-s, .role, .role-dates::before { transition: none; }
+  .rv, .stats::before, .brand-list .w, .peek img, .odo-s, .role, .role-dates::before { transition: none; }
 }
