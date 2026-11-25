@@ -2,6 +2,15 @@
 
 **https://luismorenorz.github.io/portfolio/**
 
+> **Homepage (since Nov 2026):** `index.html` at the root is the scroll-animated
+> one-page design. Its own CSS, JS and photos live in `v2/` (`v2/v2.css`,
+> `v2/v2.js`, `v2/burn.js`, `v2/assets/`); it reuses `assets/` for project
+> images. Bump the `?v=` stamps in `index.html` whenever those files change.
+> The previous homepage, with the full archive and filters, is `classic.html`;
+> old links that carry `?category=`, `?view=`, `?tag=` or a project hash are
+> forwarded to it. `v2/` itself only redirects to the homepage.
+> Everything below describes `classic.html`.
+
 A static production-design portfolio built from the Figma file
 *Oct-2025-Luis-Moreno-Resume* plus a folder of motion work. 82 projects, 282
 pieces, 10 disciplines. No build step, no dependencies. Anyone with the link

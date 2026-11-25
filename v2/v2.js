@@ -336,6 +336,9 @@
     curtain.style.display = "none";
     document.body.classList.remove("is-loading");
     if (lenis) lenis.start();
+    // arriving with #about, #contact… (e.g. from a case study): go there
+    var start = { "#about": "about", "#brands": "brands", "#experience": "experience", "#contact": "contact" }[location.hash];
+    if (start) setTimeout(function () { go(start); }, 80);
   }
 
   function openCurtain() {
@@ -374,18 +377,20 @@
   })();
 
   /* ================================================== the glass card tabs */
+  // where the shared pages live relative to this one ("" at the site root)
+  var ROOT = document.documentElement.getAttribute("data-root") || "";
   var SYSTEMS = [   // from data/stories.js; pieces and formats counted from the files
     { title: "Campaign Ecosystem", year: "2025-2026", pieces: 38, formats: 9,
       line: "One immunity platform carried from the feed to the grocery aisle.",
-      href: "../case.html?story=greenhouse",
+      href: ROOT + "case.html?story=greenhouse",
       list: ["Paid social and display", "Shoppable and banner video", "Free-standing retail displays", "Cooler wraps and shelf blades", "Print dielines"] },
     { title: "AI Product Universe", year: "2026", pieces: 15, formats: 4,
       line: "A whole product world for one tub, generated rather than shot.",
-      href: "../case.html?story=gut1",
+      href: ROOT + "case.html?story=gut1",
       list: ["Studio product imagery", "Texture and ingredient shots", "Packaging-format concepts", "Lifestyle scenes", "Atmospheric brand imagery", "One-palette art direction"] },
     { title: "Rebrand and Rollout", year: "2026", pieces: 10, formats: 8,
       line: "A private lender rebuilt from the mark out to the live site.",
-      href: "../case.html?story=sky18",
+      href: ROOT + "case.html?story=sky18",
       list: ["Logotype and mark", "Colour and type system", "Website design", "Email newsletter and signature", "LinkedIn graphics", "Brand film"] }
   ];
   var active = 0, swapTimer = 0;

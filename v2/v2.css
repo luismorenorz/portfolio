@@ -727,6 +727,20 @@ html.lenis, html.lenis body { height: auto; }
 }
 .stat .plus { color: var(--ember); }
 
+.brands-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6vh;
+  padding: 8px 0;
+  border-bottom: 1px solid currentColor;
+  color: var(--ink);
+  transition: color .25s;
+}
+.brands-more:hover { color: var(--ember); }
+.brands-more .ico { transition: transform .35s cubic-bezier(.7,0,.2,1); }
+.brands-more:hover .ico { transform: translateX(3px); }
+
 .brand-list {
   max-width: 1500px;
   margin: 14vh 0 0;

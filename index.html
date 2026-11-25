@@ -1,289 +1,324 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-root="">
 <head>
 <meta charset="utf-8">
+<script>
+  // Links made for the previous homepage carry filters or a project hash.
+  // That page now lives at classic.html, so send them there unchanged.
+  (function () {
+    var q = location.search, h = location.hash;
+    if (/[?&](category|view|tag)=/.test(q) || (h && !/^#(top|about|brands|experience|contact)?$/.test(h))) {
+      location.replace("classic.html" + q + h);
+    }
+  })();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Luis Moreno — Production Designer &amp; Graphic Designer</title>
-<meta name="description" content="Luis Moreno, production designer in San Pedro Garza García, Nuevo León. High-volume, brand-consistent creative across advertising, motion, email, retail, packaging, web and presentations.">
-<meta property="og:title" content="Luis Moreno — Design at production scale">
-<meta property="og:description" content="High-volume, brand-consistent creative across advertising, motion, email, retail, packaging, web and presentations. Selected work 2025–2026.">
-<meta property="og:type" content="website">
+<title>Luis Moreno, Production Designer</title>
+<meta name="description" content="Luis Moreno, production designer and graphic designer. Brand systems turned into ready-to-launch work across every format and channel.">
+<meta name="theme-color" content="#0e0e0d">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230f0f0d'/><text y='71' x='50' text-anchor='middle' font-family='Helvetica,Arial' font-weight='700' font-size='58' fill='%23f3f2f0'>M</text></svg>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Luis Moreno, Production Designer">
+<meta property="og:description" content="Brand systems turned into ready-to-launch work: campaign creative that ships on time, on brand and at the right spec.">
+<meta property="og:image" content="https://luismorenorz.github.io/portfolio/v2/assets/hero-fondo.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" type="image/webp" fetchpriority="high"
-      imagesrcset="assets/images/hero/luis-moreno-hero-1600.webp 1600w, assets/images/hero/luis-moreno-hero-2000.webp 2000w, assets/images/hero/luis-moreno-hero-2600.webp 2600w"
-      imagesizes="100vw" media="(min-width: 761px)">
-<link rel="preload" as="image" type="image/webp" fetchpriority="high"
-      imagesrcset="assets/images/hero/luis-moreno-hero-mobile-900.webp 900w, assets/images/hero/luis-moreno-hero-mobile-1200.webp 1200w"
-      imagesizes="100vw" media="(max-width: 760px)">
-<link rel="stylesheet" href="styles.css?v=202611120052">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="preload" as="image" href="v2/assets/hero-fondo.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="v2/assets/hero-recorte.webp" fetchpriority="high">
+<link rel="stylesheet" href="v2/v2.css?v=20261124e">
 </head>
-<body>
+<body class="is-loading">
 
-<a class="skip" href="#archive">Skip to the work</a>
-
-<header class="masthead">
-  <!-- A real link to the site root. `index.html` is the no-JS fallback that
-       also works from file://; over http(s) the script rewrites it to the
-       directory itself, which on Pages is /portfolio/. -->
-  <a class="wordmark" href="index.html" aria-label="Luis Moreno, Home">
-    <span class="wordmark-name"></span>
-    <span class="wordmark-role"></span>
-  </a>
-  <nav class="site-nav">
-    <a class="nav-work" href="#archive" data-spy="archive">Work</a>
-    <a href="#systems" data-spy="systems"><span class="nav-long">Production </span>Systems</a>
-    <a href="#capabilities" data-spy="capabilities">Capabilities</a>
-    <a href="#experience" data-spy="experience">Experience</a>
-    <a href="#about" data-spy="about">About</a>
-    <a href="#contact" data-spy="contact">Contact</a>
-  </nav>
-</header>
-
-<main id="top">
-
-  <!-- =========================== 1. LIVING COVER ========================= -->
-  <section class="cover" aria-labelledby="cover-headline">
-    <!-- The photograph is the hero. Two art directions, one source file: the
-         full frame on desktop, a 4:5 crop built for the phone. -->
-    <picture class="cover-photo">
-      <source media="(max-width: 760px)" type="image/webp"
-              srcset="assets/images/hero/luis-moreno-hero-mobile-900.webp 900w,
-                      assets/images/hero/luis-moreno-hero-mobile-1200.webp 1200w"
-              sizes="100vw">
-      <source type="image/webp"
-              srcset="assets/images/hero/luis-moreno-hero-1600.webp 1600w,
-                      assets/images/hero/luis-moreno-hero-2000.webp 2000w,
-                      assets/images/hero/luis-moreno-hero-2600.webp 2600w"
-              sizes="100vw">
-      <img src="assets/images/hero/luis-moreno-hero-2000.webp" width="2600" height="1176"
-           alt="Luis Moreno holding folders, coffee cups and a telephone in an editorial portrait."
-           fetchpriority="high" decoding="async">
-    </picture>
-
-    <div class="cover-type">
-      <p class="cover-eyebrow"></p>
-      <h1 class="cover-headline" id="cover-headline"><span class="reveal"></span></h1>
-      <p class="cover-support"></p>
+<!-- 0. INTRO — the same black slab as the footer. It opens through a notch
+     cut around the nav pills, the centre column leading. -->
+<div class="curtain" id="curtain" aria-hidden="true">
+  <div class="slab">
+    <div class="slab-top">
+      <p class="slab-lead">Have a launch that has to ship on brand?</p>
+      <ul class="slab-links mono">
+        <li>LinkedIn</li>
+        <li>moreno.luisrz@gmail.com</li>
+      </ul>
     </div>
-
-    <div class="cover-foot">
-      <p class="cover-issue"></p>
-      <a class="cover-cue" href="#browse">Browse projects <span aria-hidden="true">↓</span></a>
-    </div>
-  </section>
-
-  <!-- ====================== 2. BROWSE BY DISCIPLINE ====================== -->
-  <section id="browse" class="browse" aria-labelledby="browse-label">
-    <header class="browse-head" data-reveal>
-      <p class="band-label">Selected work</p>
-      <h2 class="browse-title" id="browse-label">Browse by discipline</h2>
-      <p class="browse-note">Choose a category to update the projects below.</p>
-    </header>
-    <nav class="browse-grid" aria-label="Browse by discipline" data-reveal></nav>
-  </section>
-
-  <!-- ========================== 3. WORK ARCHIVE ========================== -->
-  <section id="archive" class="work" aria-labelledby="archive-title">
-    <header class="work-head">
-      <h2 class="work-title" id="archive-title">Work archive</h2>
-      <p class="work-count" aria-live="polite"></p>
-    </header>
-
-    <div class="filters" role="region" aria-label="Browse and filter projects">
-      <!-- level one: the categories, the loudest control in the bar -->
-      <nav class="cats" aria-label="Filter by category"></nav>
-      <!-- level two: everything that narrows the selection further -->
-      <div class="filter-line">
-        <p class="filter-count" aria-hidden="true"></p>
-        <!-- cross-discipline tags, always visible: they never collapse behind Refine -->
-        <div class="quick-tags" role="group" aria-label="Filter by cross-discipline tag"></div>
-        <button type="button" class="share-link" hidden>Copy link</button>
-        <input class="share-url" type="text" readonly hidden aria-label="Link to this selection">
-        <span class="share-said" role="status" aria-live="polite"></span>
-        <button type="button" class="refine-toggle" aria-expanded="false" aria-controls="refine">Refine<span class="chev" aria-hidden="true">&#8964;</span></button>
-        <div class="filter-tools" id="refine">
-          <div class="active-tags" aria-live="polite"></div>
-          <button class="tag-toggle" type="button" aria-expanded="false">Filter by tag<span class="chev" aria-hidden="true">&#8964;</span></button>
-          <label class="search">
-            <span class="visually-hidden">Search projects</span>
-            <input type="search" placeholder="Search projects" autocomplete="off">
-          </label>
-          <div class="views" role="group" aria-label="Change how the archive is shown">
-            <button type="button" class="view" data-view="grid" aria-pressed="true">Grid</button>
-            <button type="button" class="view" data-view="curated" aria-pressed="false">Curated</button>
-            <button type="button" class="view" data-view="index" aria-pressed="false">Index</button>
-          </div>
-        </div>
-      </div>
-      <div class="tag-panel" hidden>
-        <div class="tag-list" role="group" aria-label="Filter by tag"></div>
-        <p class="tag-note"></p>
-      </div>
-    </div>
-
-    <div class="grid" id="grid"></div>
-
-    <div class="index-wrap" hidden>
-      <table class="index-table">
-        <thead><tr><th scope="col">Client</th><th scope="col">Project</th><th scope="col">Discipline</th><th scope="col">Pieces</th><th scope="col">Formats</th><th scope="col">Year</th></tr></thead>
-        <tbody></tbody>
-      </table>
-      <figure class="index-peek" aria-hidden="true"><img alt="" decoding="async"></figure>
-    </div>
-
-    <p class="empty" hidden>Nothing matches those filters. <button type="button" class="link-btn clear-filters">Clear them</button> and try again.</p>
-    <div class="grid-more"><button type="button" class="more-btn" hidden></button></div>
-  </section>
-
-  <!-- =================== 4. SELECTED PRODUCTION SYSTEMS ================== -->
-  <section id="systems" class="systems" aria-labelledby="systems-label">
-    <header class="band-head" data-reveal>
-      <h2 class="band-label" id="systems-label">Selected production systems</h2>
-      <p class="band-note">Campaigns built across formats, sizes and channels.</p>
-    </header>
-    <div class="systems-list"></div>
-  </section>
-
-  <!-- ===================== 5. PRODUCTION CAPABILITIES ==================== -->
-  <section id="capabilities" class="caps" aria-labelledby="caps-label">
-    <div class="caps-inner">
-      <header class="caps-head" data-reveal>
-        <h2 class="band-label" id="caps-label">Production capabilities</h2>
-        <p class="caps-note">What I can take from brief to shippable file.</p>
-      </header>
-      <div class="caps-body">
-        <ul class="caps-list"></ul>
-        <figure class="caps-preview" aria-hidden="true"><img alt="" decoding="async"></figure>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================== 6. EXPERIENCE MAP ======================== -->
-  <section id="experience" class="exp" aria-labelledby="exp-label">
-    <div class="exp-inner">
-
-      <header class="exp-head" data-reveal>
-        <p class="band-label exp-eyebrow"></p>
-        <h2 class="exp-title" id="exp-label"></h2>
-      </header>
-
-      <!-- the lead figures: one large claim beside two small facts -->
-      <div class="exp-lead" data-reveal></div>
-
-      <!-- one reverse-chronological list, nothing collapsed -->
-      <ol class="exp-roles"></ol>
-
-      <p class="exp-note"></p>
-
-      <section class="exp-achievements" aria-labelledby="ach-label">
-        <h3 class="band-label" id="ach-label">Selected achievements</h3>
-        <ol class="ach-list"></ol>
-      </section>
-
-      <section class="exp-profile" aria-labelledby="profile-label">
-        <h3 class="visually-hidden" id="profile-label">Full profile</h3>
-        <button type="button" class="profile-toggle" aria-expanded="false" aria-controls="full-profile">
-          Full profile<span class="chev" aria-hidden="true">&#8964;</span>
-        </button>
-        <div class="profile-body" id="full-profile" hidden></div>
-        <a class="resume-link" href="assets/documents/Luis-Moreno-RZ-Resume-Aug-2026.pdf" target="_blank" rel="noopener"></a>
-      </section>
-
-    </div>
-  </section>
-
-  <!-- =========================== 7. ABOUT ================================ -->
-  <section id="about" class="about" aria-labelledby="about-label">
-    <h2 class="visually-hidden" id="about-label">About</h2>
-
-    <!-- One editorial plane: the photograph is the section's background and
-         the statement and body sit on the empty wall it already provides. -->
-    <div class="about-stage">
-      <picture class="about-photo">
-        <source media="(max-width: 760px)" type="image/webp"
-                srcset="assets/images/sections/brand-systems-mobile-900.webp 900w,
-                        assets/images/sections/brand-systems-mobile-1200.webp 1200w"
-                sizes="100vw">
-        <source type="image/webp"
-                srcset="assets/images/sections/brand-systems-1400.webp 1400w,
-                        assets/images/sections/brand-systems-1800.webp 1800w,
-                        assets/images/sections/brand-systems-2400.webp 2400w"
-                sizes="100vw">
-        <img src="assets/images/sections/brand-systems-1800.webp" width="3278" height="2111"
-             alt="Luis Moreno walking in front of a physical brand moodboard."
-             loading="lazy" decoding="async">
-      </picture>
-
-      <div class="about-statement"><span class="reveal"></span></div>
-      <div class="about-body" data-reveal></div>
-    </div>
-
-    <div class="clients-wall">
-      <h3 class="band-label">Clients &amp; projects</h3>
-      <ul class="clients"></ul>
-    </div>
-  </section>
-
-  <!-- ========================== 8. CONTACT STAGE ========================= -->
-  <section id="contact" class="contact" aria-labelledby="contact-label">
-    <h2 class="band-label" id="contact-label">Contact</h2>
-    <p class="contact-role"></p>
-    <p class="contact-lead">Open to freelance and full-time opportunities.</p>
-    <a class="contact-email" href="#"></a>
-    <ul class="contact-links"></ul>
-    <p class="contact-place"></p>
-  </section>
-
-</main>
-
-<footer class="site-foot">
-  <p class="foot-name"></p>
-  <p class="foot-note">A static site. Anyone with the link can see the work.</p>
-</footer>
-
-<!-- ------------------------- project preview panel ------------------------ -->
-<div class="viewer" id="viewer" hidden>
-  <div class="viewer-scrim" data-close></div>
-
-  <div class="viewer-panel" role="dialog" aria-modal="true" aria-labelledby="viewer-title">
-    <div class="viewer-bar">
-      <div class="viewer-bar-meta">
-        <span class="viewer-client"></span>
-        <span class="viewer-sep">/</span>
-        <span class="viewer-name" id="viewer-title"></span>
-      </div>
-      <div class="viewer-bar-actions">
-        <button type="button" class="viewer-prev" aria-label="Previous project">←</button>
-        <button type="button" class="viewer-next" aria-label="Next project">→</button>
-        <a class="viewer-tab" href="#" target="_blank" rel="noopener" title="Open this project in a new tab">Open in new tab ↗</a>
-        <button type="button" class="viewer-close" aria-label="Close preview" data-close>Close ✕</button>
-      </div>
-    </div>
-
-    <div class="viewer-body">
-      <div class="viewer-inner">
-        <aside class="viewer-info">
-          <p class="viewer-eyebrow"></p>
-          <h2 class="viewer-title"></h2>
-          <p class="viewer-summary"></p>
-          <dl class="viewer-facts"></dl>
-          <ul class="viewer-tags"></ul>
-          <a class="viewer-case" hidden>Read the case study →</a>
-          <a class="viewer-live" target="_blank" rel="noopener" hidden>Open the live prototype ↗</a>
-        </aside>
-        <div class="viewer-images"></div>
-      </div>
+    <div class="slab-bottom">
+      <p class="slab-meta mono"><span>Portfolio 2026</span><span id="count">000</span></p>
+      <p class="wordmark">luismoreno<span class="dot">.</span></p>
     </div>
   </div>
 </div>
 
-<script src="data/images.js?v=202611120052"></script>
-<script src="data/videos.js?v=202611120052"></script>
-<script src="data/projects.js?v=202611120052"></script>
-<script src="data/stories.js?v=202611120052"></script>
-<script src="data/experience.js?v=202611120052"></script>
-<script src="app.js?v=202611120052"></script>
+<nav class="pills" aria-label="Main">
+  <button type="button" class="pill pill-menu" aria-expanded="false" aria-controls="menu">
+    <span class="roll"><span>Menu</span><span aria-hidden="true">Close</span></span>
+    <span class="pill-dot" aria-hidden="true"></span>
+  </button>
+  <a class="pill pill-contact" href="#contact" data-go="contact"><span>Contact</span><span class="pill-arrow" aria-hidden="true"><span class="ico ico-arrow" aria-hidden="true"></span></span></a>
+</nav>
+
+<!-- MENU — black slab that drops from the top through the same notch shape
+     the intro opens with, centre column first. -->
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="menu-inner">
+    <ol class="menu-links">
+      <li><a href="#about" data-go="about"><span class="roll"><span>About</span><span aria-hidden="true">About</span></span></a></li>
+      <li><a href="#about" data-go="work"><span class="roll"><span>The work</span><span aria-hidden="true">The work</span></span></a></li>
+      <li><a href="#brands" data-go="brands"><span class="roll"><span>Brands</span><span aria-hidden="true">Brands</span></span></a></li>
+      <li><a href="#experience" data-go="experience"><span class="roll"><span>Experience</span><span aria-hidden="true">Experience</span></span></a></li>
+      <li><a href="#contact" data-go="contact"><span class="roll"><span>Contact</span><span aria-hidden="true">Contact</span></span></a></li>
+    </ol>
+    <div class="menu-side mono">
+      <p>Production Designer<br>&amp; Graphic Designer</p>
+      <p>San Pedro Garza García, MX</p>
+      <p><a href="classic.html#archive">Full project archive <span class="ico ico-out" aria-hidden="true"></span></a></p>
+      <p><a href="mailto:moreno.luisrz@gmail.com">moreno.luisrz@gmail.com</a><br><a href="https://www.linkedin.com/in/luismorenorz/">LinkedIn <span class="ico ico-out" aria-hidden="true"></span></a></p>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- 1. HERO — background photo, the name, then the cut-out on top so the
+       name sits behind Luis. The burn is drawn over all of it. -->
+  <section class="hero-track" id="top">
+    <div class="hero">
+      <img class="hero-bg" src="v2/assets/hero-fondo.jpg" alt="" width="1920" height="1117" fetchpriority="high" decoding="async">
+      <h1 class="hero-name"><span>Luis</span> <span>Moreno</span></h1>
+      <img class="hero-cut" src="v2/assets/hero-recorte.webp" alt="Luis Moreno lying on stacks of archive folders and papers." width="1920" height="1117" decoding="async">
+
+      <div class="hero-ui mono">
+        <p class="hero-role">Production Designer<br>&amp; Graphic Designer</p>
+        <p class="hero-links"><a href="https://www.linkedin.com/in/luismorenorz/">LinkedIn <span class="ico ico-out" aria-hidden="true"></span></a><a href="mailto:moreno.luisrz@gmail.com">Email <span class="ico ico-out" aria-hidden="true"></span></a></p>
+      </div>
+
+      <canvas class="burn burn-tint" aria-hidden="true"></canvas>
+      <canvas class="burn burn-core" aria-hidden="true"></canvas>
+      <div class="burn-fallback" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- 2. ONE PINNED STORY
+       manifesto with live windows -> the first window grows into About ->
+       About splits into two doors that swing open -> a deck of work between
+       THE WORK and I'M CREATING -> the last card fills the screen -> glass card. -->
+  <section class="man-track" id="about">
+    <div class="man">
+
+      <!-- manifesto. Each .tick is a window whose images roll upward. The
+           .man-slot is the one that opens into About. -->
+      <p class="man-text"><span class="man-slot" aria-hidden="true"></span>I turn brand systems into <span class="hot">ready-to-launch</span> work: <span class="tick" aria-hidden="true"><span class="tick-strip"><img src="assets/thumb/156-113.webp" alt="" style="object-position:50% 30%"><img src="assets/thumb/equilibrio-gut1-02.webp" alt=""><img src="assets/thumb/sky18-rebrand-02.webp" alt=""><img src="assets/thumb/156-113.webp" alt="" style="object-position:50% 30%"></span></span> campaign creative that ships <span class="hot">on time, on brand</span> <span class="tick" aria-hidden="true"><span class="tick-strip"><img src="assets/thumb/vysen-summer-01.webp" alt=""><img src="assets/thumb/213-33.webp" alt=""><img src="assets/thumb/equilibrio-gut1-10.webp" alt=""><img src="assets/thumb/vysen-summer-01.webp" alt=""></span></span> and at the <span class="hot">right spec</span>, across every format <span class="tick" aria-hidden="true"><span class="tick-strip"><img src="assets/thumb/2-10.webp" alt=""><img src="assets/thumb/3-46.webp" alt=""><img src="assets/thumb/156-96.webp" alt=""><img src="assets/thumb/2-10.webp" alt=""></span></span> and channel.</p>
+
+      <!-- the opening window: the About photo, full-screen, scaled down onto
+           .man-slot. It never changes, so the opening always lands on it. -->
+      <div class="man-media" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 760px)" type="image/webp" srcset="assets/images/sections/brand-systems-mobile-900.webp 900w, assets/images/sections/brand-systems-mobile-1200.webp 1200w" sizes="100vw">
+          <img src="assets/images/sections/brand-systems-1800.webp" srcset="assets/images/sections/brand-systems-1400.webp 1400w, assets/images/sections/brand-systems-1800.webp 1800w, assets/images/sections/brand-systems-2400.webp 2400w" sizes="100vw" alt="" decoding="async">
+        </picture>
+      </div>
+
+      <!-- white stage the doors open onto -->
+      <div class="stage">
+        <p class="stage-word stage-word-l">The work</p>
+        <p class="stage-word stage-word-r">I'm creating</p>
+        <div class="deck">
+          <figure class="card"><img src="assets/thumb/equilibrio-gut1-02.webp" alt=""></figure>
+          <figure class="card"><img src="assets/thumb/sky18-rebrand-04.webp" alt=""></figure>
+          <figure class="card"><img src="assets/thumb/156-113.webp" alt="" style="object-position:50% 25%"></figure>
+          <figure class="card"><img src="assets/thumb/140-33.webp" alt=""></figure>
+          <figure class="card"><img src="assets/full/171-31.webp" srcset="assets/full/171-31.webp 1200w, v2/assets/171-31-2145.webp 2145w" sizes="100vw" alt="" style="object-position:50% 55%"></figure>
+        </div>
+      </div>
+
+      <!-- About, as two doors. Each holds the whole composition, clipped to
+           its half, so the split is invisible until they swing. -->
+      <div class="doors">
+        <div class="door door-l">
+          <picture class="door-pic">
+            <source media="(max-width: 760px)" type="image/webp" srcset="assets/images/sections/brand-systems-mobile-900.webp 900w, assets/images/sections/brand-systems-mobile-1200.webp 1200w" sizes="100vw">
+            <img src="assets/images/sections/brand-systems-1800.webp" srcset="assets/images/sections/brand-systems-1400.webp 1400w, assets/images/sections/brand-systems-1800.webp 1800w, assets/images/sections/brand-systems-2400.webp 2400w" sizes="100vw" alt="Luis Moreno walking in front of a physical brand moodboard." width="1800" height="1159" decoding="async">
+          </picture>
+          <div class="about-shade"></div>
+          <div class="about-copy">
+            <h2 class="about-title bi">About me</h2>
+            <p class="about-p bi">Production designer with 10+ years building campaigns for agencies in New York and Los Angeles, across beauty, wellness, CPG and finance. I carry one idea across every placement, size and channel without letting it drift.</p>
+            <p class="about-p bi">Most of my work lives inside brand systems I didn't write. I read them well enough to extend them, and I know which rules bend and which ones hold.</p>
+            <ul class="about-meta mono bi">
+              <li>San Pedro Garza García, MX</li>
+              <li>EN / ES</li>
+              <li>Open to freelance &amp; full-time</li>
+            </ul>
+          </div>
+          <div class="door-dim"></div>
+        </div>
+        <div class="door door-r" aria-hidden="true">
+          <picture class="door-pic">
+            <source media="(max-width: 760px)" type="image/webp" srcset="assets/images/sections/brand-systems-mobile-900.webp 900w, assets/images/sections/brand-systems-mobile-1200.webp 1200w" sizes="100vw">
+            <img src="assets/images/sections/brand-systems-1800.webp" srcset="assets/images/sections/brand-systems-1400.webp 1400w, assets/images/sections/brand-systems-1800.webp 1800w, assets/images/sections/brand-systems-2400.webp 2400w" sizes="100vw" alt="" width="1800" height="1159" decoding="async">
+          </picture>
+          <div class="about-shade"></div>
+          <div class="about-copy">
+            <p class="about-title bi">About me</p>
+            <p class="about-p bi">Production designer with 10+ years building campaigns for agencies in New York and Los Angeles, across beauty, wellness, CPG and finance. I carry one idea across every placement, size and channel without letting it drift.</p>
+            <p class="about-p bi">Most of my work lives inside brand systems I didn't write. I read them well enough to extend them, and I know which rules bend and which ones hold.</p>
+            <ul class="about-meta mono bi">
+              <li>San Pedro Garza García, MX</li>
+              <li>EN / ES</li>
+              <li>Open to freelance &amp; full-time</li>
+            </ul>
+          </div>
+          <div class="door-dim"></div>
+        </div>
+      </div>
+
+      <!-- the systems: the last card lands on the first of these images -->
+      <div class="sys">
+        <div class="sys-bgs">
+          <img class="sys-bg is-on" src="assets/full/171-31.webp" srcset="assets/full/171-31.webp 1200w, v2/assets/171-31-2145.webp 2145w" sizes="100vw" alt="A Greenhouse cooler wrap in a grocery store aisle." style="object-position:50% 55%">
+          <img class="sys-bg" src="assets/full/equilibrio-gut1-01.webp" alt="equilibri-o Gut 1 tub in a net bag with lemons." style="object-position:50% 62%">
+          <img class="sys-bg" src="assets/full/sky18-rebrand-04.webp" alt="Sky 18 Capital website shown on a laptop.">
+        </div>
+        <div class="sys-scrim"></div>
+        <div class="sys-head">
+          <h2 class="sys-title">The work<br>I'm creating</h2>
+        </div>
+        <div class="glass">
+          <div class="glass-tabs" role="tablist" aria-label="Selected projects">
+            <button type="button" role="tab" aria-selected="true" data-i="0">Greenhouse</button>
+            <button type="button" role="tab" aria-selected="false" data-i="1">equilibri-o</button>
+            <button type="button" role="tab" aria-selected="false" data-i="2">Sky 18 Capital</button>
+          </div>
+          <div class="glass-body" role="tabpanel">
+            <div class="glass-main">
+              <p class="glass-kicker mono"><span data-f="title">Campaign Ecosystem</span> · <span data-f="year">2025-2026</span></p>
+              <p class="glass-big"><span data-f="pieces">38</span><small>pieces</small></p>
+              <p class="glass-line" data-f="line">One immunity platform carried from the feed to the grocery aisle.</p>
+              <a class="glass-cta" data-f="href" href="case.html?story=greenhouse">Read the case study <span aria-hidden="true"><span class="ico ico-arrow" aria-hidden="true"></span></span></a>
+            </div>
+            <div class="glass-side">
+              <p class="glass-sub mono">Includes · <span data-f="formats">9</span> formats</p>
+              <ul class="glass-list mono" data-f="list">
+                <li>Paid social and display</li>
+                <li>Shoppable and banner video</li>
+                <li>Free-standing retail displays</li>
+                <li>Cooler wraps and shelf blades</li>
+                <li>Print dielines</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. BRANDS — a paper sheet that slides up over the pinned
+       story. Every number is counted from the portfolio data. -->
+  <section class="brands" id="brands">
+    <div class="brands-head">
+      <h2 class="brands-title rv" style="--d:1">Brands &amp;<br>results</h2>
+    </div>
+    <dl class="stats rv" style="--d:2">
+      <div class="stat"><dt class="mono scr">Pieces shipped</dt><dd><span class="num" data-to="306">0</span></dd></div>
+      <div class="stat"><dt class="mono scr">Projects</dt><dd><span class="num" data-to="83">0</span></dd></div>
+      <div class="stat"><dt class="mono scr">Brands</dt><dd><span class="num" data-to="45">0</span></dd></div>
+      <div class="stat"><dt class="mono scr">Years in production</dt><dd><span class="num" data-to="13">0</span><span class="plus">+</span></dd></div>
+    </dl>
+    <p class="brand-list"><span class="brand" data-img="assets/poster/zillow-product-motion-01.webp">Zillow</span> / <span class="brand" data-img="assets/thumb/156-113.webp">Greenhouse</span> / <span class="brand" data-img="assets/thumb/2-10.webp">Rove</span> / <span class="brand" data-img="assets/thumb/18-2.webp">Ben Bridge Jeweler</span> / <span class="brand" data-img="assets/thumb/sky18-rebrand-04.webp">Sky 18 Capital</span> / <span class="brand" data-img="assets/thumb/equilibrio-gut1-01.webp">equilibri-o</span> / <span class="brand" data-img="assets/thumb/vysen-summer-01.webp">Vysen</span> / <span class="brand" data-img="assets/thumb/156-100.webp">Spartan</span> / <span class="brand" data-img="assets/thumb/98-419.webp">Generac</span> / <span class="brand" data-img="assets/thumb/2-19.webp">Organic India</span> / <span class="brand" data-img="assets/thumb/2-23.webp">BBQGuys</span> / <span class="brand" data-img="assets/thumb/2-20.webp">Capri Tools</span> / <span class="brand" data-img="assets/thumb/242-187.webp">Wink</span> / <span class="brand" data-img="assets/thumb/137-1475.webp">Alpha Lion</span> / <span class="brand" data-img="assets/thumb/2-4.webp">The Sports Edit</span> / <span class="brand" data-img="assets/thumb/snow-emails-01.webp">SNOW</span> / <span class="brand" data-img="assets/thumb/puregenius-emails-01.webp">Pure Genius</span> / <span class="brand" data-img="assets/thumb/ff-emails-01.webp">Finding Ferdinand</span> / <span class="brand" data-img="assets/thumb/140-31.webp">Songer</span> / <span class="brand" data-img="assets/thumb/2-16.webp">Golden Hour Hemp</span> / <span class="brand" data-img="assets/thumb/179-30.webp">Cheers</span> / <span class="brand" data-img="assets/thumb/3-48.webp">GelMoment</span> / <span class="brand" data-img="assets/poster/cne-deals-video-01.webp">CNE</span> / <span class="brand" data-img="assets/thumb/137-618.webp">Doctronic</span> / <span class="brand" data-img="assets/thumb/3-19.webp">IDUNA</span> / <span class="brand" data-img="assets/thumb/argento-registry-01.webp">il&apos;argento</span> / <span class="brand" data-img="assets/thumb/polar-monkeys-one-01.webp">Polar Monkeys</span> / <span class="brand" data-img="assets/thumb/3-17-01.webp">Café Café</span> / <span class="brand" data-img="assets/thumb/3-2.webp">Manara</span> / <span class="brand" data-img="assets/thumb/213-33.webp">Trace AI</span> / <span class="brand" data-img="assets/thumb/213-32.webp">Orbitoshift</span> / <span class="brand" data-img="assets/thumb/3-5.webp">Avenue</span> / <span class="brand" data-img="assets/thumb/3-3.webp">Wyne</span> / <span class="brand" data-img="assets/thumb/9-3.webp">NOLE</span> / <span class="brand" data-img="assets/thumb/244-1536.webp">Carevio</span> / <span class="brand" data-img="assets/thumb/3-41.webp">Villa Stari Mlin</span> / <span class="brand" data-img="assets/thumb/morelia-paletas-01.webp">Morelia Gourmet Paletas</span> / <span class="brand" data-img="assets/thumb/3-4.webp">Adapt Cafe</span> / <span class="brand" data-img="assets/thumb/3-42.webp">easynerdy</span> / <span class="brand" data-img="assets/poster/blaze-product-video-01.webp">The Blaze BZ3</span> / <span class="brand" data-img="assets/thumb/pro-performance-md-01.webp">Pro Performance MD</span> / <span class="brand" data-img="assets/thumb/18-5.webp">Ananda Beauty Spot</span> / <span class="brand" data-img="assets/thumb/18-10.webp">Cosmédica</span> / <span class="brand" data-img="assets/thumb/3-25.webp">Dra. Nancy Valdés</span> / <span class="brand" data-img="assets/thumb/2-12.webp">CompressionSale</span></p>
+    <a class="brands-more mono" href="classic.html#archive">See all 83 projects in the archive <span class="ico ico-arrow" aria-hidden="true"></span></a>
+  </section>
+
+  <!-- 4. EXPERIENCE — the year beside the list rolls like an odometer to the
+       role in focus; the other roles step back. -->
+  <section class="exp" id="experience">
+    <h2 class="exp-title rv">More than a decade turning brand systems into production-ready work.</h2>
+    <div class="exp-grid">
+      <div class="exp-aside" aria-hidden="true">
+        <div class="exp-stick">
+          <p class="odo"></p>
+          <p class="mono exp-range"></p>
+          <p class="mono exp-env"></p>
+        </div>
+      </div>
+      <ol class="roles">
+        <li class="role" data-start="2022" data-range="Jun 2022 - Mar 2026" data-env="Agency · Manhattan, NY">
+          <p class="mono role-dates">2022 - 2026</p>
+          <h3 class="role-co">GAS Group</h3>
+          <p class="role-ti">Marketing Designer</p>
+          <p class="role-sum">Led creative production for up to eight accounts a month: weekly social and email, 50+ web banners, print, retail and packaging.</p>
+        </li>
+        <li class="role" data-start="2023" data-range="Sep 2023 - Feb 2026" data-env="Email agency · New York, remote">
+          <p class="mono role-dates">2023 - 2026</p>
+          <h3 class="role-co">Flowium</h3>
+          <p class="role-ti">Graphic Designer, contract</p>
+          <p class="role-sum">Designed 8 to 15 Klaviyo emails a day for ecommerce brands, using heatmaps and campaign KPIs to shape hierarchy and conversion.</p>
+        </li>
+        <li class="role" data-start="2022" data-range="Jul 2022 - Mar 2023" data-env="Agency · Los Angeles, CA">
+          <p class="mono role-dates">2022 - 2023</p>
+          <h3 class="role-co">Coalition Technologies</h3>
+          <p class="role-ti">Marketing Designer</p>
+          <p class="role-sum">Built a modular Klaviyo production system across multiple brands and extended one design system to 6 to 8 SKUs, dielines included.</p>
+        </li>
+        <li class="role" data-start="2019" data-range="Aug 2019 - Jun 2022" data-env="B2B · Monterrey, México">
+          <p class="mono role-dates">2019 - 2022</p>
+          <h3 class="role-co">Teleperformance</h3>
+          <p class="role-ti">Creative Content Coordinator</p>
+          <p class="role-sum">Led B2B sales enablement, event branding and immersive client-facing environments.</p>
+        </li>
+        <li class="role" data-start="2017" data-range="Feb 2017 - Jul 2019" data-env="Ecommerce · West Palm Beach, FL">
+          <p class="mono role-dates">2017 - 2019</p>
+          <h3 class="role-co">Svelte Media Inc.</h3>
+          <p class="role-ti">Creative Designer</p>
+          <p class="role-sum">Designed direct-response landing pages and organic social content for a wellness ecommerce business.</p>
+        </li>
+        <li class="role" data-start="2015" data-range="May 2015 - Sep 2016" data-env="Corporate · Monterrey, México">
+          <p class="mono role-dates">2015 - 2016</p>
+          <h3 class="role-co">Conduent</h3>
+          <p class="role-ti">Brand Manager</p>
+          <p class="role-sum">Managed internal brand programs, executive communication and editorial assets across stakeholder groups.</p>
+        </li>
+        <li class="role" data-start="2014" data-range="Jan 2014 - May 2015" data-env="Fashion magazine · México">
+          <p class="mono role-dates">2014 - 2015</p>
+          <h3 class="role-co">Revista Escaparate</h3>
+          <p class="role-ti">Editorial Designer</p>
+          <p class="role-sum">Editorial design and art direction for a fashion magazine: covers, layouts, photo shoots and the brand system behind them.</p>
+        </li>
+        <li class="role" data-start="2013" data-range="Jun 2013 - Jan 2014" data-env="Tourism · Mato Grosso do Sul, Brasil">
+          <p class="mono role-dates">2013 - 2014</p>
+          <h3 class="role-co">Rio da Prata</h3>
+          <p class="role-ti">Marketing and Communications Manager</p>
+          <p class="role-sum">Led organic social strategy and communications for a tourism destination in Brazil.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+</main>
+
+<!-- the brand preview window that follows the cursor over the brand list -->
+<div class="peek" aria-hidden="true"></div>
+
+<!-- 5. FOOTER — the intro slab again, so the page ends where it began. It
+     waits underneath the page and is uncovered as the last sheet slides up;
+     the name rises letter by letter over an ember glow. -->
+<footer class="slab slab-foot" id="contact">
+  <canvas class="foot-glow" aria-hidden="true"></canvas>
+  <div class="slab-top">
+    <p class="slab-lead">Have a launch that has to ship on brand?</p>
+    <ul class="slab-links mono">
+      <li><a href="https://www.linkedin.com/in/luismorenorz/"><span class="roll"><span>LinkedIn <span class="ico ico-out" aria-hidden="true"></span></span><span aria-hidden="true">LinkedIn <span class="ico ico-out" aria-hidden="true"></span></span></span></a></li>
+      <li><a href="mailto:moreno.luisrz@gmail.com"><span class="roll"><span>moreno.luisrz@gmail.com</span><span aria-hidden="true">moreno.luisrz@gmail.com</span></span></a></li>
+    </ul>
+  </div>
+  <div class="slab-bottom">
+    <p class="slab-meta mono"><span>San Pedro Garza García, MX</span><a class="to-top" href="#top" data-go="top"><span class="roll"><span>Back to top <span class="ico ico-up" aria-hidden="true"></span></span><span aria-hidden="true">Back to top <span class="ico ico-up" aria-hidden="true"></span></span></span></a><span>© 2026</span></p>
+    <p class="wordmark">luismoreno<span class="dot">.</span></p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="v2/burn.js?v=20261124e"></script>
+<script src="v2/v2.js?v=20261124e"></script>
 </body>
 </html>
