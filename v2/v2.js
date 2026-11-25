@@ -33,7 +33,7 @@
   /* ----------------------------------------------------------- scramble
      Mono labels decode into place: random glyphs settle left to right.
      Works on text nodes, so line breaks and links inside survive. */
-  var GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/—·+";
+  var GLYPHS = "abcdefghijklmnopqrstuvwxyz0123456789/-+";
   function scramble(el, text) {
     if (!el) return;
     if (text != null) { el.textContent = text; el._fin = null; }
@@ -125,8 +125,6 @@
   var sysBgs = $$(".sys-bg", sys);
   var sysScrim = $(".sys-scrim", sys);
   var sysHead = $(".sys-head", sys);
-  var sysLabel = $(".sys-label", sys);
-  var sysDecoded = false;
   var glass = $(".glass", sys);
   var glassTabs = $(".glass-tabs", glass);
   var glassBody = $(".glass-body", glass);
@@ -176,6 +174,17 @@
     return $$(".ch", el);
   }
   splitWords(manText, false);
+  // punctuation rides on the word before it, so it never wraps onto a line of
+  // its own (and stays white after a red word)
+  $$(".w", manText).forEach(function (w) {
+    var prev = w.previousSibling;
+    if (!/^[.,:;!?]+$/.test(w.textContent) || !prev || prev.nodeType !== 1 || !prev.classList.contains("w")) return;
+    var pn = document.createElement("span");
+    pn.className = "pn";
+    pn.textContent = w.textContent;
+    prev.appendChild(pn);
+    manText.removeChild(w);
+  });
   var items = $$(".w, .tick", manText);   // words and windows, in reading order
 
   /* ------------------------------------------------------------ windows
@@ -366,16 +375,16 @@
 
   /* ================================================== the glass card tabs */
   var SYSTEMS = [   // from data/stories.js; pieces and formats counted from the files
-    { title: "Campaign Ecosystem", year: "2025–2026", pieces: 38, formats: 9,
-      line: "One immunity platform carried from the feed to the grocery aisle.",
+    { title: "Ads, retail and video", year: "2025-2026", pieces: 38, formats: 9,
+      line: "An immunity campaign for a Canadian juice brand, from paid social to the grocery store cooler.",
       href: "../case.html?story=greenhouse",
       list: ["Paid social and display", "Shoppable and banner video", "Free-standing retail displays", "Cooler wraps and shelf blades", "Print dielines"] },
-    { title: "AI Product Universe", year: "2026", pieces: 15, formats: 4,
-      line: "A whole product world for one tub, generated rather than shot.",
+    { title: "AI product photos", year: "2026", pieces: 15, formats: 4,
+      line: "Fifteen AI-made images for a gut-health powder that had no photo library yet.",
       href: "../case.html?story=gut1",
       list: ["Studio product imagery", "Texture and ingredient shots", "Packaging-format concepts", "Lifestyle scenes", "Atmospheric brand imagery", "One-palette art direction"] },
-    { title: "Rebrand and Rollout", year: "2026", pieces: 10, formats: 8,
-      line: "A private lender rebuilt from the mark out to the live site.",
+    { title: "Rebrand and website", year: "2026", pieces: 10, formats: 8,
+      line: "A new logo, colors, website, emails and brand film for a private lender in North Miami.",
       href: "../case.html?story=sky18",
       list: ["Logotype and mark", "Colour and type system", "Website design", "Email newsletter and signature", "LinkedIn graphics", "Brand film"] }
   ];
@@ -637,7 +646,9 @@
   /* ================================================== brands & results */
   var brands = $(".brands");
   var nums = $$(".num", brands);
-  var statsEl = $(".stats", brands);
+  var statsEl = $(".tally", brands);
+  // reserve each number's final width so the sentence never reflows while counting
+  nums.forEach(function (n) { n.style.minWidth = n.getAttribute("data-to").length + "ch"; });
   var brandList = $(".brand-list", brands);
   splitWords(brandList, false);
   var brandWords = $$(".w", brandList);
@@ -853,13 +864,11 @@
     var sysOn = fin >= 1;
     sys.classList.toggle("is-on", sysOn);
     if (!sysOn && active !== 0) selectSystem(0, true);   // so the hand-off always matches
-    if (!sysOn) sysDecoded = false;
     if (sysOn) {
       var sp = R(ease.outCubic(range(v, T.sys[0], T.sys[1])));
       sysScrim.style.opacity = sp.toFixed(3);
       sysBgWrap.style.filter = sp > 0 ? "brightness(" + (1 - .28 * sp).toFixed(3) + ")" : "";
       sysHead.style.opacity = sp.toFixed(3);
-      if (!sysDecoded && sp > .2) { sysDecoded = true; scramble(sysLabel); }
       sysHead.style.filter = reduce ? "" : "blur(" + ((1 - sp) * 10).toFixed(2) + "px)";
       sysHead.style.transform = "translate3d(0," + ((1 - sp) * 30).toFixed(2) + "px,0)";
       var gp = R(ease.outCubic(range(v, T.sys[0] + 12, T.sys[1] + 12)));
@@ -930,7 +939,7 @@
       st.zIndex = String(N - i);
     }
 
-    // PRODUCTION [card] SYSTEMS — and pushed off as the card takes the screen
+    // THE WORK [card] I'M CREATING, pushed off as the card takes the screen
     var wi = R(ease.outCubic(range(v, T.words[0], T.words[1])));
     var gap = mobile ? 18 : W * .022;
     var off = (1 - wi) * (mobile ? 30 : 60), out = fin * W * .55, wop = (wi * (1 - fin * 1.6)).toFixed(3);
